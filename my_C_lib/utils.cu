@@ -219,35 +219,21 @@ char* prettyPrintNumber(long n){
 
 int checkArchitecturalBoundaries(int const DEV, int const Gx, int const Gy, int const Bx, int const By, int const N_BYTES_GLOBAL_MEMORY_USAGE, int SMEM_REQUIRED, int PRINT){
 
-<<<<<<< HEAD
 	if(PRINT) printf("\n- - - START CHECKING - - -\n");
-=======
-	int const NO_VERBOSE = !PRINT;
-	printf("\n- - - START CHECKING - - -\n");
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	cudaDeviceProp cudaDeviceProp;
 	CHECK(cudaGetDeviceProperties(&cudaDeviceProp, DEV));
 
 	if(PRINT) printf("Max thread per block: %d  -  required %d\n", cudaDeviceProp.maxThreadsPerBlock, By*Bx);
 	assert(cudaDeviceProp.maxThreadsPerBlock > Bx * By);
-<<<<<<< HEAD
-=======
-	if(NO_VERBOSE) printf("max thread per block . . . OK\n");
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	if(PRINT) printf("Max block dim (x: %d, y: %d)  -  required (%d, %d)\n", cudaDeviceProp.maxThreadsDim[0], cudaDeviceProp.maxThreadsDim[1], Bx, By);
 	assert(cudaDeviceProp.maxThreadsDim[0] > Bx);
 	assert(cudaDeviceProp.maxThreadsDim[1] > By);
-<<<<<<< HEAD
-=======
-	if(NO_VERBOSE) printf("block dimensions . . . OK\n");
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	if(PRINT) printf("Max grid dim (x: %d, y: %d)  -  required (%d, %d)\n", cudaDeviceProp.maxGridSize[0], cudaDeviceProp.maxGridSize[1], Gx, Gy);
 	assert(cudaDeviceProp.maxGridSize[0] > Gx);
 	assert(cudaDeviceProp.maxGridSize[1] > Gy);
-<<<<<<< HEAD
 
 	if(PRINT) printf("Global memory available: %d MegaByte  -  required %d MegaByte\n", cudaDeviceProp.totalGlobalMem/1024/1024, N_BYTES_GLOBAL_MEMORY_USAGE/1024/1024);
 	assert(cudaDeviceProp.totalGlobalMem > N_BYTES_GLOBAL_MEMORY_USAGE);
@@ -256,17 +242,4 @@ int checkArchitecturalBoundaries(int const DEV, int const Gx, int const Gy, int 
 	assert(cudaDeviceProp.sharedMemPerBlock > SMEM_REQUIRED);
 
 	if(PRINT) printf("- - - END CHECKING - - -\n\n");
-=======
-	if(NO_VERBOSE) printf("grid dimension . . . OK\n");
-
-	if(PRINT) printf("Global memory available: %d MegaByte  -  required %d MegaByte\n", cudaDeviceProp.totalGlobalMem/1024/1024, N_BYTES_GLOBAL_MEMORY_USAGE/1024/1024);
-	assert(cudaDeviceProp.totalGlobalMem > N_BYTES_GLOBAL_MEMORY_USAGE);
-	if(NO_VERBOSE) printf("global memory usage . . . OK\n");
-
-	if(PRINT) printf("Shared memory available: %d KiloByte - required %d KiloByte\n", cudaDeviceProp.sharedMemPerBlock/1024, SMEM_REQUIRED/1024);
-	assert(cudaDeviceProp.sharedMemPerBlock > SMEM_REQUIRED);
-	if(NO_VERBOSE) printf("smem usage . . . OK\n");
-
-	printf("- - - END CHECKING - - -\n\n");
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 }

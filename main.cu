@@ -5,15 +5,11 @@
 #include <assert.h>
 #include "my_C_lib/utils.h"
 #include "my_C_lib/CPU_time.h"
-<<<<<<< HEAD
 #include "hashlib/hmac-sha1.cuh"
 #include "hashlib/sha1.cuh"
+#include "seqlib/seq_hmac_sha1.cuh"
 
 #define H_LEN 20 // Length in Bytes of the PRF functions' output
-=======
-
-#define H_LEN 4 // Length in Bytes of the PRF functions' output
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 #define DEV 0
 #define intDivCeil(n, d) ((n + d - 1) / d)
 
@@ -21,7 +17,6 @@ int DEBUG;
 char salt[] = "salt";
 
 __constant__ int D_C;
-<<<<<<< HEAD
 __constant__ int D_SK_LEN;
 __constant__ int D_N;
 
@@ -29,20 +24,10 @@ __constant__ int D_N;
 __device__ void actualFunction(char* sk, char* output, int const KERNEL_ID){
 	int idx = blockDim.x * blockIdx.x + threadIdx.x;
 
-=======
-__constant__ int D_DK_LEN;
-__constant__ int D_N;
-__device__ char d_salt[] = "salt";	// Static Global Memory
-
-__device__ void actualFunction(char* sk, char* output, int const KERNEL_ID){
-
-	int idx = blockDim.x * blockIdx.x + threadIdx.x;
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	if(idx >= D_N)
 		return;
 
-<<<<<<< HEAD
 	globalChars globalChars;
 	uint8_t salt[H_LEN] = "salt";
 	int saltLen = 4 + (2 * sizeof(int));
@@ -83,48 +68,13 @@ __device__ void actualFunction(char* sk, char* output, int const KERNEL_ID){
 		printf("\n --- \n");
 	}
 	*/
-=======
-	//uint8_t tmp[D_C][H_LEN];
-	char tmp[H_LEN];
-	for(int i = 0; i < H_LEN; i++)
-		tmp[i] = i*(idx+1);				//TODO: messo per avere tmp non completamente nullo. AL POSTO DI i METTERE 0. Lo scopo di questo ciclo è simulare una memset dove si pulisce l'array
-
-
-	/*
-	 * salt = salt || KERNEL_ID || idx
-	 */
-	for(int i = 0; i < D_C; i++){
-		/* TODO: chiamata alla hash function
-		 * 	salt = hash(sk, salt);
-		 * 	tmp[i] = salt;
-		 */
-		printf("");
-	}
-
-	/*
-	 * uint8_t result[H_LEN];
-	 * result = tmp[0];
-	 */
-	for(int i = 1; i < D_C; i++){
-		/**
-		 * result ^= tmp[i]
-		 */
-		printf("");
-	}
-
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	int index;
 	for(int i = 0; i < H_LEN; i++){
 		index = idx * H_LEN + i;
-<<<<<<< HEAD
 		output[index] = acc[i];
 	}
 
-=======
-		output[index] = tmp[i];
-	}
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 }
 
 __global__ void pbkdf2(char* sk, char* output, int *kernelId){
@@ -144,7 +94,6 @@ __global__ void pbkdf2_4(char* sk, char* output, int *kernelId){
 	actualFunction(sk, output, *kernelId);
 }
 
-<<<<<<< HEAD
 __host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
 __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
 __host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
@@ -155,16 +104,6 @@ __host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM);
 __host__ void printHeader(int const DK_NUM, int const DK_LEN, int const  BX);
 __host__ void printKernelDebugInfo(int const K_ID, int const THREAD_X_K, int const K_BYTES_GENERATED, int const DK_LEN);
 
-=======
-__host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out);
-__host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out);
-__host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out);
-__host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out, int const nStream, int const INDEX);
-__host__ void executionSequential(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, struct Data *out);
-__host__ void copyValueFromGlobalMemoryToCPUMemory(uint8_t *keys, uint8_t *output, int const NUM, int const LEN);
-__host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM);
-__host__ void printHeader(int const DK_NUM, int const DK_LEN, int const  BX);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 /**
  * DF = PBKDF2(PRF,Password, Salt, c, dkLen)
  *
@@ -190,13 +129,9 @@ struct Data{
 
 int main(int c, char **v){
 	system("clear");
-<<<<<<< HEAD
 	printf("\t\t\t\t----------- Authors -------------\n");
 	printf("\t\t\t\t| Luca Tagliabue, Marco Predari |\n");
 	printf("\t\t\t\t---------------------------------\n\n");
-=======
-	printf("Authors:\nLuca Tagliabue, Marco Predari\n\n");
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	if(c != 7){
 		printf("Error !!\n");
@@ -208,10 +143,7 @@ int main(int c, char **v){
 	//Host var
 	int const BX = atoi(v[1]);				// Thread per block
 	char const *SOURCE_KEY = v[2];			// Password
-<<<<<<< HEAD
 	int const SK_LEN = strlen(SOURCE_KEY);	// Password len
-=======
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	int const C = atoi(v[3]);				// Number of iteration
 	int const DK_LEN = atoi(v[4]);			// Derived Keys' length
 	int const DK_NUM = atoi(v[5]);			// Number of derived keys we'll generate
@@ -221,10 +153,6 @@ int main(int c, char **v){
 
 	assert(isPowOfTwo(DK_LEN) == 1);
 	assert(isPowOfTwo(DK_NUM) == 1);
-<<<<<<< HEAD
-=======
-	assert(isPowOfTwo(H_LEN) == 1);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	// One kernel generate one dk, one thread generate one Ti
 	int threadsPerKernel = intDivCeil(DK_LEN, H_LEN);		// Threads needed
@@ -262,24 +190,16 @@ int main(int c, char **v){
 
 	CHECK(cudaSetDevice(DEV));
 
-<<<<<<< HEAD
 	//Tranfer to CONSTANT MEMORY
 	CHECK(cudaMemcpyToSymbol(D_N, &threadsPerKernel, sizeof(int)));	// Thread per kernel
 	CHECK(cudaMemcpyToSymbol(D_SK_LEN, &SK_LEN, sizeof(int)));		// Source key len
 	CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));					// Iteration
-=======
-	cudaMemcpyToSymbol(D_N, &threadsPerKernel, sizeof(int));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	// Without Stream
 	printf("- - - - - - Execution one, more kernel no stream - - - - - -\n");
 	printf("\nTotal number of threads required per kernel: %d\n\n", threadsPerKernel);
 	double start = seconds();
-<<<<<<< HEAD
 	execution1(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, threadsPerKernel, out1);
-=======
-	execution1(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, out1);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	out1->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - End execution one - - - - - - - - - - - - - -\n");
 
@@ -290,24 +210,16 @@ int main(int c, char **v){
 
 	printHeader(DK_NUM, DK_LEN, BX);
 
-<<<<<<< HEAD
 	//Tranfer to CONSTANT MEMORY
 	CHECK(cudaMemcpyToSymbol(D_N, &threadsPerKernel, sizeof(int)));	// Thread per kernel
 	CHECK(cudaMemcpyToSymbol(D_SK_LEN, &SK_LEN, sizeof(int)));		// Source key len
 	CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));					// Iteration
-=======
-	cudaMemcpyToSymbol(D_N, &threadsPerKernel, sizeof(int));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	// With Stream
 	printf("- - - - - - Execution two, with stream - - - - - -\n");
 	printf("\nTotal number of threads required per kernel: %d\n\n", threadsPerKernel);
 	start = seconds();
-<<<<<<< HEAD
 	execution2(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, threadsPerKernel, out2);
-=======
-	execution2(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, out2);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	out2->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - - End execution two - - - - - - - - \n");
 
@@ -323,23 +235,15 @@ int main(int c, char **v){
 	threadsPerKernel = intDivCeil((DK_LEN * DK_NUM), H_LEN);	// Threads needed
 	Gx = intDivCeil(threadsPerKernel, BX);				// Calculate Gx
 
-<<<<<<< HEAD
 	//Tranfer to CONSTANT MEMORY
 	CHECK(cudaMemcpyToSymbol(D_N, &threadsPerKernel, sizeof(int)));	// Thread per kernel
 	CHECK(cudaMemcpyToSymbol(D_SK_LEN, &SK_LEN, sizeof(int)));		// Source key len
 	CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));					// Iteration
-=======
-	cudaMemcpyToSymbol(D_N, &threadsPerKernel, sizeof(int));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	printf("- - - - - - Execution three, one kernel no stream - - - - - -\n");
 	printf("\nTotal number of threads required per kernel: %d\n\n", threadsPerKernel);
 	start = seconds();
-<<<<<<< HEAD
 	execution3(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, threadsPerKernel, out3);
-=======
-	execution3(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, out3);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	out3->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - End execution three - - - - - - - - - - - - - -\n");
 
@@ -353,7 +257,6 @@ int main(int c, char **v){
 	printf("- - - - - - Execution four, rational use of stream - - - - - -\n");
 	for(int i = 0; i < S_LEN; i++){
 		threadsPerKernel = intDivCeil((DK_LEN * DK_NUM), (H_LEN*N_STREAM[i]));	// Threads needed
-<<<<<<< HEAD
 		Gx = intDivCeil(threadsPerKernel, BX);									// Calculate Gx
 		printf("Total Bytes: %d\n", DK_LEN * DK_NUM);
 		printf("N_STREAM: %d\n", N_STREAM[i]);
@@ -367,12 +270,6 @@ int main(int c, char **v){
 
 		start = seconds();
 		execution4(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, threadsPerKernel, out4, N_STREAM[i], i);
-=======
-		Gx = intDivCeil(threadsPerKernel, BX);				// Calculate Gx
-		cudaMemcpyToSymbol(D_N, &threadsPerKernel, sizeof(int));
-		start = seconds();
-		execution4(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, out4, N_STREAM[i], i);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 		out4[i].elapsedGlobal = seconds() - start;
 		printf("\n\n\n\n");
 	}
@@ -433,27 +330,16 @@ int main(int c, char **v){
 
 
 
-<<<<<<< HEAD
 __host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 	//Alloc and init CPU memory
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
-=======
-__host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out){
-
-	//Alloc and init CPU memory
-	int const N_BYTES_OUTPUT = DK_LEN * DK_NUM * sizeof(char);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	char	 *output = (char*)malloc(N_BYTES_OUTPUT);
 	memset(output, 0, N_BYTES_OUTPUT);
 
 	printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
 
-<<<<<<< HEAD
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
-=======
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 1);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	//Device var
 	char *d_output;
@@ -477,17 +363,10 @@ __host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	CHECK(cudaMalloc((void**)&d_sk, N_BYTES_SK));
 	CHECK(cudaMemcpy(d_sk, SOURCE_KEY, N_BYTES_SK, cudaMemcpyHostToDevice));
 
-<<<<<<< HEAD
-=======
-	//- - - TRANFER ON CONSTANT MEMORY
-	CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));				// Iteration
-	CHECK(cudaMemcpyToSymbol(D_DK_LEN, &DK_LEN, sizeof(int)));	// Desired Keys Length
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 	//Starting kernel
-<<<<<<< HEAD
 	printf("Starting %d kernels with %s threads each (%d threads needed)...\n", DK_NUM, prettyPrintNumber(block.x*grid.x), THREAD_X_KERNEL);
 	int index;
 	double start = seconds();
@@ -500,16 +379,6 @@ __host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 		CHECK(cudaMemcpy(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost));
 
 		printf("Copy %d° key, %d Bytes starting index output[%d]\n\n", i+1, DK_LEN*sizeof(char), index);
-=======
-	printf("Starting %d kernels with %s threads each ...\n", DK_NUM, prettyPrintNumber(block.x*grid.x));
-	int index;
-	double start = seconds();
-	for(int i = 0; i < DK_NUM; i++){
-		index = i*DK_LEN;
-		CHECK(cudaMemcpy(d_kernelId, &i, sizeof(int), cudaMemcpyHostToDevice));
-		pbkdf2<<<grid, block>>>(d_sk, &d_output[index], d_kernelId);
-		CHECK(cudaMemcpy(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	}
 
 	CHECK(cudaDeviceSynchronize());
@@ -521,11 +390,7 @@ __host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 
 
 	// Copy value from output to keys var
-<<<<<<< HEAD
 	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, THREAD_X_KERNEL * H_LEN);
-=======
-	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 
 	// Debug print
@@ -535,11 +400,7 @@ __host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 }
 
 
-<<<<<<< HEAD
 __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
-=======
-__host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out){
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	cudaDeviceProp cudaDeviceProp;
 	cudaGetDeviceProperties(&cudaDeviceProp, DEV);
@@ -548,11 +409,7 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	assert(cudaDeviceProp.deviceOverlap != 0);
 
 	//Alloc and init CPU memory
-<<<<<<< HEAD
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
-=======
-	int const N_BYTES_OUTPUT = DK_LEN * DK_NUM * sizeof(char);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	char	 *output;
 	CHECK(cudaMallocHost((void**)&output, N_BYTES_OUTPUT));
@@ -560,11 +417,7 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 
 	printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
 
-<<<<<<< HEAD
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
-=======
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 1);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 
 	//Device var
@@ -588,14 +441,6 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	CHECK(cudaMalloc((void**)&d_sk, N_BYTES_SK));
 	CHECK(cudaMemcpy(d_sk, SOURCE_KEY, N_BYTES_SK, cudaMemcpyHostToDevice));
 
-<<<<<<< HEAD
-=======
-
-	//- - - TRANFER ON CONSTANT MEMORY
-	CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));				// Iteration
-	CHECK(cudaMemcpyToSymbol(D_DK_LEN, &DK_LEN, sizeof(int)));	// Desired Keys Length
-
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 
@@ -606,7 +451,6 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	}
 
 	//Starting kernel
-<<<<<<< HEAD
 	printf("Starting %d kernels with stream with %s threads each (%d threads needed)...\n", DK_NUM, prettyPrintNumber(block.x*grid.x), THREAD_X_KERNEL);
 	int index;
 	double start = seconds();
@@ -619,16 +463,6 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 		CHECK(cudaMemcpyAsync(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
 
 		printf("Copy %d° key, %d Bytes starting index output[%d]\n\n", i+1, DK_LEN*sizeof(char), index);
-=======
-	printf("Starting %d kernels with stream with %s threads each...\n", DK_NUM, prettyPrintNumber(block.x*grid.x));
-	int index;
-	double start = seconds();
-	for(int i = 0; i < DK_NUM; i++){
-		index = i*DK_LEN;
-		CHECK(cudaMemcpyAsync(&d_kernelId[i], &i, sizeof(int), cudaMemcpyHostToDevice, stream[i]));
-		pbkdf2_2<<<grid, block, 0, stream[i]>>>(d_sk, &d_output[index], &d_kernelId[i]);
-		CHECK(cudaMemcpyAsync(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	}
 
 	for(int i = 0; i<DK_NUM; i++){
@@ -645,11 +479,7 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	printf("%d stream destroyed ...\n", DK_NUM);
 
 	// Copy value from output to keys var
-<<<<<<< HEAD
 	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, THREAD_X_KERNEL * H_LEN);
-=======
-	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
@@ -658,27 +488,16 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 
 }
 
-<<<<<<< HEAD
 __host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * sizeof(char);
-=======
-__host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out){
-
-
-	int const N_BYTES_OUTPUT = DK_LEN * DK_NUM * sizeof(char);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	char	 *output = (char*)malloc(N_BYTES_OUTPUT);
 	memset(output, 0, N_BYTES_OUTPUT);
 
 	printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
 
-<<<<<<< HEAD
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
-=======
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 1);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	//Device var
 	char *d_output;
@@ -700,7 +519,6 @@ __host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	CHECK(cudaMalloc((void**)&d_sk, N_BYTES_SK));
 	CHECK(cudaMemcpy(d_sk, SOURCE_KEY, N_BYTES_SK, cudaMemcpyHostToDevice));
 
-<<<<<<< HEAD
 	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 	//Starting kernel
@@ -711,22 +529,6 @@ __host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	CHECK(cudaMemcpy(output, d_output, N_BYTES_OUTPUT, cudaMemcpyDeviceToHost));
 
 	printf("Copy the all output of %d Bytes compose of %d blocks of %d Bytes\n\n", N_BYTES_OUTPUT, N_BYTES_OUTPUT/H_LEN, H_LEN);
-=======
-
-	//- - - TRANFER ON CONSTANT MEMORY
-	CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));				// Iteration
-	CHECK(cudaMemcpyToSymbol(D_DK_LEN, &DK_LEN, sizeof(int)));	// Desired Keys Length
-
-	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
-
-	//Starting kernel
-	printf("Starting ONE kernels with %s threads...\n", prettyPrintNumber(block.x * grid.x));
-	double start = seconds();
-
-	pbkdf2_3<<<grid, block>>>(d_sk, d_output);
-
-	CHECK(cudaMemcpy(output, d_output, N_BYTES_OUTPUT, cudaMemcpyDeviceToHost));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	out->elapsedKernel = seconds() - start;
 	printf("Kernel synchronized ...\n", DK_NUM);
@@ -735,18 +537,13 @@ __host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 
 
 	// Copy value from output to keys var
-<<<<<<< HEAD
 	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, DK_LEN);
-=======
-	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 }
 
-<<<<<<< HEAD
 __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const N_STREAM, int const INDEX){
 
 
@@ -755,27 +552,13 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	assert(cudaDeviceProp.deviceOverlap != 0);
 
 	int const N_BYTES_OUTPUT = THREAD_X_KERNEL * H_LEN * N_STREAM * sizeof(char);
-=======
-__host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, struct Data *out, int const N_STREAM, int const INDEX){
-
-
-	cudaDeviceProp cudaDeviceProp;
-	cudaGetDeviceProperties(&cudaDeviceProp);
-	assert(cudaDeviceProp.deviceOverlap != 0);
-
-	int const N_BYTES_OUTPUT = DK_LEN * DK_NUM * sizeof(char);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	char	 *output;
 	cudaMallocHost((void**)&output, N_BYTES_OUTPUT);
 	memset(output, 0, N_BYTES_OUTPUT);
 
 	printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
 
-<<<<<<< HEAD
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
-=======
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 1);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	//Device var
 	char *d_output;
@@ -787,11 +570,7 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 
 
 	//- - - ALLOC AND TRANFER TO GLOBAL MEMORY
-<<<<<<< HEAD
 	cudaMalloc((void**)&d_kernelId, N_STREAM*sizeof(int));
-=======
-	cudaMalloc((void**)&d_kernelId, DK_NUM*sizeof(int));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	// Output var
 	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
@@ -802,14 +581,6 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	CHECK(cudaMalloc((void**)&d_sk, N_BYTES_SK));
 	CHECK(cudaMemcpy(d_sk, SOURCE_KEY, N_BYTES_SK, cudaMemcpyHostToDevice));
 
-<<<<<<< HEAD
-=======
-
-	//- - - TRANFER ON CONSTANT MEMORY
-	CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));				// Iteration
-	CHECK(cudaMemcpyToSymbol(D_DK_LEN, &DK_LEN, sizeof(int)));	// Desired Keys Length
-
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 
@@ -821,17 +592,12 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	}
 
 	//Starting kernel
-<<<<<<< HEAD
 	printf("Starting %d kernel with stream with %s threads each (%d threads needed)...\n", N_STREAM, prettyPrintNumber(grid.x * block.x), THREAD_X_KERNEL);
-=======
-	printf("Starting %d stream with %d threads each...\n", N_STREAM, grid.x * block.x);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	int nBytes;
 	int oIndex;
 	double start = seconds();
 	for(int i = 0; i < N_STREAM; i++){
-<<<<<<< HEAD
 		nBytes = THREAD_X_KERNEL * H_LEN;
 		oIndex = i*nBytes;
 		printKernelDebugInfo(i, THREAD_X_KERNEL, nBytes, DK_LEN);
@@ -841,14 +607,6 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 		CHECK(cudaMemcpyAsync(&output[oIndex], &d_output[oIndex], nBytes * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
 
 		printf("Copy %d° macro-block of %d Bytes, starting at index output[%d]\n\n", i+1, nBytes, oIndex);
-=======
-		nBytes = DK_LEN * DK_NUM / N_STREAM;
-		oIndex = i*nBytes;
-		printf("(%d) %d stream handle %d Bytes of %d\n",oIndex, i, nBytes, N_BYTES_OUTPUT);
-		CHECK(cudaMemcpyAsync(&d_kernelId[i], &i, sizeof(int), cudaMemcpyHostToDevice, stream[i]));
-		pbkdf2_4<<<grid, block>>>(d_sk, d_output, d_kernelId);
-		CHECK(cudaMemcpyAsync(&output[oIndex], &d_output[oIndex], nBytes * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	}
 
 	for(int i = 0; i < N_STREAM; i++){
@@ -864,68 +622,82 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	}
 	printf("%d stream destroyed...\n", N_STREAM);
 
-<<<<<<< HEAD
 
 	// Copy value from output to keys var
 	copyValueFromGlobalMemoryToCPUMemory(out[INDEX].keys, (uint8_t*)output, DK_NUM, DK_LEN, DK_LEN);
-=======
-	CHECK(cudaMemcpy(output, d_output, N_BYTES_OUTPUT, cudaMemcpyDeviceToHost));
-
-	// Copy value from output to keys var
-	copyValueFromGlobalMemoryToCPUMemory(out[INDEX].keys, (uint8_t*)output, DK_NUM, DK_LEN);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 
 	CHECK(cudaDeviceReset());
 
 	// Debug print
-<<<<<<< HEAD
 	if(DEBUG) printAllKeys(out[INDEX].keys, DK_LEN, DK_NUM);
-=======
-	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 }
 
-__host__ void executionSequential(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, struct Data *out){
+__host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, int const DK_LEN, int const DK_NUM, struct Data *out){
 
 
-	printf("Chiavi: %d\nBlocchi: %d\nIterazioni: %d\n", DK_NUM, DK_LEN/H_LEN, C);
+	printf("Chiavi: %d\nBlocchi: %d\nIterazioni: %d\n", DK_NUM, DK_LEN/H_LEN, TOTAL_ITERATIONS);
 
+	const uint8_t NUM_BLOCKS = intDivCeil(DK_LEN, H_LEN);
+
+	uint8_t output[DK_NUM * DK_LEN];
 	uint8_t tmp[H_LEN];
-	uint8_t output[DK_LEN*DK_NUM];
-	for(int numKey = 0; numKey < DK_NUM; numKey++){
-<<<<<<< HEAD
-		for(int block = 0; block < intDivCeil(DK_LEN , H_LEN); block++){
-=======
-		for(int block = 0; block < DK_LEN / H_LEN; block++){
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
-			for(int iteration = 0; iteration < C; iteration++){
-				/**
-				 * Predosky, you're up !!!!
-				 */
+	uint8_t buffer[H_LEN];
+	uint8_t k_xor[H_LEN];
 
-				//FOO GENERATOR: predosky delete it.
-				for(int i = 0; i < H_LEN; i++){
-					tmp[i] = i+1;
+	uint8_t sk_len = strlen(SOURCE_KEY);
+	uint8_t salt_len = strlen(salt);
+
+
+	for(int numKey = 0; numKey < DK_NUM; numKey++) {
+
+		uint8_t acc_key[NUM_BLOCKS * H_LEN];
+
+		for(int block = 0; block < NUM_BLOCKS; block++) {
+			//copy the well know salt value
+			memcpy(buffer, salt, salt_len);
+			//concatenate values to add entropy to the salt
+			buffer[salt_len] = numKey;
+			buffer[salt_len + 1] = block;
+			//calculate the fist hmac_sha1
+			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int), tmp);
+			//init the xor val
+			memcpy(k_xor, tmp, H_LEN);
+			//apply iterations to hash fn
+			for(int iteration = 0; iteration < TOTAL_ITERATIONS; iteration++) {
+				//hash again
+				lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) tmp, H_LEN, buffer);
+				//copy the sha1 generated in order to use it in the next iteration
+				memcpy(tmp, buffer, H_LEN);
+				//to optimize the algorithm directly xor the sha1 obtained
+				for(int k = 0; k < H_LEN; k++) {
+					k_xor[k] ^= buffer[k];
 				}
 			}
-			memcpy(&output[numKey*H_LEN], tmp, H_LEN * sizeof(uint8_t));
-			memset(tmp, 0, H_LEN*sizeof(uint8_t));
+			//concatenate the key part
+			memcpy(&acc_key[block * H_LEN], k_xor, H_LEN);
 		}
-
+		//save generated key
+		memcpy(&output[numKey * DK_LEN], acc_key, DK_LEN);
 	}
+
+	for(int key = 0; key < DK_NUM * DK_LEN; key++) {
+		if (key > 0 && key % DK_LEN == 0) {
+			printf("\n");
+		}
+		if (key % DK_LEN == 0) {
+			printf("key(%d) -> ", key / DK_LEN);
+		}
+		printf("%02x ", output[key]);
+	}
+	printf("\n");
 
 	//out->key is a linear matrix
 	memcpy(out->keys, output, DK_LEN * DK_NUM * sizeof(uint8_t));
 }
 
 
-<<<<<<< HEAD
 __host__ void copyValueFromGlobalMemoryToCPUMemory(uint8_t *keys, uint8_t *output, int const NUM, int const LEN, int const OFFSET){
 	for(int i = 0, j = 0; i < NUM; i++, j += OFFSET){
-=======
-__host__ void copyValueFromGlobalMemoryToCPUMemory(uint8_t *keys, uint8_t *output, int const NUM, int const LEN){
-	for(int i = 0, j = 0; i < NUM; i++, j += LEN){
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 		memcpy(&keys[i*LEN], &output[j], LEN);
 	}
 }
@@ -938,11 +710,7 @@ __host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM){
 			index = (i * LEN) + j;
 			printf("%02x ", keys[index]);
 		}
-<<<<<<< HEAD
 		printf("\n\n");
-=======
-		printf("\n");
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
 	}
 }
 
@@ -954,10 +722,7 @@ __host__ void printHeader(int const DK_NUM, int const DK_LEN, int const  BX){
 	printf("| %d Byte H_LEN. \t |\n", H_LEN);
 	printf("- - - - - - - - - - - - - \n\n");
 }
-<<<<<<< HEAD
 
 __host__ void printKernelDebugInfo(int const K_ID, int const THREAD_X_K, int const K_BYTES_GENERATED, int const DK_LEN){
 	printf("%d° kernel, %d thread, generate %d Bytes (%d Bytes each block), derived key len %d\n", K_ID+1, THREAD_X_K, K_BYTES_GENERATED, H_LEN, DK_LEN);
 }
-=======
->>>>>>> bfbfddfc730f8b0abf1d8d07500a0d9da9264712
