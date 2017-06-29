@@ -1,0 +1,15 @@
+.ptp-sync/
+.cproject
+.project
+.settings/
+*.i
+*.ii
+*.gpu
+*.ptx
+*.cubin
+*.fatbin
+*.d
+*.o
+/Debug/
+.ptp-sync-folder
+Debug/
