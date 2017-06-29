@@ -9,6 +9,7 @@
 #include "hashlib/sha1.cuh"
 #include "seqlib/seq_hmac_sha1.cuh"
 
+
 #define H_LEN 20 // Length in Bytes of the PRF functions' output
 #define DEV 0
 #define intDivCeil(n, d) ((n + d - 1) / d)
@@ -690,7 +691,6 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 		printf("%02x ", output[key]);
 	}
 	printf("\n");
-
 	//out->key is a linear matrix
 	memcpy(out->keys, output, DK_LEN * DK_NUM * sizeof(uint8_t));
 }
