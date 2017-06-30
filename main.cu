@@ -622,13 +622,15 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 
 __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, int DK_LEN, int DK_NUM, struct Data *out){
 
-	const unsigned long NUM_BLOCKS = intDivCeil(DK_LEN, H_LEN);
+	const int NUM_BLOCKS = intDivCeil(DK_LEN, H_LEN);
+
+	printf("Chiavi: %d\nBlocchi: %d\nIterazioni: %d\n", DK_NUM, NUM_BLOCKS, TOTAL_ITERATIONS);
+
 	uint8_t tmp[H_LEN];
 	uint8_t buffer[H_LEN];
 	uint8_t k_xor[H_LEN];
 	const unsigned int sk_len = strlen(SOURCE_KEY);
 	const unsigned int salt_len = strlen(salt);
-	int x = 0;
 
 	//uint8_t output[DK_NUM * DK_LEN];
 
@@ -637,6 +639,16 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 		printf("Total Iterations: %d\n", TOTAL_ITERATIONS);
 		printf("Nun Blocks: %d\n", NUM_BLOCKS);
 	}
+
+	time_t t;
+	struct tm *timestamp;
+	int x = 0;
+	int total = DK_NUM * NUM_BLOCKS * TOTAL_ITERATIONS;
+	int tenPercent = total / 10;
+
+	t = time(NULL);
+	timestamp = gmtime(&t);
+	printf("%c 0 complete . . . [%dh %dmin %dsec UTC]\n", 37, timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
 
 	for(int numKey = 0; numKey < DK_NUM; numKey++) {
 
@@ -662,7 +674,12 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 				for(int k = 0; k < H_LEN; k++) {
 					k_xor[k] ^= buffer[k];
 				}
+
+				// Completeness
 				x++;
+				t = time(NULL);
+				timestamp = gmtime(&t);
+				if(x % tenPercent  == 0) printf("%c %d complete . . . [%dh %dmin %dsec UTC]\n", 37, 10 * (x / tenPercent), timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
 			}
 			//concatenate the key part
 			memcpy(&acc_key[block * H_LEN], k_xor, H_LEN);
@@ -709,7 +726,7 @@ __host__ void printHeader(int const DK_NUM, int const DK_LEN, int const  BX){
 	printf("\n- - - - REQUEST - - - - -  \n");
 	printf("| %d Keys.\t\t |\n", DK_NUM);
 	printf("| %d Bytes per Key.\t |\n", DK_LEN);
-	printf("| %d Threads per block.\t |\n", BX);
+	printf("| %d Threads per block.  |\n", BX);
 	printf("| %d Byte H_LEN. \t |\n", H_LEN);
 	printf("- - - - - - - - - - - - - \n\n");
 }
