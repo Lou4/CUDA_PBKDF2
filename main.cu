@@ -620,22 +620,24 @@ __host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	cudaFree(d_kernelId);
 }
 
-__host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, int const DK_LEN, int const DK_NUM, struct Data *out){
+__host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, int DK_LEN, int DK_NUM, struct Data *out){
 
-
-	const uint8_t NUM_BLOCKS = intDivCeil(DK_LEN, H_LEN);
-
-	printf("Chiavi: %d\nBlocchi: %d\nIterazioni: %d\n", DK_NUM, NUM_BLOCKS, TOTAL_ITERATIONS);
-
-	uint8_t output[DK_NUM * DK_LEN];
+	const unsigned long NUM_BLOCKS = intDivCeil(DK_LEN, H_LEN);
 	uint8_t tmp[H_LEN];
 	uint8_t buffer[H_LEN];
 	uint8_t k_xor[H_LEN];
-
-	uint8_t sk_len = strlen(SOURCE_KEY);
-	uint8_t salt_len = strlen(salt);
-
+	const unsigned int sk_len = strlen(SOURCE_KEY);
+	const unsigned int salt_len = strlen(salt);
 	int x = 0;
+
+	//uint8_t output[DK_NUM * DK_LEN];
+
+	if (INFO) {
+		printf("Source Key: %s | len : %d\n", SOURCE_KEY, sk_len);
+		printf("Total Iterations: %d\n", TOTAL_ITERATIONS);
+		printf("Nun Blocks: %d\n", NUM_BLOCKS);
+	}
+
 	for(int numKey = 0; numKey < DK_NUM; numKey++) {
 
 		uint8_t acc_key[NUM_BLOCKS * H_LEN];
@@ -666,23 +668,22 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 			memcpy(&acc_key[block * H_LEN], k_xor, H_LEN);
 		}
 		//save generated key
-		memcpy(&output[numKey * DK_LEN], acc_key, DK_LEN);
+		memcpy(&out->keys[numKey * DK_LEN], acc_key, DK_LEN);
 	}
 
-	/*
-	for(int key = 0; key < DK_NUM * DK_LEN; key++) {
+
+	/*for(int key = 0; key < DK_NUM * DK_LEN; key++) {
 		if (key > 0 && key % DK_LEN == 0) {
 			printf("\n");
 		}
 		if (key % DK_LEN == 0) {
 			printf("key(%d) -> ", key / DK_LEN);
 		}
-		printf("%02x ", output[key]);
-	}
-	*/
+		printf("%02x ", out->keys[key]);
+	}*/
 	printf("x: %d\n",x);
 	//out->key is a linear matrix
-	memcpy(out->keys, output, DK_LEN * DK_NUM * sizeof(uint8_t));
+	//memcpy(out->keys, output, DK_LEN * DK_NUM * sizeof(uint8_t));
 }
 
 
