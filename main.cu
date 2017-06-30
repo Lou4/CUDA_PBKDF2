@@ -481,7 +481,7 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 	//CHECK(cudaDeviceReset());
-	cudaFree(output);
+	cudaFreeHost(output);
 	cudaFree(d_output);
 	cudaFree(d_kernelId);
 
@@ -611,7 +611,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 	if(DEBUG) printAllKeys(out[INDEX].keys, DK_LEN, DK_NUM);
 
 	//CHECK(cudaDeviceReset());
-	cudaFree(output);
+	cudaFreeHost(output);
 	cudaFree(d_output);
 	cudaFree(d_kernelId);
 }
