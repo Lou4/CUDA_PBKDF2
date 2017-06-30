@@ -97,10 +97,10 @@ __global__ void pbkdf2_4(char* output, int *kernelId){
 	actualFunction(output, *kernelId);
 }
 
-__host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
-__host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
-__host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
-__host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const nStream, int const INDEX);
+__host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
+__host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
+__host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
+__host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const nStream, int const INDEX);
 __host__ void executionSequential(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, struct Data *out);
 __host__ void copyValueFromGlobalMemoryToCPUMemory(uint8_t *keys, uint8_t *output, int const NUM, int const LEN, int const OFFSET);
 __host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM);
@@ -210,7 +210,7 @@ int main(int c, char **v){
 	printf("- - - - - - Execution one, more kernel no stream - - - - - -\n");
 	printf("\nKernel: %d, Thread per Kernel: %d\n\n", DK_NUM, *threadsPerKernel);
 	double start = seconds();
-	execution1(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out1);
+	execution1(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out1);
 	out1->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - End execution one - - - - - - - - - - - - - -\n");
 
@@ -225,7 +225,7 @@ int main(int c, char **v){
 	printf("- - - - - - Execution two, with stream - - - - - -\n");
 	printf("\nKernel: %d, Thread per Kernel: %d\n\n", DK_NUM, *threadsPerKernel);
 	start = seconds();
-	execution2(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out2);
+	execution2(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out2);
 	out2->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - - End execution two - - - - - - - - \n");
 
@@ -247,7 +247,7 @@ int main(int c, char **v){
 	printf("- - - - - - Execution three, one kernel no stream - - - - - -\n");
 	printf("\nKernel: 1, Thread per Kernel: %d\n\n", *threadsPerKernel);
 	start = seconds();
-	execution3(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out3);
+	execution3(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out3);
 	out3->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - End execution three - - - - - - - - - - - - - -\n");
 
@@ -270,13 +270,9 @@ int main(int c, char **v){
 		printf("\nStream: %d, Threads per Stream: %d\n", N_STREAM[i], *threadsPerKernel);
 		printf("Every stream generate %d Bytes.\n\n", *threadsPerKernel * H_LEN);
 
-		//Tranfer to CONSTANT MEMORY
-		CHECK(cudaMemcpyToSymbol(D_N, threadsPerKernel, sizeof(int)));	// Thread per kernel
-		CHECK(cudaMemcpyToSymbol(D_SK_LEN, &SK_LEN, sizeof(int)));		// Source key len
-		CHECK(cudaMemcpyToSymbol(D_C, &C, sizeof(int)));					// Iteration
 
 		start = seconds();
-		execution4(SOURCE_KEY, C, DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out4, N_STREAM[i], i);
+		execution4(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out4, N_STREAM[i], i);
 		out4[i].elapsedGlobal = seconds() - start;
 		printf("\n\n\n\n");
 	}
@@ -340,7 +336,7 @@ int main(int c, char **v){
 
 
 
-__host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
+__host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 	//Alloc and init CPU memory
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
@@ -408,7 +404,7 @@ __host__ void execution1(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 }
 
 
-__host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
+__host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 	cudaDeviceProp cudaDeviceProp;
 	cudaGetDeviceProperties(&cudaDeviceProp, DEV);
@@ -491,7 +487,7 @@ __host__ void execution2(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 
 }
 
-__host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
+__host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * sizeof(char);
 	char	 *output = (char*)malloc(N_BYTES_OUTPUT);
@@ -538,7 +534,7 @@ __host__ void execution3(const char* SOURCE_KEY, int const C, int const DK_LEN, 
 	free(output);
 }
 
-__host__ void execution4(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const N_STREAM, int const INDEX){
+__host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const N_STREAM, int const INDEX){
 
 	cudaDeviceProp cudaDeviceProp;
 	cudaGetDeviceProperties(&cudaDeviceProp, DEV);
@@ -649,7 +645,6 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 	t = time(NULL);
 	timestamp = gmtime(&t);
 	printf("%c 0 complete . . . [%dh %dmin %dsec UTC]\n", 37, timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
-
 	for(int numKey = 0; numKey < DK_NUM; numKey++) {
 
 		uint8_t acc_key[NUM_BLOCKS * H_LEN];
@@ -726,7 +721,7 @@ __host__ void printHeader(int const DK_NUM, int const DK_LEN, int const  BX){
 	printf("\n- - - - REQUEST - - - - -  \n");
 	printf("| %d Keys.\t\t |\n", DK_NUM);
 	printf("| %d Bytes per Key.\t |\n", DK_LEN);
-	printf("| %d Threads per block.  |\n", BX);
+	printf("| %d Threads per block. |\n", BX);
 	printf("| %d Byte H_LEN. \t |\n", H_LEN);
 	printf("- - - - - - - - - - - - - \n\n");
 }
