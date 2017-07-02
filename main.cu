@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <curand.h>
 #include "my_C_lib/utils.h"
 #include "my_C_lib/CPU_time.h"
 #include "hashlib/hmac-sha1.cuh"
@@ -628,7 +629,17 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 	const unsigned int sk_len = strlen(SOURCE_KEY);
 	const unsigned int salt_len = strlen(salt);
 
-	//uint8_t output[DK_NUM * DK_LEN];
+	curandGenerator_t randomGenerator;
+	float *devSalts, *hostSalts;
+
+	hostSalts = (float *) malloc (DK_LEN * sizeof(float));
+	CHECK(cudaMalloc((void**)&devSalts, DK_NUM * sizeof(float)));
+
+	curandCreateGenerator(&randomGenerator, CURAND_RNG_PSEUDO_DEFAULT);
+	curandSetPseudoRandomGeneratorSeed(randomGenerator, 1234ULL);
+	curandGenerateUniform(randomGenerator, devSalts, DK_NUM);
+
+	CHECK(cudaMemcpy(hostSalts, devSalts, DK_NUM * sizeof(float), cudaMemcpyDeviceToHost));
 
 	if (INFO) {
 		printf("Source Key: %s | len : %d\n", SOURCE_KEY, sk_len);
@@ -655,8 +666,9 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 			//concatenate values to add entropy to the salt
 			buffer[salt_len] = numKey;
 			buffer[salt_len + 1] = block;
+			buffer[salt_len + 2] = hostSalts[numKey];
 			//calculate the fist hmac_sha1
-			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int), tmp);
+			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int) + sizeof(float), tmp);
 			//init the xor val
 			memcpy(k_xor, tmp, H_LEN);
 			//apply iterations to hash fn
