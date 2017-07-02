@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <curand_kernel.h>
 #include "my_C_lib/utils.h"
 #include "my_C_lib/CPU_time.h"
 #include "hashlib/hmac-sha1.cuh"
@@ -24,8 +25,7 @@ __constant__ int D_C;
 __constant__ int D_N;
 
 
-
-__device__ void actualFunction(char* output, int const KERNEL_ID){
+__device__ void actualFunction(char* output, int const KERNEL_ID, curandState *randomStates){
 	int idx = blockDim.x * blockIdx.x + threadIdx.x;
 
 	if(idx >= D_N)
@@ -33,14 +33,25 @@ __device__ void actualFunction(char* output, int const KERNEL_ID){
 
 	globalChars globalChars;
 	uint8_t salt[H_LEN] = "salt";
-	int saltLen = 4 + (2 * sizeof(int));
+
+	int saltLen = 4 + (2 * sizeof(int)) + sizeof(float);
 	int *ptr = (int*)&salt[4];
+	long seed;
+
 	uint8_t acc[H_LEN];
 	uint8_t buffer[H_LEN];
 
+	//curand seed variables
+	cudaMemcpyDevice(&seed, &idx, sizeof(int));
+	cudaMemcpyDevice(&seed + sizeof(int), &KERNEL_ID, sizeof(int));
 
+	curand_init(seed, 0, 0, &randomStates[idx]);
+	//salt variables
 	cudaMemcpyDevice(&ptr[0], &idx, sizeof(int));
 	cudaMemcpyDevice(&ptr[1], &KERNEL_ID, sizeof(int));
+	//attatching salt
+	float rr = curand_uniform(&randomStates[idx]);
+	cudaMemcpyDevice(&ptr[2], &rr, sizeof(float));
 
 	/* DEBUG
 	if(idx == 1){
@@ -80,21 +91,21 @@ __device__ void actualFunction(char* output, int const KERNEL_ID){
 
 }
 
-__global__ void pbkdf2(char* output, int *kernelId){
-	actualFunction(output, *kernelId);
+__global__ void pbkdf2(char* output, int *kernelId, curandState *randomStates){
+	actualFunction(output, *kernelId, randomStates);
 }
 
 
-__global__ void pbkdf2_2(char* output, int *kernelId){
-	actualFunction(output, *kernelId);
+__global__ void pbkdf2_2(char* output, int *kernelId, curandState *randomStates){
+	actualFunction(output, *kernelId, randomStates);
 }
 
-__global__ void pbkdf2_3(char* output){
-	actualFunction(output, 0);
+__global__ void pbkdf2_3(char* output, curandState *randomStates){
+	actualFunction(output, 0, randomStates);
 }
 
-__global__ void pbkdf2_4(char* output, int *kernelId){
-	actualFunction(output, *kernelId);
+__global__ void pbkdf2_4(char* output, int *kernelId, curandState *randomStates){
+	actualFunction(output, *kernelId, randomStates);
 }
 
 __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
@@ -350,6 +361,7 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 	//Device var
 	char *d_output;
 	int *d_kernelId;
+	curandState *randomStates;
 
 	dim3 grid(GX, 1, 1);
 	dim3 block(BX, 1, 1);
@@ -360,6 +372,7 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_kernelId, 0, sizeof(int)));
 
+	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)));
 
 	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
@@ -372,7 +385,7 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, THREAD_X_KERNEL*H_LEN, DK_LEN);
 
 		CHECK(cudaMemcpy(d_kernelId, &i, sizeof(int), cudaMemcpyHostToDevice));
-		pbkdf2<<<grid, block>>>(&d_output[index], d_kernelId);
+		pbkdf2<<<grid, block>>>(&d_output[index], d_kernelId, randomStates);
 		CHECK(cudaMemcpy(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost));
 
 		if(INFO) printf("Copy %d° key, %d Bytes starting index output[%d]\n\n", i+1, DK_LEN*sizeof(char), index);
@@ -397,12 +410,11 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
-	//CHECK(cudaDeviceReset());
-	cudaFree(d_output);
-	cudaFree(d_kernelId);
+	CHECK(cudaFree(d_output));
+	CHECK(cudaFree(d_kernelId));
+	CHECK(cudaFree(randomStates));
 	free(output);
 }
-
 
 __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
@@ -426,6 +438,7 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 	//Device var
 	char *d_output;
 	int *d_kernelId;
+	curandState *randomStates;
 
 	dim3 grid(GX, 1, 1);
 	dim3 block(BX, 1, 1);
@@ -436,6 +449,7 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_kernelId, 0, DK_NUM * sizeof(int)));
+	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)));
 
 
 	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
@@ -455,7 +469,7 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, THREAD_X_KERNEL*H_LEN, DK_LEN);
 
 		CHECK(cudaMemcpyAsync(&d_kernelId[i], &i, sizeof(int), cudaMemcpyHostToDevice, stream[i]));
-		pbkdf2_2<<<grid, block, 0, stream[i]>>>(&d_output[index], &d_kernelId[i]);
+		pbkdf2_2<<<grid, block, 0, stream[i]>>>(&d_output[index], &d_kernelId[i], randomStates);
 		CHECK(cudaMemcpyAsync(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
 
 		if(INFO) printf("Copy %d° key, %d Bytes starting index output[%d]\n\n", i+1, DK_LEN*sizeof(char), index);
@@ -480,10 +494,10 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
-	//CHECK(cudaDeviceReset());
-	cudaFreeHost(output);
-	cudaFree(d_output);
-	cudaFree(d_kernelId);
+	CHECK(cudaFreeHost(output));
+	CHECK(cudaFree(d_output));
+	CHECK(cudaFree(d_kernelId));
+	CHECK(cudaFree(randomStates));
 
 }
 
@@ -499,6 +513,7 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 	//Device var
 	char *d_output;
+	curandState *randomStates;
 
 	dim3 grid(GX, 1, 1);
 	dim3 block(BX, 1, 1);
@@ -507,6 +522,7 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 	//- - - ALLOC AND TRANFER TO GLOBAL MEMORY
 	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
+	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)));
 
 
 	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
@@ -515,7 +531,7 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 	if(INFO) printf("Starting ONE kernels with %s threads (%d threads needed)...\n", prettyPrintNumber(block.x * grid.x), THREAD_X_KERNEL);
 	double start = seconds();
 
-	pbkdf2_3<<<grid, block>>>(d_output);
+	pbkdf2_3<<<grid, block>>>(d_output, randomStates);
 	CHECK(cudaMemcpy(output, d_output, N_BYTES_OUTPUT, cudaMemcpyDeviceToHost));
 
 	if(INFO) printf("Copy the all output of %d Bytes compose of %d blocks of %d Bytes\n\n", N_BYTES_OUTPUT, N_BYTES_OUTPUT/H_LEN, H_LEN);
@@ -529,8 +545,8 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
-	//CHECK(cudaDeviceReset());
-	cudaFree(d_output);
+	CHECK(cudaFree(d_output));
+	CHECK(cudaFree(randomStates));
 	free(output);
 }
 
@@ -552,6 +568,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 	//Device var
 	char *d_output;
 	int *d_kernelId;
+	curandState *randomStates;
 
 	dim3 grid(GX, 1, 1);
 	dim3 block(BX, 1, 1);
@@ -562,6 +579,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_kernelId, 0, N_STREAM * sizeof(int)));
+	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)))
 
 
 	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
@@ -584,7 +602,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, nBytes, DK_LEN);
 
 		CHECK(cudaMemcpyAsync(&d_kernelId[i], &i, sizeof(int), cudaMemcpyHostToDevice, stream[i]));
-		pbkdf2_4<<<grid, block>>>(&d_output[oIndex], &d_kernelId[i]);
+		pbkdf2_4<<<grid, block>>>(&d_output[oIndex], &d_kernelId[i], randomStates);
 		CHECK(cudaMemcpyAsync(&output[oIndex], &d_output[oIndex], nBytes * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
 
 		if(INFO) printf("Copy %d° macro-block of %d Bytes, starting at index output[%d]\n\n", i+1, nBytes, oIndex);
@@ -610,10 +628,10 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 	// Debug print
 	if(DEBUG) printAllKeys(out[INDEX].keys, DK_LEN, DK_NUM);
 
-	//CHECK(cudaDeviceReset());
-	cudaFreeHost(output);
-	cudaFree(d_output);
-	cudaFree(d_kernelId);
+	CHECK(cudaFreeHost(output));
+	CHECK(cudaFree(d_output));
+	CHECK(cudaFree(d_kernelId));
+	CHECK(cudaFree(randomStates));
 }
 
 __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, int DK_LEN, int DK_NUM, struct Data *out){
