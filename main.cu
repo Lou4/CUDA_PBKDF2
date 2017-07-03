@@ -650,7 +650,7 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 	curandGenerator_t randomGenerator;
 	float *devSalts, *hostSalts;
 
-	hostSalts = (float *) malloc (DK_LEN * sizeof(float));
+	hostSalts = (float *) malloc (DK_NUM * sizeof(float));
 	CHECK(cudaMalloc((void**)&devSalts, DK_NUM * sizeof(float)));
 
 	curandCreateGenerator(&randomGenerator, CURAND_RNG_PSEUDO_DEFAULT);
@@ -686,7 +686,7 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 			buffer[salt_len + 1] = block;
 			buffer[salt_len + 2] = hostSalts[numKey];
 			//calculate the fist hmac_sha1
-			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int), tmp);
+			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int) + sizeof(float), tmp);
 			//init the xor val
 			memcpy(k_xor, tmp, H_LEN);
 			//apply iterations to hash fn
