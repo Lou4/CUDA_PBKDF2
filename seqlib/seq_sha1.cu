@@ -1,43 +1,15 @@
-/*
- *  SHA-1 in C
- *  By Steve Reid <steve@edmweb.com>
- *  100% Public Domain
- *
- *  Version:	$Id: sha1.c,v 1.6 2004/05/28 17:00:35 aland Exp $
- */
-
-//#include "autoconf.h"
-
 #include <string.h>
-
-//#ifdef HAVE_SYS_TYPES_H
 #include <sys/types.h>
-//#endif
-
 #include <netinet/in.h>
-//#ifdef HAVE_NETINET_IN_H
-//#include <netinet/in.h>
-//#endif
-
-//#ifdef HAVE_STDINT_H
 #include <stdint.h>
-//#endif
-
 #include "seq_sha1.cuh"
 
 #define blk0(i) (block->l[i] = htonl(block->l[i]))
-
 #define rol(value, bits) (((value) << (bits)) | ((value) >> (32 - (bits))))
-
-/* blk0() and blk() perform the initial expand. */
-/* I got the idea of expanding during the round function from SSLeay */
-
 #define blk0(i) (block->l[i] = htonl(block->l[i]))
 
-#define blk(i) (block->l[i&15] = rol(block->l[(i+13)&15]^block->l[(i+8)&15] \
-    ^block->l[(i+2)&15]^block->l[i&15],1))
+#define blk(i) (block->l[i&15] = rol(block->l[(i+13)&15]^block->l[(i+8)&15] ^block->l[(i+2)&15]^block->l[i&15],1))
 
-/* (R0+R1), R2, R3, R4 are the different operations used in SHA1 */
 #define R0(v,w,x,y,z,i) z+=((w&(x^y))^y)+blk0(i)+0x5A827999+rol(v,5);w=rol(w,30);
 #define R1(v,w,x,y,z,i) z+=((w&(x^y))^y)+blk(i)+0x5A827999+rol(v,5);w=rol(w,30);
 #define R2(v,w,x,y,z,i) z+=(w^x^y)+blk(i)+0x6ED9EBA1+rol(v,5);w=rol(w,30);

@@ -1,28 +1,7 @@
-/*
- * Adapted from hmac.c (HMAC-MD5) for use by SHA1.
- * by <mcr@sandelman.ottawa.on.ca>. Test cases from RFC2202.
- *
- */
-
-/*
-** Function: hmac_sha1
-*/
-
-//#include "autoconf.h"
-
 #include <string.h>
 #include <stdint.h>
 #include <sys/types.h>
-//#include "libradius.h"
 #include "seq_sha1.cuh"
-
-/*
-unsigned char*  text;                pointer to data stream
-int             text_len;            length of data stream
-unsigned char*  key;                 pointer to authentication key
-int             key_len;             length of authentication key
-unsigned char*  digest;              caller digest to be filled in
-*/
 
 #ifdef HMAC_SHA1_DATA_PROBLEMS
 unsigned int sha1_data_problems = 1;

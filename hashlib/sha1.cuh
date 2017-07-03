@@ -1,3 +1,5 @@
+#ifndef _SHA1_CUDA_H
+#define _SHA1_CUDA_H
 #include <stdint.h>
 #define BLOCK_DIM 32
 #define TEST_SIZE 4096
@@ -44,3 +46,4 @@ __device__ void sha1_read_ctx (const struct sha1_ctx * ctx, void *resbuf);
 __device__ void sha1_finish_ctx (struct sha1_ctx *ctx, void *resbuf);
 __device__ void sha1_process_bytes (const void *buffer, size_t len, struct sha1_ctx * ctx);
 __device__ void sha1_process_block (const void *buffer, size_t len, struct sha1_ctx *ctx);
+#endif

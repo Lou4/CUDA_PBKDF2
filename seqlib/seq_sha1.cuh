@@ -1,15 +1,6 @@
 #ifndef _LRAD_SHA1_H
 #define _LRAD_SHA1_H
 #include <stdint.h>
-/*
- *  FreeRADIUS defines to ensure globally unique SHA1 function names,
- *  so that we don't pick up vendor-specific broken SHA1 libraries.
- */
-/*#define SHA1_CTX		librad_SHA1_CTX
-#define SHA1Transform		librad_SHA1Transform
-#define SHA1Init		librad_SHA1Init
-#define SHA1Update		librad_SHA1Update
-#define SHA1Final       	librad_SHA1Final*/
 
 typedef struct {
     uint32_t state[5];
