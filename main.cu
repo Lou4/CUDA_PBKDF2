@@ -17,7 +17,6 @@
 #define SK_MAX_LEN 100
 
 int DEBUG, INFO;
-char salt[] = "salt";
 
 __constant__ char D_SK[SK_MAX_LEN];
 __constant__ int D_SK_LEN;
@@ -33,33 +32,25 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 
 	globalChars globalChars;
 	uint8_t salt[H_LEN] = "salt";
+	curandState curandState = randomStates[idx];
 
-	int saltLen = 4 + (2 * sizeof(int)) + sizeof(float);
+	int saltLen = 4 + sizeof(float);
 	int *ptr = (int*)&salt[4];
-	long seed;
+	long seed = idx;
 
 	uint8_t acc[H_LEN];
 	uint8_t buffer[H_LEN];
 
-	//curand seed variables
-	cudaMemcpyDevice(&seed, &idx, sizeof(int));
-	cudaMemcpyDevice(&seed + sizeof(int), &KERNEL_ID, sizeof(int));
+	curand_init(seed, KERNEL_ID,  0, &curandState);
 
-	curand_init(seed, 0, 0, &randomStates[idx]);
-	//salt variables
-	cudaMemcpyDevice(&ptr[0], &idx, sizeof(int));
-	cudaMemcpyDevice(&ptr[1], &KERNEL_ID, sizeof(int));
 	//attatching salt
-	float rr = curand_uniform(&randomStates[idx]);
-	cudaMemcpyDevice(&ptr[2], &rr, sizeof(float));
+	float rr = curand_uniform(&curandState);
 
 	/* DEBUG
-	if(idx == 1){
-		for(int i = 0; i <H_LEN; i++){
-			printf("%02x ", salt[i]);
-		}
-		printf("\n --- \n");
-	}*/
+	printf("(%d, %d): %f\n", idx, KERNEL_ID, rr);
+	*/
+
+	cudaMemcpyDevice(ptr, &rr, sizeof(float));
 
 
 	hmac_sha1(D_SK, D_SK_LEN, salt, saltLen, buffer, &globalChars);
@@ -73,15 +64,6 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 			acc[i] ^= buffer[i];
 		}
 	}
-
-	/* DEBUG
-	if(idx == 0 && KERNEL_ID == 4){
-		for(int i = 0; i <H_LEN; i++){
-			printf("%02x  ", acc[i]);
-		}
-		printf("\n --- \n");
-	}
-	*/
 
 	int index;
 	for(int i = 0; i < H_LEN; i++){
@@ -351,8 +333,6 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 	//Alloc and init CPU memory
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
-	char	 *output = (char*)malloc(N_BYTES_OUTPUT);
-	memset(output, 0, N_BYTES_OUTPUT);
 
 	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
 
@@ -386,7 +366,7 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 		CHECK(cudaMemcpy(d_kernelId, &i, sizeof(int), cudaMemcpyHostToDevice));
 		pbkdf2<<<grid, block>>>(&d_output[index], d_kernelId, randomStates);
-		CHECK(cudaMemcpy(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost));
+		CHECK(cudaMemcpy(&out->keys[i*DK_LEN], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost));
 
 		if(INFO) printf("Copy %d° key, %d Bytes starting index output[%d]\n\n", i+1, DK_LEN*sizeof(char), index);
 	}
@@ -402,18 +382,11 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 	printf("\n");
 
 	if(INFO) printf("%d kernels synchronized ...\n", DK_NUM);
-
-	// Copy value from output to keys var
-	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, THREAD_X_KERNEL * H_LEN);
-
-
-	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFree(d_output));
 	CHECK(cudaFree(d_kernelId));
 	CHECK(cudaFree(randomStates));
-	free(output);
 }
 
 __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
@@ -504,8 +477,6 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * sizeof(char);
-	char	 *output = (char*)malloc(N_BYTES_OUTPUT);
-	memset(output, 0, N_BYTES_OUTPUT);
 
 	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
 
@@ -532,7 +503,7 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 	double start = seconds();
 
 	pbkdf2_3<<<grid, block>>>(d_output, randomStates);
-	CHECK(cudaMemcpy(output, d_output, N_BYTES_OUTPUT, cudaMemcpyDeviceToHost));
+	CHECK(cudaMemcpy(out->keys, d_output, N_BYTES_OUTPUT, cudaMemcpyDeviceToHost));
 
 	if(INFO) printf("Copy the all output of %d Bytes compose of %d blocks of %d Bytes\n\n", N_BYTES_OUTPUT, N_BYTES_OUTPUT/H_LEN, H_LEN);
 
@@ -540,14 +511,13 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 	if(INFO) printf("Kernel synchronized ...\n", DK_NUM);
 
 	// Copy value from output to keys var
-	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, DK_LEN);
+	//copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, DK_LEN);
 
 	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFree(d_output));
 	CHECK(cudaFree(randomStates));
-	free(output);
 }
 
 __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const N_STREAM, int const INDEX){
@@ -643,6 +613,7 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 	uint8_t tmp[H_LEN];
 	uint8_t buffer[H_LEN];
 	uint8_t k_xor[H_LEN];
+	char  salt[H_LEN] = "salt";
 	const unsigned int sk_len = strlen(SOURCE_KEY);
 	const unsigned int salt_len = strlen(salt);
 
