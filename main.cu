@@ -301,17 +301,18 @@ int main(int c, char **v){
 	printf("  One stream per key takes %f seconds\n", out2->elapsedGlobal);
 	printf("  One kernel takes %f seconds\n", out3->elapsedGlobal);
 	for(int i = 0; i < S_LEN; i++){
-		printf("  %d Stream takes %f seconds\n",i , out4[i].elapsedGlobal);
+		printf("  %d Stream takes %f seconds\n", N_STREAM[i], out4[i].elapsedGlobal);
 	}
 	printf("  Sequential takes %f seconds\n", outS->elapsedGlobal);
 	printf("\n");
 
 
-	printf("  One stream per key vs One kernel per key: %c %2lf\n", 37, 100-((100*out2->elapsedGlobal)/out1->elapsedGlobal));
-	printf("  One kernel vs One stream per key: %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/out2->elapsedGlobal));
+	printf("  One kernel vs One kernel per key: \t %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/out1->elapsedGlobal));
+	printf("  One kernel vs One stream per key: \t %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/out2->elapsedGlobal));
 	for(int i = 0; i < S_LEN; i++){
-		printf("  %d stream vs One kernel: %c %2lf\n", i, 37, 100-((100*out4[i].elapsedGlobal)/out3->elapsedGlobal));
+		printf("  One kernel vs %d stream: \t %c %2lf\n", N_STREAM[i], 37, 100-((100*out3->elapsedGlobal)/out4[i].elapsedGlobal));
 	}
+	printf("  One kernel vs Sequential: \t %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/outS->elapsedGlobal));
 	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 
 	cudaDeviceReset();
