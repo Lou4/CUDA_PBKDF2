@@ -32,7 +32,6 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 
 	globalChars globalChars;
 	uint8_t salt[H_LEN] = "salt";
-	int const SK = D_SK;
 	int const SK_LEN = D_SK_LEN;
 	int const C = D_C;
 	curandState curandState = randomStates[idx];
@@ -56,11 +55,11 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 	cudaMemcpyDevice(ptr, &rr, sizeof(float));
 
 
-	hmac_sha1(SK, SK_LEN, salt, saltLen, buffer, &globalChars);
+	hmac_sha1(D_SK, SK_LEN, salt, saltLen, buffer, &globalChars);
 	cudaMemcpyDevice(salt, buffer, H_LEN);
 	cudaMemcpyDevice(acc, buffer, H_LEN);
 	for(int i = 0; i < C; i++){
-		hmac_sha1(SK, SK_LEN, salt, H_LEN, buffer, &globalChars);
+		hmac_sha1(D_SK, SK_LEN, salt, H_LEN, buffer, &globalChars);
 		cudaMemcpyDevice(salt, buffer, H_LEN);
 
 		for(int i = 0; i < H_LEN; i++){
