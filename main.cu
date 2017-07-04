@@ -527,7 +527,10 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 	int const N_BYTES_OUTPUT = THREAD_X_KERNEL * H_LEN * N_STREAM * sizeof(char);
 	char	 *output;
-	cudaMallocHost((void**)&output, N_BYTES_OUTPUT);
+	int *kid;
+	CHECK(cudaMallocHost((void**)&output, N_BYTES_OUTPUT));
+	CHECK(cudaMallocHost((void**)&kid, N_STREAM * sizeof(int)));
+	memset(kid, 0, N_STREAM * sizeof(int));
 	memset(output, 0, N_BYTES_OUTPUT);
 
 	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
@@ -570,7 +573,8 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 		oIndex = i*nBytes;
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, nBytes, DK_LEN);
 
-		CHECK(cudaMemcpyAsync(&d_kernelId[i], &i, sizeof(int), cudaMemcpyHostToDevice, stream[i]));
+		kid[i] = i;
+		CHECK(cudaMemcpyAsync(&d_kernelId[i], &kid[i], sizeof(int), cudaMemcpyHostToDevice, stream[i]));
 		pbkdf2_4<<<grid, block>>>(&d_output[oIndex], &d_kernelId[i], randomStates);
 		CHECK(cudaMemcpyAsync(&output[oIndex], &d_output[oIndex], nBytes * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
 
@@ -598,6 +602,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 	if(DEBUG) printAllKeys(out[INDEX].keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFreeHost(output));
+	CHECK(cudaFreeHost(kid));
 	CHECK(cudaFree(d_output));
 	CHECK(cudaFree(d_kernelId));
 	CHECK(cudaFree(randomStates));
