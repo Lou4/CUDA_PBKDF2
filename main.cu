@@ -297,13 +297,13 @@ int main(int c, char **v){
 	}
 
 	printf("\n\n\n- - - - - - - - - - RESULT - - - - - - - - - - - - - - \n");
-	printf("  One kernel per key takes %f seconds\n", out1->elapsedGlobal);
-	printf("  One stream per key takes %f seconds\n", out2->elapsedGlobal);
-	printf("  One kernel takes %f seconds\n", out3->elapsedGlobal);
+	printf("  One kernel per key takes \t %f seconds\n", out1->elapsedGlobal);
+	printf("  One stream per key takes \t %f seconds\n", out2->elapsedGlobal);
+	printf("  One kernel takes \t %f seconds\n", out3->elapsedGlobal);
 	for(int i = 0; i < S_LEN; i++){
-		printf("  %d Stream takes %f seconds\n", N_STREAM[i], out4[i].elapsedGlobal);
+		printf("  %d Stream takes \t %f seconds\n", N_STREAM[i], out4[i].elapsedGlobal);
 	}
-	printf("  Sequential takes %f seconds\n", outS->elapsedGlobal);
+	printf("  Sequential takes \t %f seconds\n", outS->elapsedGlobal);
 	printf("\n");
 
 
@@ -392,9 +392,12 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 	//Alloc and init CPU memory
 	char	 *output;
+	int *kid;
 	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
 	CHECK(cudaMallocHost((void**)&output, N_BYTES_OUTPUT));
+	CHECK(cudaMallocHost((void**)&kid, DK_NUM * sizeof(int)));
 	memset(output, 0, N_BYTES_OUTPUT);
+	memset(kid, 0, DK_NUM * sizeof(int));
 
 	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
 
@@ -434,7 +437,9 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 		index = i * THREAD_X_KERNEL * H_LEN;
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, THREAD_X_KERNEL*H_LEN, DK_LEN);
 
-		CHECK(cudaMemcpyAsync(&d_kernelId[i], &i, sizeof(int), cudaMemcpyHostToDevice, stream[i]));
+		kid[i] = i;
+
+		CHECK(cudaMemcpyAsync(&d_kernelId[i], &kid[i], sizeof(int), cudaMemcpyHostToDevice, stream[i]));
 		pbkdf2_2<<<grid, block, 0, stream[i]>>>(&d_output[index], &d_kernelId[i], randomStates);
 		CHECK(cudaMemcpyAsync(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
 
@@ -461,6 +466,7 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFreeHost(output));
+	CHECK(cudaFreeHost(kid));
 	CHECK(cudaFree(d_output));
 	CHECK(cudaFree(d_kernelId));
 	CHECK(cudaFree(randomStates));
