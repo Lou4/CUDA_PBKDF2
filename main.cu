@@ -297,29 +297,21 @@ int main(int c, char **v){
 	}
 
 	printf("\n\n\n- - - - - - - - - - RESULT - - - - - - - - - - - - - - \n");
-	printf("  Witout stream takes %f seconds\n", out1->elapsedGlobal);
-	printf("  With stream takes %f seconds\n", out2->elapsedGlobal);
+	printf("  One kernel per key takes %f seconds\n", out1->elapsedGlobal);
+	printf("  One stream per key takes %f seconds\n", out2->elapsedGlobal);
 	printf("  One kernel takes %f seconds\n", out3->elapsedGlobal);
 	for(int i = 0; i < S_LEN; i++){
-		printf("  Stream with rational takes %f seconds\n", out4[i].elapsedGlobal);
+		printf("  %d Stream takes %f seconds\n",i , out4[i].elapsedGlobal);
 	}
 	printf("  Sequential takes %f seconds\n", outS->elapsedGlobal);
 	printf("\n");
 
-	printf("  Witout stream kernel and transfert  takes %f seconds\n", out1->elapsedKernel);
-	printf("  With stream kernel and transfert takes %f seconds\n", out2->elapsedKernel);
-	printf("  One kernel and transfert takes %f seconds\n", out3->elapsedKernel);
+
+	printf("  One stream per key vs One kernel per key: %c %2lf\n", 37, 100-((100*out2->elapsedGlobal)/out1->elapsedGlobal));
+	printf("  One kernel vs One stream per key: %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/out2->elapsedGlobal));
 	for(int i = 0; i < S_LEN; i++){
-		printf("  Stream with kernel and transfert takes %f seconds\n", out4[i].elapsedKernel);
+		printf("  %d stream vs One kernel: %c %2lf\n", i, 37, 100-((100*out4[i].elapsedGlobal)/out3->elapsedGlobal));
 	}
-	printf("  Sequential haven't kernel so ... \n");
-
-	printf("\n");
-
-	printf("  With stream gain: %c %2lf\n", 37, 100-((100*out2->elapsedGlobal)/out1->elapsedGlobal));
-	printf("  With stream gain kernel and transfert: %c %2lf\n", 37, 100-((100*out2->elapsedKernel)/out1->elapsedKernel));
-	printf("  One kernel gain: %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/out2->elapsedGlobal));
-	printf("  One kernel gain kernel and transfert: %c %2lf\n", 37, 100-((100*out3->elapsedKernel)/out2->elapsedKernel));
 	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 
 	cudaDeviceReset();
