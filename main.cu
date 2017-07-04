@@ -32,6 +32,9 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 
 	globalChars globalChars;
 	uint8_t salt[H_LEN] = "salt";
+	int const SK = D_SK;
+	int const SK_LEN = D_SK_LEN;
+	int const C = D_C;
 	curandState curandState = randomStates[idx];
 
 	int saltLen = 4 + sizeof(float);
@@ -53,11 +56,11 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 	cudaMemcpyDevice(ptr, &rr, sizeof(float));
 
 
-	hmac_sha1(D_SK, D_SK_LEN, salt, saltLen, buffer, &globalChars);
+	hmac_sha1(SK, SK_LEN, salt, saltLen, buffer, &globalChars);
 	cudaMemcpyDevice(salt, buffer, H_LEN);
 	cudaMemcpyDevice(acc, buffer, H_LEN);
-	for(int i = 0; i < D_C; i++){
-		hmac_sha1(D_SK, D_SK_LEN, salt, H_LEN, buffer, &globalChars);
+	for(int i = 0; i < C; i++){
+		hmac_sha1(SK, SK_LEN, salt, H_LEN, buffer, &globalChars);
 		cudaMemcpyDevice(salt, buffer, H_LEN);
 
 		for(int i = 0; i < H_LEN; i++){
@@ -575,7 +578,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 		kid[i] = i;
 		CHECK(cudaMemcpyAsync(&d_kernelId[i], &kid[i], sizeof(int), cudaMemcpyHostToDevice, stream[i]));
-		pbkdf2_4<<<grid, block>>>(&d_output[oIndex], &d_kernelId[i], randomStates);
+		pbkdf2_4<<<grid, block, 0, stream[i]>>>(&d_output[oIndex], &d_kernelId[i], randomStates);
 		CHECK(cudaMemcpyAsync(&output[oIndex], &d_output[oIndex], nBytes * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
 
 		if(INFO) printf("Copy %d° macro-block of %d Bytes, starting at index output[%d]\n\n", i+1, nBytes, oIndex);
