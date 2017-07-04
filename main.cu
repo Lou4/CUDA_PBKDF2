@@ -606,6 +606,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, int DK_LEN, int DK_NUM, struct Data *out){
 
+	//srand(time(NULL));
 	const int NUM_BLOCKS = intDivCeil(DK_LEN, H_LEN);
 
 	printf("Chiavi: %d\nBlocchi: %d\nIterazioni: %d\n", DK_NUM, NUM_BLOCKS, TOTAL_ITERATIONS);
@@ -642,8 +643,7 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 			//copy the well know salt value
 			memcpy(buffer, salt, salt_len);
 			//concatenate values to add entropy to the salt
-			buffer[salt_len] = numKey;
-			buffer[salt_len + 1] = block;
+			buffer[salt_len] = rand();
 			//calculate the fist hmac_sha1
 			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int), tmp);
 			//init the xor val
@@ -671,20 +671,11 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 		//save generated key
 		memcpy(&out->keys[numKey * DK_LEN], acc_key, DK_LEN);
 	}
-
-
-	/*for(int key = 0; key < DK_NUM * DK_LEN; key++) {
-		if (key > 0 && key % DK_LEN == 0) {
-			printf("\n");
-		}
-		if (key % DK_LEN == 0) {
-			printf("key(%d) -> ", key / DK_LEN);
-		}
-		printf("%02x ", out->keys[key]);
-	}*/
 	printf("x: %d\n",x);
-	//out->key is a linear matrix
-	//memcpy(out->keys, output, DK_LEN * DK_NUM * sizeof(uint8_t));
+	// Debug print
+	if(DEBUG) {
+		printAllKeys(out->keys, DK_LEN, DK_NUM);
+	}
 }
 
 
