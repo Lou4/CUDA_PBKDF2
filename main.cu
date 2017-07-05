@@ -662,14 +662,14 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 
 	printf("Chiavi: %d\nBlocchi: %d\nIterazioni: %d\n", DK_NUM, NUM_BLOCKS, TOTAL_ITERATIONS);
 
-	uint8_t tmp[H_LEN];
+	char salt[H_LEN] = "salt";
 	uint8_t buffer[H_LEN];
 	uint8_t k_xor[H_LEN];
-	char  salt[H_LEN] = "salt";
+	int *ptr = (int*) &salt[strlen(salt)];
 	const unsigned int sk_len = strlen(SOURCE_KEY);
 	const unsigned int salt_len = strlen(salt);
 
-	memset(&salt[strlen(salt)], 0, H_LEN - strlen(salt));
+	memset(ptr, 0, H_LEN - strlen(salt));
 
 	if (INFO) {
 		printf("Source Key: %s | len : %d\n", SOURCE_KEY, sk_len);
@@ -692,20 +692,31 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 
 		for(int block = 0; block < NUM_BLOCKS; block++) {
 			//copy the well know salt value
-			memcpy(buffer, salt, salt_len);
+			//memcpy(buffer, salt, salt_len);
 			//concatenate values to add entropy to the salt
-			buffer[salt_len] = rand();
-			buffer[salt_len + 1] = DK_LEN;
+			ptr[0] = rand();
+			memcpy(&ptr[1], &DK_LEN, sizeof(long));
+
+			if (block == 0 && numKey == 0) {
+				printf("(key %d) Salt: ", numKey);
+				for (int i = 0; i<H_LEN; i++) {
+					printf("%02x ", (uint8_t)salt[i]);
+				}
+				printf("\n");
+			}
+
 			//calculate the fist hmac_sha1
-			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int) + sizeof(long), tmp);
+			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) salt, H_LEN, buffer);
 			//init the xor val
-			memcpy(k_xor, tmp, H_LEN);
+			memcpy(k_xor, buffer, H_LEN);
+			//copy back to salt array
+			memcpy(salt, buffer, H_LEN);
 			//apply iterations to hash fn
 			for(int iteration = 0; iteration < TOTAL_ITERATIONS; iteration++) {
 				//hash again
-				lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) tmp, H_LEN, buffer);
-				//copy the sha1 generated in order to use it in the next iteration
-				memcpy(tmp, buffer, H_LEN);
+				lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) salt, H_LEN, buffer);
+				//copy back to salt array for the next iteration
+				memcpy(salt, buffer, H_LEN);
 				//to optimize the algorithm directly xor the sha1 obtained
 				for(int k = 0; k < H_LEN; k++) {
 					k_xor[k] ^= buffer[k];
