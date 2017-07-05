@@ -32,9 +32,7 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 
 	globalChars globalChars;
 	uint8_t salt[H_LEN] = "salt";
-	int const SK_LEN = D_SK_LEN;
-	int const C = D_C;
-	curandState curandState = randomStates[idx];
+	curandState curandState;
 
 	int saltLen = 4 + sizeof(float);
 	int *ptr = (int*)&salt[4];
@@ -55,11 +53,11 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 	cudaMemcpyDevice(ptr, &rr, sizeof(float));
 
 
-	hmac_sha1(D_SK, SK_LEN, salt, saltLen, buffer, &globalChars);
+	hmac_sha1(D_SK, D_SK_LEN, salt, saltLen, buffer, &globalChars);
 	cudaMemcpyDevice(salt, buffer, H_LEN);
 	cudaMemcpyDevice(acc, buffer, H_LEN);
-	for(int i = 0; i < C; i++){
-		hmac_sha1(D_SK, SK_LEN, salt, H_LEN, buffer, &globalChars);
+	for(int i = 0; i < D_C; i++){
+		hmac_sha1(D_SK, D_SK_LEN, salt, H_LEN, buffer, &globalChars);
 		cudaMemcpyDevice(salt, buffer, H_LEN);
 
 		for(int i = 0; i < H_LEN; i++){
@@ -92,14 +90,14 @@ __global__ void pbkdf2_4(char* output, int *kernelId, curandState *randomStates)
 	actualFunction(output, *kernelId, randomStates);
 }
 
-__host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
-__host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
-__host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
-__host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const nStream, int const INDEX);
-__host__ void executionSequential(const char* SOURCE_KEY, int const C, int const DK_LEN, int const DK_NUM, struct Data *out);
+__host__ void execution1(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
+__host__ void execution2(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
+__host__ void execution3(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out);
+__host__ void execution4(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const nStream, int const INDEX);
+__host__ void executionSequential(const char* SOURCE_KEY, int const C, long const DK_LEN, long const DK_NUM, struct Data *out);
 __host__ void copyValueFromGlobalMemoryToCPUMemory(uint8_t *keys, uint8_t *output, int const NUM, int const LEN, int const OFFSET);
 __host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM);
-__host__ void printHeader(int const DK_NUM, int const DK_LEN, int const  BX);
+__host__ void printHeader(long const DK_NUM, long const DK_LEN, int const  BX, int const C);
 __host__ void printKernelDebugInfo(int const K_ID, int const THREAD_X_K, int const K_BYTES_GENERATED, int const DK_LEN);
 
 /**
@@ -138,13 +136,20 @@ int main(int c, char **v){
 		exit(EXIT_FAILURE);
 	}
 
+	printf("- - - - - - - - REMINDER - - - - - - - - \n");
+	printf("|    sizeof(curandState): %d Bytes     |\n", sizeof(curandState));
+	printf("- - - - - - - - - - - - - - - - - - - - ");
+
+	printf("\n\n\n\n");
+
+
 	//Host var
 	int const BX = atoi(v[1]);				// Thread per block
 	char const *SOURCE_KEY = v[2];			// Password
 	int const SK_LEN = strlen(SOURCE_KEY);	// Password len
 	int const C = atoi(v[3]);				// Number of iteration
-	int const DK_LEN = atoi(v[4]);			// Derived Keys' length
-	int const DK_NUM = atoi(v[5]);			// Number of derived keys we'll generate
+	long const DK_LEN = atoi(v[4]);			// Derived Keys' length
+	long const DK_NUM = atoi(v[5]);			// Number of derived keys we'll generate
 	DEBUG = atoi(v[6]);
 	INFO = atoi(v[7]);
 
@@ -159,37 +164,26 @@ int main(int c, char **v){
 	int *threadsPerKernel;
 	threadsPerKernel = (int*) malloc(sizeof(int));
 	*threadsPerKernel = intDivCeil(DK_LEN, H_LEN);		// Threads needed
-	int Gx = intDivCeil(*threadsPerKernel, BX);				// Calculate Gx
+	int Gx = intDivCeil(*threadsPerKernel, BX);			// Calculate Gx
 
 	//Output var
+	int const N_STREAM[] = {2, 4, 8, 16};
+	int const S_LEN = 4;
 	struct Data *out1, *out2, *out3, *out4, *outS;
 	out1 = (struct Data*)malloc(sizeof(struct Data));
 	out2 = (struct Data*)malloc(sizeof(struct Data));
 	out3 = (struct Data*)malloc(sizeof(struct Data));
+	out4 = (struct Data*)malloc(sizeof(struct Data) * S_LEN);
+	outS = (struct Data*)malloc(sizeof(struct Data));
 
 	out1->keys = (uint8_t*)malloc(DK_NUM * DK_LEN * sizeof(uint8_t*));
 	out2->keys = (uint8_t*)malloc(DK_NUM * DK_LEN * sizeof(uint8_t*));
 	out3->keys = (uint8_t*)malloc(DK_NUM * DK_LEN * sizeof(uint8_t*));
-
-	int const N_STREAM[] = {2, 4, 8, 16};
-	int const S_LEN = 4;
-	out4 = (struct Data*)malloc(sizeof(struct Data) * S_LEN);
-	for(int i = 0; i < S_LEN; i++){
+	for(int i = 0; i < S_LEN; i++)
 		out4[i].keys = (uint8_t*)malloc(DK_NUM * DK_LEN * sizeof(uint8_t*));
-	}
-
-	outS = (struct Data*)malloc(sizeof(struct Data));
 	outS->keys = (uint8_t*)malloc(DK_NUM * DK_LEN * sizeof(uint8_t*));
 
-	if(DEBUG){
-		printf("SOURCE_KEY: %s\n", SOURCE_KEY);
-		printf("C: %d\n", C);
-		printf("DK_LEN: %d\n", DK_LEN);
-		printf("DK_NUM: %d\n", DK_NUM);
-		printf("H_LEN: %d\n", H_LEN);
-	}
-
-	printHeader(DK_NUM, DK_LEN, BX);
+	printHeader(DK_NUM, DK_LEN, BX, C);
 
 	CHECK(cudaSetDevice(DEV));
 
@@ -197,40 +191,40 @@ int main(int c, char **v){
 	int N_BYTES_SK = (strlen(SOURCE_KEY) + 1) * sizeof(char); // +1 because of null end char
 	CHECK(cudaMemcpyToSymbol(D_SK, 		SOURCE_KEY, 			N_BYTES_SK));	// Source Key
 	CHECK(cudaMemcpyToSymbol(D_SK_LEN, 	&SK_LEN, 			sizeof(int)));	// Source key len
-	CHECK(cudaMemcpyToSymbol(D_N, 		threadsPerKernel, 	sizeof(int)));	// Thread per kernel
 	CHECK(cudaMemcpyToSymbol(D_C, 		&C, 					sizeof(int)));	// Iteration
+	CHECK(cudaMemcpyToSymbol(D_N, 		threadsPerKernel, 	sizeof(int)));	// Thread per kernel
 
 
 	// Without Stream
 	printf("- - - - - - Execution one, more kernel no stream - - - - - -\n");
-	printf("\nKernel: %d, Thread per Kernel: %d\n\n", DK_NUM, *threadsPerKernel);
+	printf("\nKernel: %ld, Thread per Kernel: %s\n\n", DK_NUM, prettyPrintNumber(*threadsPerKernel));
 	double start = seconds();
 	execution1(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out1);
 	out1->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - End execution one - - - - - - - - - - - - - -\n");
 
-	printf("\n\n\n* * * **************************************************************************************** * * *\n\n\n");
+	printf("\n\n\n\n\n\n\n\n\n* * * **************************************************************************************** * * *\n\n\n\n\n\n\n\n\n");
 
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX);
+	printHeader(DK_NUM, DK_LEN, BX, C);
 
 	// With Stream
 	printf("- - - - - - Execution two, with stream - - - - - -\n");
-	printf("\nKernel: %d, Thread per Kernel: %d\n\n", DK_NUM, *threadsPerKernel);
+	printf("\nStream: %ld, Thread per Stream: %s\n\n", DK_NUM, prettyPrintNumber(*threadsPerKernel));
 	start = seconds();
 	execution2(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out2);
 	out2->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - - End execution two - - - - - - - - \n");
 
 
-	printf("\n\n\n* * * **************************************************************************************** * * *\n\n\n");
+	printf("\n\n\n\n\n\n\n\n\n* * * **************************************************************************************** * * *\n\n\n\n\n\n\n\n\n");
 
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX);
+	printHeader(DK_NUM, DK_LEN, BX, C);
 
 	// One kernel generate ALL dk, one thread generate one Ti
 	*threadsPerKernel = intDivCeil((DK_LEN * DK_NUM), H_LEN);		// Threads needed
@@ -240,18 +234,19 @@ int main(int c, char **v){
 	CHECK(cudaMemcpyToSymbol(D_N, threadsPerKernel, sizeof(int)));	// Thread per kernel
 
 	printf("- - - - - - Execution three, one kernel no stream - - - - - -\n");
-	printf("\nKernel: 1, Thread per Kernel: %d\n\n", *threadsPerKernel);
+	printf("\nKernel: 1, Thread per Kernel: %s\n\n", prettyPrintNumber(*threadsPerKernel));
 	start = seconds();
 	execution3(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out3);
 	out3->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - End execution three - - - - - - - - - - - - - -\n");
 
 
-	printf("\n\n\n* * * **************************************************************************************** * * *\n\n\n");
+	printf("\n\n\n\n\n\n\n\n\n* * * **************************************************************************************** * * *\n\n\n\n\n\n\n\n\n");
+
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX);
+	printHeader(DK_NUM, DK_LEN, BX, C);
 
 	printf("- - - - - - Execution four, rational use of stream - - - - - -\n");
 	for(int i = 0; i < S_LEN; i++){
@@ -261,9 +256,8 @@ int main(int c, char **v){
 		CHECK(cudaMemcpyToSymbol(D_N, threadsPerKernel, sizeof(int)));	// Thread per kernel
 
 		Gx = intDivCeil(*threadsPerKernel, BX);									// Calculate Gx
-		printf("Total Bytes: %d\n", DK_LEN * DK_NUM);
-		printf("\nStream: %d, Threads per Stream: %d\n", N_STREAM[i], *threadsPerKernel);
-		printf("Every stream generate %d Bytes.\n\n", *threadsPerKernel * H_LEN);
+		printf("\nStream: %d, Threads per Stream: %s\n", N_STREAM[i], prettyPrintNumber(*threadsPerKernel));
+		printf("Every stream generate %s Bytes.\n\n", prettyPrintNumber(*threadsPerKernel * H_LEN));
 
 
 		start = seconds();
@@ -273,11 +267,12 @@ int main(int c, char **v){
 	}
 	printf("- - - - - - - End execution four - - - - - - - - - - - - - -\n");
 
-	printf("\n\n\n* * * **************************************************************************************** * * *\n\n\n");
+	printf("\n\n\n\n\n\n\n\n\n* * * **************************************************************************************** * * *\n\n\n\n\n\n\n\n\n");
+
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX);
+	printHeader(DK_NUM, DK_LEN, BX, C);
 
 	printf("- - - - - - Last but not least execution, SEQUENTIAL - - - - - -\n");
 	start = seconds();
@@ -285,7 +280,8 @@ int main(int c, char **v){
 	outS->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - - End last execution - - - - - - - - - - - - - - -\n");
 
-	printf("\n\n\n* * * **************************************************************************************** * * *\n\n\n");
+	printf("\n\n\n\n\n\n\n\n\n* * * **************************************************************************************** * * *\n\n\n\n\n\n\n\n\n");
+
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
@@ -324,19 +320,20 @@ int main(int c, char **v){
 
 
 
-__host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
+__host__ void execution1(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 	//Alloc and init CPU memory
-	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
+	long const N_BYTES_OUTPUT =  (long)THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
+	long const N_BYTES_CURAND_STATE = (long)THREAD_X_KERNEL * sizeof(curandState);
 
-	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
-
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
+	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE));
+	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT + N_BYTES_CURAND_STATE, 0, INFO);
 
 	//Device var
 	char *d_output;
 	int *d_kernelId;
-	curandState *randomStates;
+	curandState *d_randomStates;
 
 	dim3 grid(GX, 1, 1);
 	dim3 block(BX, 1, 1);
@@ -344,35 +341,36 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 	//- - - ALLOC AND TRANFER TO GLOBAL MEMORY
 	CHECK(cudaMalloc((void**)&d_kernelId, sizeof(int)));
 	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
+	CHECK(cudaMalloc((void**)&d_randomStates, N_BYTES_CURAND_STATE));
 	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_kernelId, 0, sizeof(int)));
 
-	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)));
 
-	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
+	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 	//Starting kernel
-	if(INFO) printf("Starting %d kernels with %s threads each (%d threads needed)...\n", DK_NUM, prettyPrintNumber(block.x*grid.x), THREAD_X_KERNEL);
-	int index;
+	long index;
 	double start = seconds();
+	time_t t;
+	struct tm *timestamp;
 	for(int i = 0; i < DK_NUM; i++){
-		index = i* THREAD_X_KERNEL * H_LEN;
+		index = (long)i * THREAD_X_KERNEL * H_LEN;
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, THREAD_X_KERNEL*H_LEN, DK_LEN);
 
 		CHECK(cudaMemcpy(d_kernelId, &i, sizeof(int), cudaMemcpyHostToDevice));
-		pbkdf2<<<grid, block>>>(&d_output[index], d_kernelId, randomStates);
+		pbkdf2<<<grid, block>>>(&d_output[index], d_kernelId, d_randomStates);
 		CHECK(cudaMemcpy(&out->keys[i*DK_LEN], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost));
 
-		if(INFO) printf("Copy %d° key, %d Bytes starting index output[%d]\n\n", i+1, DK_LEN*sizeof(char), index);
+		// Completness
+		t = time(NULL);
+		timestamp = gmtime(&t);
+		printf("%d° kernel of %d done . . . [%dh %dmin %dsec UTC]\n", i+1, DK_NUM, timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
+
+		if(INFO) printf("Copy %d° key, %d Bytes starting index output[%ld]\n\n", i+1, DK_LEN*sizeof(char), index);
 	}
 
 	CHECK(cudaDeviceSynchronize());
 	out->elapsedKernel = seconds() - start;
-
-	/*for(int i = 0; i < N_BYTES_OUTPUT; i++){
-		printf("%02x ", (uint8_t)output[i]);
-		if(i != 0 && (i + 1) % 20 == 0) printf("\n");
-	}*/
 
 	printf("\n");
 
@@ -381,10 +379,10 @@ __host__ void execution1(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 	CHECK(cudaFree(d_output));
 	CHECK(cudaFree(d_kernelId));
-	CHECK(cudaFree(randomStates));
+	CHECK(cudaFree(d_randomStates));
 }
 
-__host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
+__host__ void execution2(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
 	cudaDeviceProp cudaDeviceProp;
 	cudaGetDeviceProperties(&cudaDeviceProp, DEV);
@@ -395,15 +393,17 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 	//Alloc and init CPU memory
 	char	 *output;
 	int *kid;
-	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
+	long const N_BYTES_OUTPUT =  (long)THREAD_X_KERNEL * H_LEN * DK_NUM * sizeof(char);
+	long const N_BYTES_CURAND_STATE = (long)THREAD_X_KERNEL * sizeof(curandState);
+	int const N_BYTES_KID = DK_NUM * sizeof(int);
 	CHECK(cudaMallocHost((void**)&output, N_BYTES_OUTPUT));
-	CHECK(cudaMallocHost((void**)&kid, DK_NUM * sizeof(int)));
+	CHECK(cudaMallocHost((void**)&kid, N_BYTES_KID));
 	memset(output, 0, N_BYTES_OUTPUT);
-	memset(kid, 0, DK_NUM * sizeof(int));
+	memset(kid, 0, N_BYTES_KID);
 
-	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
-
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
+	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState + %s Bytes for kernel IDs)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE + N_BYTES_KID), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_KID));
+	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT + N_BYTES_CURAND_STATE + N_BYTES_KID, 0, INFO);
 
 
 	//Device var
@@ -416,27 +416,27 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 
 	//- - - ALLOC AND TRANFER TO GLOBAL MEMORY
-	CHECK(cudaMalloc((void**)&d_kernelId, DK_NUM*sizeof(int)));
-	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
-	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
-	CHECK(cudaMemset(d_kernelId, 0, DK_NUM * sizeof(int)));
-	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)));
+	CHECK(cudaMalloc((void**)&d_kernelId, 	N_BYTES_KID));
+	CHECK(cudaMalloc((void**)&d_output, 		N_BYTES_OUTPUT));
+	CHECK(cudaMalloc((void**)&randomStates, 	N_BYTES_CURAND_STATE));
+	CHECK(cudaMemset(d_kernelId,		0, 		N_BYTES_KID));
+	CHECK(cudaMemset(d_output, 		0,		N_BYTES_OUTPUT));
 
 
-	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
-
+	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 	cudaStream_t stream[DK_NUM];
+	cudaEvent_t event[DK_NUM];
 	for(int i = 0; i<DK_NUM; i++){
 		CHECK(cudaStreamCreate(&stream[i]));
+		CHECK(cudaEventCreate(&event[i]));
 	}
 
 	//Starting kernel
-	if(INFO) printf("Starting %d kernels with stream with %s threads each (%d threads needed)...\n", DK_NUM, prettyPrintNumber(block.x*grid.x), THREAD_X_KERNEL);
-	int index;
+	long index;
 	double start = seconds();
 	for(int i = 0; i < DK_NUM; i++){
-		index = i * THREAD_X_KERNEL * H_LEN;
+		index = (long)i * THREAD_X_KERNEL * H_LEN;
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, THREAD_X_KERNEL*H_LEN, DK_LEN);
 
 		kid[i] = i;
@@ -444,12 +444,19 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 		CHECK(cudaMemcpyAsync(&d_kernelId[i], &kid[i], sizeof(int), cudaMemcpyHostToDevice, stream[i]));
 		pbkdf2_2<<<grid, block, 0, stream[i]>>>(&d_output[index], &d_kernelId[i], randomStates);
 		CHECK(cudaMemcpyAsync(&output[index], &d_output[index], DK_LEN * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
+		CHECK(cudaEventRecord(event[i], stream[i]));
 
-		if(INFO) printf("Copy %d° key, %d Bytes starting index output[%d]\n\n", i+1, DK_LEN*sizeof(char), index);
+		if(INFO) printf("Copy %d° key, %d Bytes starting index output[%ld]\n\n", i+1, DK_LEN*sizeof(char), index);
 	}
 
+	// Sync and profiling
+	time_t t;
+	struct tm *timestamp;
 	for(int i = 0; i<DK_NUM; i++){
-		CHECK(cudaStreamSynchronize(stream[i]));
+		CHECK(cudaEventSynchronize(event[i]));
+		t = time(NULL);
+		timestamp = gmtime(&t);
+		printf("Stream %d complete . . . [%dh %dmin %dsec UTC]\n", i, timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
 	}
 	out->elapsedKernel = seconds() - start;
 
@@ -457,6 +464,7 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 	for(int i = 0; i<DK_NUM; i++){
 		CHECK(cudaStreamDestroy(stream[i]));
+		CHECK(cudaEventDestroy(event[i]));
 	}
 
 	if(INFO) printf("%d stream destroyed ...\n", DK_NUM);
@@ -475,13 +483,14 @@ __host__ void execution2(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 }
 
-__host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
+__host__ void execution3(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out){
 
-	int const N_BYTES_OUTPUT =  THREAD_X_KERNEL * H_LEN * sizeof(char);
+	long const N_BYTES_OUTPUT =  (long)THREAD_X_KERNEL * H_LEN * sizeof(char);
+	long const N_BYTES_CURAND_STATE = (long)THREAD_X_KERNEL * sizeof(curandState);
 
-	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
-
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
+	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE));
+	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, INFO);
 
 	//Device var
 	char *d_output;
@@ -494,25 +503,20 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 	//- - - ALLOC AND TRANFER TO GLOBAL MEMORY
 	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
 	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
-	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)));
+	CHECK(cudaMalloc((void**)&randomStates, N_BYTES_CURAND_STATE));
 
 
-	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
+	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 	//Starting kernel
-	if(INFO) printf("Starting ONE kernels with %s threads (%d threads needed)...\n", prettyPrintNumber(block.x * grid.x), THREAD_X_KERNEL);
 	double start = seconds();
-
 	pbkdf2_3<<<grid, block>>>(d_output, randomStates);
-	CHECK(cudaMemcpy(out->keys, d_output, N_BYTES_OUTPUT, cudaMemcpyDeviceToHost));
+	CHECK(cudaMemcpy(out->keys, d_output, DK_LEN * DK_NUM, cudaMemcpyDeviceToHost));
 
 	if(INFO) printf("Copy the all output of %d Bytes compose of %d blocks of %d Bytes\n\n", N_BYTES_OUTPUT, N_BYTES_OUTPUT/H_LEN, H_LEN);
 
 	out->elapsedKernel = seconds() - start;
 	if(INFO) printf("Kernel synchronized ...\n", DK_NUM);
-
-	// Copy value from output to keys var
-	//copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, DK_LEN);
 
 	// Debug print
 	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
@@ -521,23 +525,25 @@ __host__ void execution3(int const DK_LEN, int const DK_NUM, int const GX, int c
 	CHECK(cudaFree(randomStates));
 }
 
-__host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const N_STREAM, int const INDEX){
+__host__ void execution4(long const DK_LEN, long const DK_NUM, int const GX, int const BX, int const THREAD_X_KERNEL, struct Data *out, int const N_STREAM, int const INDEX){
 
 	cudaDeviceProp cudaDeviceProp;
 	cudaGetDeviceProperties(&cudaDeviceProp, DEV);
 	assert(cudaDeviceProp.deviceOverlap != 0);
 
-	int const N_BYTES_OUTPUT = THREAD_X_KERNEL * H_LEN * N_STREAM * sizeof(char);
+	long const N_BYTES_OUTPUT = (long)THREAD_X_KERNEL * H_LEN * N_STREAM * sizeof(char);
+	long const N_BYTES_CURAND_STATE = (long)THREAD_X_KERNEL * sizeof(curandState);
+	int const N_BYTES_KID = N_STREAM * sizeof(int);
 	char	 *output;
 	int *kid;
 	CHECK(cudaMallocHost((void**)&output, N_BYTES_OUTPUT));
-	CHECK(cudaMallocHost((void**)&kid, N_STREAM * sizeof(int)));
-	memset(kid, 0, N_STREAM * sizeof(int));
+	CHECK(cudaMallocHost((void**)&kid, N_BYTES_KID));
+	memset(kid, 0, N_BYTES_KID);
 	memset(output, 0, N_BYTES_OUTPUT);
 
-	if(INFO) printf("N_BYTES_OUTPUT: %s Bytes\n", prettyPrintNumber(N_BYTES_OUTPUT));
-
-	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, 0);
+	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState + %s Bytes for kernel IDs)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE + N_BYTES_KID), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_KID));
+	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, INFO);
 
 	//Device var
 	char *d_output;
@@ -549,49 +555,65 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 
 
 	//- - - ALLOC AND TRANFER TO GLOBAL MEMORY
-	CHECK(cudaMalloc((void**)&d_kernelId, N_STREAM*sizeof(int)));
-	CHECK(cudaMalloc((void**)&d_output, N_BYTES_OUTPUT));
-	CHECK(cudaMemset(d_output, 0, N_BYTES_OUTPUT));
-	CHECK(cudaMemset(d_kernelId, 0, N_STREAM * sizeof(int)));
-	CHECK(cudaMalloc((void**)&randomStates, THREAD_X_KERNEL * sizeof(curandState)))
+	CHECK(cudaMalloc((void**)&d_kernelId, 	N_BYTES_KID));
+	CHECK(cudaMalloc((void**)&d_output, 		N_BYTES_OUTPUT));
+	CHECK(cudaMalloc((void**)&randomStates, 	N_BYTES_CURAND_STATE));
+	CHECK(cudaMemset(d_kernelId, 	0, 	N_BYTES_KID));
+	CHECK(cudaMemset(d_output, 		0, 	N_BYTES_OUTPUT));
 
 
-	if(INFO) printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
+
+	printf("grid(%d, %d, %d) - block(%d, %d, %d)\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
 
 	cudaStream_t stream[N_STREAM];
+	cudaEvent_t startEvent[N_STREAM];
+	cudaEvent_t stopEvent[N_STREAM];
 	for(int i = 0; i < N_STREAM; i++){
-		cudaStreamCreate(&stream[i]);
+		CHECK(cudaStreamCreate(&stream[i]));
+		CHECK(cudaEventCreate(&startEvent[i]));
+		CHECK(cudaEventCreate(&stopEvent[i]));
 	}
 
 	//Starting kernel
-	if(INFO) printf("Starting %d kernel with stream with %s threads each (%d threads needed)...\n", N_STREAM, prettyPrintNumber(grid.x * block.x), THREAD_X_KERNEL);
-
-	int nBytes;
-	int oIndex;
+	long nBytes;
+	long oIndex;
 	double start = seconds();
 	for(int i = 0; i < N_STREAM; i++){
-		nBytes = THREAD_X_KERNEL * H_LEN;
-		oIndex = i*nBytes;
+		nBytes = (long)THREAD_X_KERNEL * H_LEN;
+		oIndex = nBytes * i;
 		if(INFO) printKernelDebugInfo(i, THREAD_X_KERNEL, nBytes, DK_LEN);
 
 		kid[i] = i;
+
+		CHECK(cudaEventRecord(startEvent[i]));
 		CHECK(cudaMemcpyAsync(&d_kernelId[i], &kid[i], sizeof(int), cudaMemcpyHostToDevice, stream[i]));
 		pbkdf2_4<<<grid, block, 0, stream[i]>>>(&d_output[oIndex], &d_kernelId[i], randomStates);
 		CHECK(cudaMemcpyAsync(&output[oIndex], &d_output[oIndex], nBytes * sizeof(char), cudaMemcpyDeviceToHost, stream[i]));
+		CHECK(cudaEventRecord(stopEvent[i]));
 
 		if(INFO) printf("Copy %d° macro-block of %d Bytes, starting at index output[%d]\n\n", i+1, nBytes, oIndex);
 	}
 
-	for(int i = 0; i < N_STREAM; i++){
-		cudaStreamSynchronize(stream[i]);
+	// Sync and profiling
+	time_t t;
+	struct tm *timestamp;
+	float elapsed;
+	for(int i = 0; i<N_STREAM; i++){
+		CHECK(cudaEventSynchronize(stopEvent[i]));
+		t = time(NULL);
+		timestamp = gmtime(&t);
+		cudaEventElapsedTime(&elapsed, startEvent[i], stopEvent[i]);
+		printf("Stream %d complete (elapsed %f millisec). . . [%dh %dmin %dsec UTC]\n", i, elapsed, timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
 	}
 	out[INDEX].elapsedKernel = seconds() - start;
 
 	if(INFO) printf("%d stream synchronized...\n", N_STREAM);
 
 	for(int i = 0; i < N_STREAM; i++){
-		cudaStreamDestroy(stream[i]);
+		CHECK(cudaStreamDestroy(stream[i]));
+		CHECK(cudaEventDestroy(startEvent[i]));
+		CHECK(cudaEventDestroy(stopEvent[i]));
 	}
 
 	if(INFO) printf("%d stream destroyed...\n", N_STREAM);
@@ -610,7 +632,7 @@ __host__ void execution4(int const DK_LEN, int const DK_NUM, int const GX, int c
 	CHECK(cudaFree(randomStates));
 }
 
-__host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, int DK_LEN, int DK_NUM, struct Data *out){
+__host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERATIONS, long const DK_LEN, long const DK_NUM, struct Data *out){
 
 	//srand(time(NULL));
 	const int NUM_BLOCKS = intDivCeil(DK_LEN, H_LEN);
@@ -703,13 +725,14 @@ __host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM){
 	}
 }
 
-__host__ void printHeader(int const DK_NUM, int const DK_LEN, int const  BX){
-	printf("\n- - - - REQUEST - - - - -  \n");
-	printf("| %d Keys.\t\t |\n", DK_NUM);
-	printf("| %d Bytes per Key.\t |\n", DK_LEN);
-	printf("| %d Threads per block. |\n", BX);
-	printf("| %d Byte H_LEN. \t |\n", H_LEN);
-	printf("- - - - - - - - - - - - - \n\n");
+__host__ void printHeader(long const DK_NUM, long const DK_LEN, int const  BX, int const C){
+	printf("\n- - - - - - - - - REQUEST - - - - - - - -\n");
+	printf("| Keys:              %15s \t |\n", prettyPrintNumber(DK_NUM));
+	printf("| Bytes per Key:     %15s \t |\n", prettyPrintNumber(DK_LEN));
+	printf("| Threads per block: %15d \t |\n", BX);
+	printf("| H_LEN Bytes:       %15d \t |\n", H_LEN);
+	printf("| Iterations:        %15s \t |\n", prettyPrintNumber(C));
+	printf("- - - - - - - - - - - - - - - - - - - - -\n\n");
 }
 
 __host__ void printKernelDebugInfo(int const K_ID, int const THREAD_X_K, int const K_BYTES_GENERATED, int const DK_LEN){

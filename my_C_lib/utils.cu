@@ -217,7 +217,7 @@ char* prettyPrintNumber(long n){
 	return number;
 }
 
-int checkArchitecturalBoundaries(int const DEV, int const Gx, int const Gy, int const Bx, int const By, int const N_BYTES_GLOBAL_MEMORY_USAGE, int SMEM_REQUIRED, int PRINT){
+int checkArchitecturalBoundaries(int const DEV, int const Gx, int const Gy, int const Bx, int const By, long const N_BYTES_GLOBAL_MEMORY_USAGE, int SMEM_REQUIRED, int PRINT){
 
 	if(PRINT) printf("\n- - - START CHECKING - - -\n");
 
