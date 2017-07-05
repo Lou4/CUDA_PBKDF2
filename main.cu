@@ -20,6 +20,7 @@ int PRINT_KEY, INFO, SLOW_EXE;
 
 __constant__ char D_SK[SK_MAX_LEN];
 __constant__ int D_SK_LEN;
+__constant__ long D_DK_LEN;
 __constant__ int D_C;
 __constant__ int D_N;
 
@@ -31,7 +32,7 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 		return;
 
 	globalChars globalChars;
-	uint8_t salt[H_LEN] = "salt";
+	uint8_t salt[H_LEN] = "salt\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 	curandState curandState;
 
 	int saltLen = 4 + sizeof(float);
@@ -51,7 +52,27 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 	*/
 
 	cudaMemcpyDevice(ptr, &rr, sizeof(float));
+	cudaMemcpyDevice(&ptr[1], &D_DK_LEN, sizeof(int));
 
+	if(idx == 0 && KERNEL_ID == 0){
+		// BYTES ARE STORED IN BIG ENDIAND
+		/*
+		uint8_t *foo = (uint8_t*)&rr;
+		uint8_t *bar = (uint8_t*)&D_DK_LEN;
+		for(int i = 0; i<sizeof(float); i++){
+			printf("%02x ", foo[i]);
+		}
+		printf("\n");
+		for(int i = 0; i<sizeof(long); i++){
+			printf("%02x ", bar[i]);
+		}
+		printf("\n");*/
+		printf("Salt: ");
+		for(int i = 0; i < H_LEN; i++){
+			printf("%02x ", salt[i]);
+		}
+		printf("\n");
+	}
 
 	hmac_sha1(D_SK, D_SK_LEN, salt, saltLen, buffer, &globalChars);
 	cudaMemcpyDevice(salt, buffer, H_LEN);
@@ -192,6 +213,7 @@ int main(int c, char **v){
 	int N_BYTES_SK = (strlen(SOURCE_KEY) + 1) * sizeof(char); // +1 because of null end char
 	CHECK(cudaMemcpyToSymbol(D_SK, 		SOURCE_KEY, 			N_BYTES_SK));	// Source Key
 	CHECK(cudaMemcpyToSymbol(D_SK_LEN, 	&SK_LEN, 			sizeof(int)));	// Source key len
+	CHECK(cudaMemcpyToSymbol(D_DK_LEN, 	&DK_LEN, 			sizeof(long)));	// Derived key len
 	CHECK(cudaMemcpyToSymbol(D_C, 		&C, 					sizeof(int)));	// Iteration
 	CHECK(cudaMemcpyToSymbol(D_N, 		threadsPerKernel, 	sizeof(int)));	// Thread per kernel
 
