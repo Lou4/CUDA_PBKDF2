@@ -24,6 +24,13 @@ __constant__ long D_DK_LEN;
 __constant__ int D_C;
 __constant__ int D_N;
 
+__device__ int devStrlen(char* str){
+	int len = 0;
+	while(str[len] != '\0')
+		len++;
+
+	return len;
+}
 
 __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *randomStates){
 	int idx = blockDim.x * blockIdx.x + threadIdx.x;
@@ -32,14 +39,14 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 		return;
 
 	globalChars globalChars;
-	uint8_t salt[H_LEN] = "salt\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
+	char salt[H_LEN] = "salt\0\0\0\0\0\0\0\0\0\0\0\0\0\0\0";
 	curandState curandState;
 
-	int saltLen = 4 + sizeof(float);
-	int *ptr = (int*)&salt[4];
+	int saltLen = H_LEN;
+	int *ptr = (int*)&salt[devStrlen(salt)];
 	long seed = idx;
 
-	uint8_t acc[H_LEN];
+	uint8_t k_xor[H_LEN];
 	uint8_t buffer[H_LEN];
 
 	curand_init(seed, KERNEL_ID,  0, &curandState);
@@ -52,7 +59,7 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 	*/
 
 	cudaMemcpyDevice(ptr, &rr, sizeof(float));
-	cudaMemcpyDevice(&ptr[1], &D_DK_LEN, sizeof(int));
+	cudaMemcpyDevice(&ptr[1], &D_DK_LEN, sizeof(long));
 
 	if(idx == 0 && KERNEL_ID == 0){
 		// BYTES ARE STORED IN BIG ENDIAND
@@ -76,20 +83,20 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 
 	hmac_sha1(D_SK, D_SK_LEN, salt, saltLen, buffer, &globalChars);
 	cudaMemcpyDevice(salt, buffer, H_LEN);
-	cudaMemcpyDevice(acc, buffer, H_LEN);
+	cudaMemcpyDevice(k_xor, buffer, H_LEN);
 	for(int i = 0; i < D_C; i++){
 		hmac_sha1(D_SK, D_SK_LEN, salt, H_LEN, buffer, &globalChars);
 		cudaMemcpyDevice(salt, buffer, H_LEN);
 
 		for(int i = 0; i < H_LEN; i++){
-			acc[i] ^= buffer[i];
+			k_xor[i] ^= buffer[i];
 		}
 	}
 
 	int index;
 	for(int i = 0; i < H_LEN; i++){
 		index = idx * H_LEN + i;
-		output[index] = acc[i];
+		output[index] = k_xor[i];
 	}
 
 }
