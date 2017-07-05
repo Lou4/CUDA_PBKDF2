@@ -16,7 +16,7 @@
 #define intDivCeil(n, d) ((n + d - 1) / d)
 #define SK_MAX_LEN 100
 
-int DEBUG, INFO, SLOW_EXE;
+int PRINT_KEY, INFO, SLOW_EXE;
 
 __constant__ char D_SK[SK_MAX_LEN];
 __constant__ int D_SK_LEN;
@@ -131,7 +131,7 @@ int main(int c, char **v){
 
 	if(c != 9){
 		printf("Error !!\n");
-		printf("./Project_GPU <Bx> <source_key> <iterations> <len_derived_keys> <num_derived_keys> <DEBUG> <INFO> <SLOW_EXECUTION>\n");
+		printf("./Project_GPU <Bx> <source_key> <iterations> <len_derived_keys> <num_derived_keys> <PRINT_KEY> <INFO> <SLOW_EXECUTION>\n");
 
 		exit(EXIT_FAILURE);
 	}
@@ -150,7 +150,7 @@ int main(int c, char **v){
 	int const C = atoi(v[3]);				// Number of iteration
 	long const DK_LEN = atoi(v[4]);			// Derived Keys' length
 	long const DK_NUM = atoi(v[5]);			// Number of derived keys we'll generate
-	DEBUG = atoi(v[6]);
+	PRINT_KEY = atoi(v[6]);
 	INFO = atoi(v[7]);
 	SLOW_EXE = atoi(v[8]);
 
@@ -290,9 +290,9 @@ int main(int c, char **v){
 	// Check correctness first two execution
 	printf("check correctness . . .\n");
 	for(int i=0; i<DK_NUM; i++){
-		if (DEBUG) printf("check %d key (len %d Bytes)...", i, sizeof(uint8_t)*DK_LEN);
+		if (INFO) printf("check %d key (len %d Bytes)...", i, sizeof(uint8_t)*DK_LEN);
 		assert(memcmp(out1->keys, out2->keys, DK_NUM * DK_LEN * sizeof(uint8_t)) == 0);
-		if (DEBUG) printf("ok\n");
+		if (INFO) printf("ok\n");
 	}
 
 	printf("\n\n\n- - - - - - - - - - RESULT - - - - - - - - - - - - - - \n");
@@ -376,7 +376,7 @@ __host__ void execution1(long const DK_LEN, long const DK_NUM, int const GX, int
 	printf("\n");
 
 	if(INFO) printf("%d kernels synchronized ...\n", DK_NUM);
-	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
+	if(PRINT_KEY) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFree(d_output));
 	CHECK(cudaFree(d_kernelId));
@@ -474,7 +474,7 @@ __host__ void execution2(long const DK_LEN, long const DK_NUM, int const GX, int
 	copyValueFromGlobalMemoryToCPUMemory(out->keys, (uint8_t*)output, DK_NUM, DK_LEN, THREAD_X_KERNEL * H_LEN);
 
 	// Debug print
-	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
+	if(PRINT_KEY) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFreeHost(output));
 	CHECK(cudaFreeHost(kid));
@@ -520,7 +520,7 @@ __host__ void execution3(long const DK_LEN, long const DK_NUM, int const GX, int
 	if(INFO) printf("Kernel synchronized ...\n", DK_NUM);
 
 	// Debug print
-	if(DEBUG) printAllKeys(out->keys, DK_LEN, DK_NUM);
+	if(PRINT_KEY) printAllKeys(out->keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFree(d_output));
 	CHECK(cudaFree(randomStates));
@@ -624,7 +624,7 @@ __host__ void execution4(long const DK_LEN, long const DK_NUM, int const GX, int
 	copyValueFromGlobalMemoryToCPUMemory(out[INDEX].keys, (uint8_t*)output, DK_NUM, DK_LEN, DK_LEN);
 
 	// Debug print
-	if(DEBUG) printAllKeys(out[INDEX].keys, DK_LEN, DK_NUM);
+	if(PRINT_KEY) printAllKeys(out[INDEX].keys, DK_LEN, DK_NUM);
 
 	CHECK(cudaFreeHost(output));
 	CHECK(cudaFreeHost(kid));
@@ -701,10 +701,9 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 		memcpy(&out->keys[numKey * DK_LEN], acc_key, DK_LEN);
 	}
 	printf("x: %d\n",x);
-	// Debug print
-	if(DEBUG) {
-		printAllKeys(out->keys, DK_LEN, DK_NUM);
-	}
+
+	if(PRINT_KEY) printAllKeys(out->keys, DK_LEN, DK_NUM);
+
 }
 
 
