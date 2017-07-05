@@ -16,7 +16,7 @@
 #define intDivCeil(n, d) ((n + d - 1) / d)
 #define SK_MAX_LEN 100
 
-int DEBUG, INFO;
+int DEBUG, INFO, SLOW_EXE;
 
 __constant__ char D_SK[SK_MAX_LEN];
 __constant__ int D_SK_LEN;
@@ -129,9 +129,9 @@ int main(int c, char **v){
 	printf("\t\t\t\t| Luca Tagliabue, Marco Predari |\n");
 	printf("\t\t\t\t---------------------------------\n\n");
 
-	if(c != 8){
+	if(c != 9){
 		printf("Error !!\n");
-		printf("./Project_GPU <Bx> <source_key> <iterations> <len_derived_keys> <num_derived_keys> <DEBUG> <INFO>\n");
+		printf("./Project_GPU <Bx> <source_key> <iterations> <len_derived_keys> <num_derived_keys> <DEBUG> <INFO> <SLOW_EXECUTION>\n");
 
 		exit(EXIT_FAILURE);
 	}
@@ -152,6 +152,7 @@ int main(int c, char **v){
 	long const DK_NUM = atoi(v[5]);			// Number of derived keys we'll generate
 	DEBUG = atoi(v[6]);
 	INFO = atoi(v[7]);
+	SLOW_EXE = atoi(v[8]);
 
 	int foo;
 
@@ -199,7 +200,7 @@ int main(int c, char **v){
 	printf("- - - - - - Execution one, more kernel no stream - - - - - -\n");
 	printf("\nKernel: %ld, Thread per Kernel: %s\n\n", DK_NUM, prettyPrintNumber(*threadsPerKernel));
 	double start = seconds();
-	execution1(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out1);
+	if(SLOW_EXE) execution1(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out1);
 	out1->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - End execution one - - - - - - - - - - - - - -\n");
 
@@ -214,7 +215,7 @@ int main(int c, char **v){
 	printf("- - - - - - Execution two, with stream - - - - - -\n");
 	printf("\nStream: %ld, Thread per Stream: %s\n\n", DK_NUM, prettyPrintNumber(*threadsPerKernel));
 	start = seconds();
-	execution2(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out2);
+	if(SLOW_EXE) execution2(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out2);
 	out2->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - - End execution two - - - - - - - - \n");
 
@@ -261,7 +262,7 @@ int main(int c, char **v){
 
 
 		start = seconds();
-		execution4(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out4, N_STREAM[i], i);
+		if(SLOW_EXE) execution4(DK_LEN, DK_NUM, Gx, BX, *threadsPerKernel, out4, N_STREAM[i], i);
 		out4[i].elapsedGlobal = seconds() - start;
 		printf("\n\n\n\n");
 	}
@@ -327,7 +328,7 @@ __host__ void execution1(long const DK_LEN, long const DK_NUM, int const GX, int
 	long const N_BYTES_CURAND_STATE = (long)THREAD_X_KERNEL * sizeof(curandState);
 
 	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE));
-	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	printf("Total length of the keys: %s Bytes (overhead %s Bytes)\n", prettyPrintNumber(DK_LEN * DK_NUM), prettyPrintNumber(N_BYTES_OUTPUT - (DK_LEN * DK_NUM)));
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT + N_BYTES_CURAND_STATE, 0, INFO);
 
 	//Device var
@@ -402,7 +403,7 @@ __host__ void execution2(long const DK_LEN, long const DK_NUM, int const GX, int
 	memset(kid, 0, N_BYTES_KID);
 
 	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState + %s Bytes for kernel IDs)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE + N_BYTES_KID), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_KID));
-	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	printf("Total length of the keys: %s Bytes (overhead %s Bytes)\n", prettyPrintNumber(DK_LEN * DK_NUM), prettyPrintNumber(N_BYTES_OUTPUT - (DK_LEN * DK_NUM)));
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT + N_BYTES_CURAND_STATE + N_BYTES_KID, 0, INFO);
 
 
@@ -489,7 +490,7 @@ __host__ void execution3(long const DK_LEN, long const DK_NUM, int const GX, int
 	long const N_BYTES_CURAND_STATE = (long)THREAD_X_KERNEL * sizeof(curandState);
 
 	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE));
-	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	printf("Total length of the keys: %s Bytes (overhead %s Bytes)\n", prettyPrintNumber(DK_LEN * DK_NUM), prettyPrintNumber(N_BYTES_OUTPUT - (DK_LEN * DK_NUM)));
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, INFO);
 
 	//Device var
@@ -542,7 +543,7 @@ __host__ void execution4(long const DK_LEN, long const DK_NUM, int const GX, int
 	memset(output, 0, N_BYTES_OUTPUT);
 
 	printf("Global memory required: %s Bytes (%s Bytes for keys + %s Bytes for curandState + %s Bytes for kernel IDs)\n", prettyPrintNumber(N_BYTES_OUTPUT + N_BYTES_CURAND_STATE + N_BYTES_KID), prettyPrintNumber(N_BYTES_OUTPUT), prettyPrintNumber(N_BYTES_CURAND_STATE), prettyPrintNumber(N_BYTES_KID));
-	printf("Total length of the keys: %s Bytes\n", prettyPrintNumber(DK_LEN * DK_NUM));
+	printf("Total length of the keys: %s Bytes (overhead %s Bytes)\n", prettyPrintNumber(DK_LEN * DK_NUM), prettyPrintNumber(N_BYTES_OUTPUT - (DK_LEN * DK_NUM)));
 	checkArchitecturalBoundaries(DEV, GX, 1, BX, 1, N_BYTES_OUTPUT, 0, INFO);
 
 	//Device var
@@ -662,7 +663,7 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 
 	t = time(NULL);
 	timestamp = gmtime(&t);
-	printf("%c 0 complete . . . [%dh %dmin %dsec UTC]\n", 37, timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
+	if(tenPercent != 0) printf("%c 0 complete . . . [%dh %dmin %dsec UTC]\n", 37, timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
 	for(int numKey = 0; numKey < DK_NUM; numKey++) {
 
 		uint8_t acc_key[NUM_BLOCKS * H_LEN];
@@ -691,7 +692,7 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 				x++;
 				t = time(NULL);
 				timestamp = gmtime(&t);
-				if(x % tenPercent  == 0) printf("%c %d complete . . . [%dh %dmin %dsec UTC]\n", 37, 10 * (x / tenPercent), timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
+				if(tenPercent != 0 && x % tenPercent  == 0) printf("%c %d complete . . . [%dh %dmin %dsec UTC]\n", 37, 10 * (x / tenPercent), timestamp->tm_hour, timestamp->tm_min, timestamp->tm_sec);
 			}
 			//concatenate the key part
 			memcpy(&acc_key[block * H_LEN], k_xor, H_LEN);
