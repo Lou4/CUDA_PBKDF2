@@ -647,7 +647,7 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 	const unsigned int sk_len = strlen(SOURCE_KEY);
 	const unsigned int salt_len = strlen(salt);
 
-	//uint8_t output[DK_NUM * DK_LEN];
+	memset(&salt[strlen(salt)], 0, H_LEN - strlen(salt));
 
 	if (INFO) {
 		printf("Source Key: %s | len : %d\n", SOURCE_KEY, sk_len);
@@ -673,8 +673,9 @@ __host__ void executionSequential(const char* SOURCE_KEY, int const TOTAL_ITERAT
 			memcpy(buffer, salt, salt_len);
 			//concatenate values to add entropy to the salt
 			buffer[salt_len] = rand();
+			buffer[salt_len + 1] = DK_LEN;
 			//calculate the fist hmac_sha1
-			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int), tmp);
+			lrad_hmac_sha1((const unsigned char*) SOURCE_KEY, sk_len, (const unsigned char*) buffer, salt_len + sizeof(int) + sizeof(long), tmp);
 			//init the xor val
 			memcpy(k_xor, tmp, H_LEN);
 			//apply iterations to hash fn
