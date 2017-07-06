@@ -8,6 +8,7 @@ int isPowOfTwo(int num);
 char* prettyPrintNumber(long n);
 int checkDeviceProperties(int b_x, int b_y, int b_z, int g_x, int g_y, int g_z, int globalMem, int dev);
 int checkArchitecturalBoundaries(int const DEV, int const Gx, int const Gy, int const Bx, int const By, long const N_BYTES_GLOBAL_MEMORY_USAGE, int SMEM_REQUIRED, int PRINT);
+void assertWithMessage(const bool CONDITION, const char *msg, const char *F, const int ROW);
 
 #define BLOCK_DIM_X 12
 #define BLOCK_DIM_Y 10

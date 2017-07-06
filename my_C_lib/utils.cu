@@ -225,21 +225,28 @@ int checkArchitecturalBoundaries(int const DEV, int const Gx, int const Gy, int 
 	CHECK(cudaGetDeviceProperties(&cudaDeviceProp, DEV));
 
 	if(PRINT) printf("Max thread per block: %d  -  required %d\n", cudaDeviceProp.maxThreadsPerBlock, By*Bx);
-	assert(cudaDeviceProp.maxThreadsPerBlock > Bx * By);
+	assertWithMessage(cudaDeviceProp.maxThreadsPerBlock > Bx * By, "ERROR: Too much thread per block.", __FILE__, __LINE__);
 
 	if(PRINT) printf("Max block dim (x: %d, y: %d)  -  required (%d, %d)\n", cudaDeviceProp.maxThreadsDim[0], cudaDeviceProp.maxThreadsDim[1], Bx, By);
-	assert(cudaDeviceProp.maxThreadsDim[0] > Bx);
-	assert(cudaDeviceProp.maxThreadsDim[1] > By);
+	assertWithMessage(cudaDeviceProp.maxThreadsDim[0] > Bx, "ERROR: Too much thread for block x dimension", __FILE__, __LINE__);
+	assertWithMessage(cudaDeviceProp.maxThreadsDim[1] > By, "ERROR: Too much thread for block y dimension", __FILE__, __LINE__);
 
 	if(PRINT) printf("Max grid dim (x: %d, y: %d)  -  required (%d, %d)\n", cudaDeviceProp.maxGridSize[0], cudaDeviceProp.maxGridSize[1], Gx, Gy);
-	assert(cudaDeviceProp.maxGridSize[0] > Gx);
-	assert(cudaDeviceProp.maxGridSize[1] > Gy);
+	assertWithMessage(cudaDeviceProp.maxGridSize[0] > Gx, "ERROR: Too much block for grid x dimension", __FILE__, __LINE__);
+	assertWithMessage(cudaDeviceProp.maxGridSize[1] > Gy, "ERROR: Too much block for grid y dimension", __FILE__, __LINE__);
 
 	if(PRINT) printf("Global memory available: %d MegaByte  -  required %d MegaByte\n", cudaDeviceProp.totalGlobalMem/1024/1024, N_BYTES_GLOBAL_MEMORY_USAGE/1024/1024);
-	assert(cudaDeviceProp.totalGlobalMem > N_BYTES_GLOBAL_MEMORY_USAGE);
+	assertWithMessage(cudaDeviceProp.totalGlobalMem > N_BYTES_GLOBAL_MEMORY_USAGE, "ERROR: Too much global memory required", __FILE__, __LINE__);
 
 	if(PRINT) printf("Shared memory available: %d KiloByte - required %d KiloByte\n", cudaDeviceProp.sharedMemPerBlock/1024, SMEM_REQUIRED/1024);
-	assert(cudaDeviceProp.sharedMemPerBlock > SMEM_REQUIRED);
+	assertWithMessage(cudaDeviceProp.sharedMemPerBlock > SMEM_REQUIRED, "ERROR: Too much shared memory required", __FILE__, __LINE__);
 
 	if(PRINT) printf("- - - END CHECKING - - -\n\n");
+}
+
+void assertWithMessage(const bool CONDITION, const char *msg, const char *F, const int ROW){
+	if(!CONDITION){
+		printf("\n%s (file: %s - line: %d)\n", msg, F, ROW);
+		assert(CONDITION);
+	}
 }

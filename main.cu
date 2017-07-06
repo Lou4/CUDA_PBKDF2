@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
 #include <curand_kernel.h>
 #include "my_C_lib/utils.h"
 #include "my_C_lib/CPU_time.h"
@@ -184,10 +183,10 @@ int main(int c, char **v){
 
 	int foo;
 
-	assert(isPowOfTwo(BX) == 1);
-	assert(isPowOfTwo(DK_LEN) == 1);
-	assert(isPowOfTwo(DK_NUM) == 1);
-	assert(SK_LEN <= SK_MAX_LEN);
+	assertWithMessage(isPowOfTwo(BX) == 1, "ERROR: block dim x is not a pow of two", __FILE__, __LINE__);
+	assertWithMessage(isPowOfTwo(DK_LEN) == 1, "ERROR: derived key's length is not a pow of two", __FILE__, __LINE__);
+	assertWithMessage(isPowOfTwo(DK_NUM) == 1, "ERROR: number of derived key is not a pow of two", __FILE__, __LINE__);
+	assertWithMessage(SK_LEN <= SK_MAX_LEN, "ERROR: source key too long", __FILE__, __LINE__);
 
 	// One kernel generate one dk, one thread generate one Ti
 	int *threadsPerKernel;
@@ -320,7 +319,7 @@ int main(int c, char **v){
 	printf("check correctness . . .\n");
 	for(int i=0; i<DK_NUM; i++){
 		if (INFO) printf("check %d key (len %d Bytes)...", i, sizeof(uint8_t)*DK_LEN);
-		assert(memcmp(out1->keys, out2->keys, DK_NUM * DK_LEN * sizeof(uint8_t)) == 0);
+		assertWithMessage(memcmp(out1->keys, out2->keys, DK_NUM * DK_LEN * sizeof(uint8_t)) == 0, "ERROR: keys are different", __FILE__, __LINE__);
 		if (INFO) printf("ok\n");
 	}
 
@@ -418,7 +417,7 @@ __host__ void execution2(long const DK_LEN, long const DK_NUM, int const GX, int
 	cudaGetDeviceProperties(&cudaDeviceProp, DEV);
 
 	if(INFO) printf("cudaDeviceProp.deviceOverlap: %d\n", cudaDeviceProp.deviceOverlap);
-	assert(cudaDeviceProp.deviceOverlap != 0);
+	assertWithMessage(cudaDeviceProp.deviceOverlap != 0, "ERROR: cuda device overlap properties is 0", __FILE__, __LINE__);
 
 	//Alloc and init CPU memory
 	char	 *output;
@@ -559,7 +558,7 @@ __host__ void execution4(long const DK_LEN, long const DK_NUM, int const GX, int
 
 	cudaDeviceProp cudaDeviceProp;
 	cudaGetDeviceProperties(&cudaDeviceProp, DEV);
-	assert(cudaDeviceProp.deviceOverlap != 0);
+	assertWithMessage(cudaDeviceProp.deviceOverlap != 0, "ERROR: cuda device overlap properties is 0", __FILE__, __LINE__);
 
 	long const N_BYTES_OUTPUT = (long)THREAD_X_KERNEL * H_LEN * N_STREAM * sizeof(char);
 	long const N_BYTES_CURAND_STATE = (long)THREAD_X_KERNEL * sizeof(curandState);
