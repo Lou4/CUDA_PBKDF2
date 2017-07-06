@@ -324,22 +324,22 @@ int main(int c, char **v){
 	}
 
 	printf("\n\n\n- - - - - - - - - - RESULT - - - - - - - - - - - - - - \n");
-	printf("  One kernel per key takes \t %f seconds\n", out1->elapsedGlobal);
-	printf("  One stream per key takes \t %f seconds\n", out2->elapsedGlobal);
-	printf("  One kernel takes \t %f seconds\n", out3->elapsedGlobal);
+	printf("  Solution 1: One kernel per key takes \t %f seconds\n", out1->elapsedGlobal);
+	printf("  Solution 2: One stream per key takes \t %f seconds\n", out2->elapsedGlobal);
+	printf("  Solution 3: One kernel takes \t %f seconds\n", out3->elapsedGlobal);
 	for(int i = 0; i < S_LEN; i++){
-		printf("  %d Stream takes \t %f seconds\n", N_STREAM[i], out4[i].elapsedGlobal);
+		printf("  Solution 4: %d Stream takes \t %f seconds\n", N_STREAM[i], out4[i].elapsedGlobal);
 	}
 	printf("  Sequential takes \t %f seconds\n", outS->elapsedGlobal);
 	printf("\n");
 
 
-	printf("  One kernel vs One kernel per key: \t %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/out1->elapsedGlobal));
-	printf("  One kernel vs One stream per key: \t %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/out2->elapsedGlobal));
+	printf("  Solution 3 vs Solution 1 (%d kernel): \t %c %2lf\n", DK_NUM, 37, 100-((100*out3->elapsedGlobal)/out1->elapsedGlobal));
+	printf("  Solution 3 vs Solution 2 (%d stream): \t %c %2lf\n", DK_NUM, 37, 100-((100*out3->elapsedGlobal)/out2->elapsedGlobal));
 	for(int i = 0; i < S_LEN; i++){
-		printf("  One kernel vs %d stream: \t %c %2lf\n", N_STREAM[i], 37, 100-((100*out3->elapsedGlobal)/out4[i].elapsedGlobal));
+		printf("  Solution 3 Solution 4 (%d stream): \t %c %2lf\n", N_STREAM[i], 37, 100-((100*out3->elapsedGlobal)/out4[i].elapsedGlobal));
 	}
-	printf("  One kernel vs Sequential: \t %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/outS->elapsedGlobal));
+	printf("  Solution 3 vs Sequential: \t %c %2lf\n", 37, 100-((100*out3->elapsedGlobal)/outS->elapsedGlobal));
 	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
 
 	cudaDeviceReset();
