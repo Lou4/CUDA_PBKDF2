@@ -1,13 +1,4 @@
 ./Debug/GPU_Project 8 h3ll0w0rld 1000 32 8 1 0 0 > tests/test1xreport.txt				
-				----------- Authors -------------
-				| Luca Tagliabue, Marco Predari |
-				---------------------------------
-
-- - - - - - - - - - - - - REMINDER - - - - - - - - - - - - - -
-| [1]   sizeof(curandState): 48 Bytes                        |
-| [2]   For EVERY solution we print ONLY the first salt used |
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 
 - - - - - - - - - REQUEST - - - - - - - -
 | Source Keys:            h3ll0w0rld 	 |
