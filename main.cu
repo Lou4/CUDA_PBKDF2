@@ -166,9 +166,8 @@ int main(int c, char **v){
 	printf("- - - - - - - - - - - - - REMINDER - - - - - - - - - - - - - -\n");
 	printf("| [1]   sizeof(curandState): %d Bytes                        |\n", sizeof(curandState));
 	printf("| [2]   For EVERY solution we print ONLY the first salt used |\n");
-	printf("| [3]   DK_LEN * DK_NUM > 2048 for a sensible execution      |")
+	printf("| [3]   DK_LEN * DK_NUM > 2048 for a sensible execution      |\n");
 	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
-
 	printf("\n\n\n\n");
 
 
