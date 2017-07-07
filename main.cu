@@ -73,9 +73,9 @@ __device__ void actualFunction(char* output, int const KERNEL_ID, curandState *r
 			printf("%02x ", bar[i]);
 		}
 		printf("\n");*/
-		printf("Salt: ");
+		printf("\nSalt for idx %d - kernel_id %d: ", idx, KERNEL_ID);
 		for(int i = 0; i < H_LEN; i++){
-			printf("%02x ", salt[i]);
+			printf("%02x ", (uint8_t)salt[i]);
 		}
 		printf("\n");
 	}
@@ -163,9 +163,10 @@ int main(int c, char **v){
 		exit(EXIT_FAILURE);
 	}
 
-	printf("- - - - - - - - REMINDER - - - - - - - - \n");
-	printf("|    sizeof(curandState): %d Bytes     |\n", sizeof(curandState));
-	printf("- - - - - - - - - - - - - - - - - - - - ");
+	printf("- - - - - - - - - - - - - REMINDER - - - - - - - - - - - - - -\n");
+	printf("| [1]   sizeof(curandState): %d Bytes                        |\n", sizeof(curandState));
+	printf("| [2]   For EVERY solution we print ONLY the first salt used |\n");
+	printf("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
 
 	printf("\n\n\n\n");
 
