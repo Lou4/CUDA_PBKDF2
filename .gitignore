@@ -13,5 +13,5 @@
 /Debug/
 .ptp-sync-folder
 Debug/
-*.pdf
-.~lock.documentazione.odt#
+*.odt
+*.odt#
