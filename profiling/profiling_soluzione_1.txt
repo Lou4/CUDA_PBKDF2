@@ -1,0 +1,1371 @@
+				----------- Authors -------------
+				| Luca Tagliabue, Marco Predari |
+				---------------------------------
+
+- - - - - - - - - - - - - REMINDER - - - - - - - - - - - - - -
+| [1]   sizeof(curandState): 48 Bytes                        |
+| [2]   For EVERY solution we print ONLY the first salt used |
+| [3]   DK_LEN * DK_NUM > 2048 for a sensible execution      |
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                          512 	 |
+| Bytes per Key:                 256 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution one, more kernel no stream - - - - - -
+
+Kernel: 512, Thread per Kernel: 13
+
+Global memory required: 133.744 Bytes (133.120 Bytes for keys + 624 Bytes for curandState)
+Total length of the keys: 131.072 Bytes (overhead 2.048 Bytes)
+grid(1, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 01 00 00 00 00 00 00 00 00 00 00 
+1° kernel of 512 done . . . [16h 30min 17sec UTC]
+2° kernel of 512 done . . . [16h 30min 18sec UTC]
+3° kernel of 512 done . . . [16h 30min 18sec UTC]
+4° kernel of 512 done . . . [16h 30min 18sec UTC]
+5° kernel of 512 done . . . [16h 30min 19sec UTC]
+6° kernel of 512 done . . . [16h 30min 19sec UTC]
+7° kernel of 512 done . . . [16h 30min 20sec UTC]
+8° kernel of 512 done . . . [16h 30min 20sec UTC]
+9° kernel of 512 done . . . [16h 30min 21sec UTC]
+10° kernel of 512 done . . . [16h 30min 21sec UTC]
+11° kernel of 512 done . . . [16h 30min 21sec UTC]
+12° kernel of 512 done . . . [16h 30min 22sec UTC]
+13° kernel of 512 done . . . [16h 30min 22sec UTC]
+14° kernel of 512 done . . . [16h 30min 23sec UTC]
+15° kernel of 512 done . . . [16h 30min 23sec UTC]
+16° kernel of 512 done . . . [16h 30min 24sec UTC]
+17° kernel of 512 done . . . [16h 30min 24sec UTC]
+18° kernel of 512 done . . . [16h 30min 24sec UTC]
+19° kernel of 512 done . . . [16h 30min 25sec UTC]
+20° kernel of 512 done . . . [16h 30min 25sec UTC]
+21° kernel of 512 done . . . [16h 30min 26sec UTC]
+22° kernel of 512 done . . . [16h 30min 26sec UTC]
+23° kernel of 512 done . . . [16h 30min 27sec UTC]
+24° kernel of 512 done . . . [16h 30min 27sec UTC]
+25° kernel of 512 done . . . [16h 30min 27sec UTC]
+26° kernel of 512 done . . . [16h 30min 28sec UTC]
+27° kernel of 512 done . . . [16h 30min 28sec UTC]
+28° kernel of 512 done . . . [16h 30min 29sec UTC]
+29° kernel of 512 done . . . [16h 30min 29sec UTC]
+30° kernel of 512 done . . . [16h 30min 30sec UTC]
+31° kernel of 512 done . . . [16h 30min 30sec UTC]
+32° kernel of 512 done . . . [16h 30min 30sec UTC]
+33° kernel of 512 done . . . [16h 30min 31sec UTC]
+34° kernel of 512 done . . . [16h 30min 31sec UTC]
+35° kernel of 512 done . . . [16h 30min 32sec UTC]
+36° kernel of 512 done . . . [16h 30min 32sec UTC]
+37° kernel of 512 done . . . [16h 30min 33sec UTC]
+38° kernel of 512 done . . . [16h 30min 33sec UTC]
+39° kernel of 512 done . . . [16h 30min 33sec UTC]
+40° kernel of 512 done . . . [16h 30min 34sec UTC]
+41° kernel of 512 done . . . [16h 30min 34sec UTC]
+42° kernel of 512 done . . . [16h 30min 35sec UTC]
+43° kernel of 512 done . . . [16h 30min 35sec UTC]
+44° kernel of 512 done . . . [16h 30min 36sec UTC]
+45° kernel of 512 done . . . [16h 30min 36sec UTC]
+46° kernel of 512 done . . . [16h 30min 36sec UTC]
+47° kernel of 512 done . . . [16h 30min 37sec UTC]
+48° kernel of 512 done . . . [16h 30min 37sec UTC]
+49° kernel of 512 done . . . [16h 30min 38sec UTC]
+50° kernel of 512 done . . . [16h 30min 38sec UTC]
+51° kernel of 512 done . . . [16h 30min 39sec UTC]
+52° kernel of 512 done . . . [16h 30min 39sec UTC]
+53° kernel of 512 done . . . [16h 30min 39sec UTC]
+54° kernel of 512 done . . . [16h 30min 40sec UTC]
+55° kernel of 512 done . . . [16h 30min 40sec UTC]
+56° kernel of 512 done . . . [16h 30min 41sec UTC]
+57° kernel of 512 done . . . [16h 30min 41sec UTC]
+58° kernel of 512 done . . . [16h 30min 42sec UTC]
+59° kernel of 512 done . . . [16h 30min 42sec UTC]
+60° kernel of 512 done . . . [16h 30min 42sec UTC]
+61° kernel of 512 done . . . [16h 30min 43sec UTC]
+62° kernel of 512 done . . . [16h 30min 43sec UTC]
+63° kernel of 512 done . . . [16h 30min 44sec UTC]
+64° kernel of 512 done . . . [16h 30min 44sec UTC]
+65° kernel of 512 done . . . [16h 30min 45sec UTC]
+66° kernel of 512 done . . . [16h 30min 45sec UTC]
+67° kernel of 512 done . . . [16h 30min 45sec UTC]
+68° kernel of 512 done . . . [16h 30min 46sec UTC]
+69° kernel of 512 done . . . [16h 30min 46sec UTC]
+70° kernel of 512 done . . . [16h 30min 47sec UTC]
+71° kernel of 512 done . . . [16h 30min 47sec UTC]
+72° kernel of 512 done . . . [16h 30min 48sec UTC]
+73° kernel of 512 done . . . [16h 30min 48sec UTC]
+74° kernel of 512 done . . . [16h 30min 48sec UTC]
+75° kernel of 512 done . . . [16h 30min 49sec UTC]
+76° kernel of 512 done . . . [16h 30min 49sec UTC]
+77° kernel of 512 done . . . [16h 30min 50sec UTC]
+78° kernel of 512 done . . . [16h 30min 50sec UTC]
+79° kernel of 512 done . . . [16h 30min 51sec UTC]
+80° kernel of 512 done . . . [16h 30min 51sec UTC]
+81° kernel of 512 done . . . [16h 30min 51sec UTC]
+82° kernel of 512 done . . . [16h 30min 52sec UTC]
+83° kernel of 512 done . . . [16h 30min 52sec UTC]
+84° kernel of 512 done . . . [16h 30min 53sec UTC]
+85° kernel of 512 done . . . [16h 30min 53sec UTC]
+86° kernel of 512 done . . . [16h 30min 54sec UTC]
+87° kernel of 512 done . . . [16h 30min 54sec UTC]
+88° kernel of 512 done . . . [16h 30min 54sec UTC]
+89° kernel of 512 done . . . [16h 30min 55sec UTC]
+90° kernel of 512 done . . . [16h 30min 55sec UTC]
+91° kernel of 512 done . . . [16h 30min 56sec UTC]
+92° kernel of 512 done . . . [16h 30min 56sec UTC]
+93° kernel of 512 done . . . [16h 30min 57sec UTC]
+94° kernel of 512 done . . . [16h 30min 57sec UTC]
+95° kernel of 512 done . . . [16h 30min 57sec UTC]
+96° kernel of 512 done . . . [16h 30min 58sec UTC]
+97° kernel of 512 done . . . [16h 30min 58sec UTC]
+98° kernel of 512 done . . . [16h 30min 59sec UTC]
+99° kernel of 512 done . . . [16h 30min 59sec UTC]
+100° kernel of 512 done . . . [16h 31min 0sec UTC]
+101° kernel of 512 done . . . [16h 31min 0sec UTC]
+102° kernel of 512 done . . . [16h 31min 0sec UTC]
+103° kernel of 512 done . . . [16h 31min 1sec UTC]
+104° kernel of 512 done . . . [16h 31min 1sec UTC]
+105° kernel of 512 done . . . [16h 31min 2sec UTC]
+106° kernel of 512 done . . . [16h 31min 2sec UTC]
+107° kernel of 512 done . . . [16h 31min 3sec UTC]
+108° kernel of 512 done . . . [16h 31min 3sec UTC]
+109° kernel of 512 done . . . [16h 31min 3sec UTC]
+110° kernel of 512 done . . . [16h 31min 4sec UTC]
+111° kernel of 512 done . . . [16h 31min 4sec UTC]
+112° kernel of 512 done . . . [16h 31min 5sec UTC]
+113° kernel of 512 done . . . [16h 31min 5sec UTC]
+114° kernel of 512 done . . . [16h 31min 6sec UTC]
+115° kernel of 512 done . . . [16h 31min 6sec UTC]
+116° kernel of 512 done . . . [16h 31min 6sec UTC]
+117° kernel of 512 done . . . [16h 31min 7sec UTC]
+118° kernel of 512 done . . . [16h 31min 7sec UTC]
+119° kernel of 512 done . . . [16h 31min 8sec UTC]
+120° kernel of 512 done . . . [16h 31min 8sec UTC]
+121° kernel of 512 done . . . [16h 31min 9sec UTC]
+122° kernel of 512 done . . . [16h 31min 9sec UTC]
+123° kernel of 512 done . . . [16h 31min 9sec UTC]
+124° kernel of 512 done . . . [16h 31min 10sec UTC]
+125° kernel of 512 done . . . [16h 31min 10sec UTC]
+126° kernel of 512 done . . . [16h 31min 11sec UTC]
+127° kernel of 512 done . . . [16h 31min 11sec UTC]
+128° kernel of 512 done . . . [16h 31min 12sec UTC]
+129° kernel of 512 done . . . [16h 31min 12sec UTC]
+130° kernel of 512 done . . . [16h 31min 12sec UTC]
+131° kernel of 512 done . . . [16h 31min 13sec UTC]
+132° kernel of 512 done . . . [16h 31min 13sec UTC]
+133° kernel of 512 done . . . [16h 31min 14sec UTC]
+134° kernel of 512 done . . . [16h 31min 14sec UTC]
+135° kernel of 512 done . . . [16h 31min 15sec UTC]
+136° kernel of 512 done . . . [16h 31min 15sec UTC]
+137° kernel of 512 done . . . [16h 31min 15sec UTC]
+138° kernel of 512 done . . . [16h 31min 16sec UTC]
+139° kernel of 512 done . . . [16h 31min 16sec UTC]
+140° kernel of 512 done . . . [16h 31min 17sec UTC]
+141° kernel of 512 done . . . [16h 31min 17sec UTC]
+142° kernel of 512 done . . . [16h 31min 18sec UTC]
+143° kernel of 512 done . . . [16h 31min 18sec UTC]
+144° kernel of 512 done . . . [16h 31min 18sec UTC]
+145° kernel of 512 done . . . [16h 31min 19sec UTC]
+146° kernel of 512 done . . . [16h 31min 19sec UTC]
+147° kernel of 512 done . . . [16h 31min 20sec UTC]
+148° kernel of 512 done . . . [16h 31min 20sec UTC]
+149° kernel of 512 done . . . [16h 31min 21sec UTC]
+150° kernel of 512 done . . . [16h 31min 21sec UTC]
+151° kernel of 512 done . . . [16h 31min 21sec UTC]
+152° kernel of 512 done . . . [16h 31min 22sec UTC]
+153° kernel of 512 done . . . [16h 31min 22sec UTC]
+154° kernel of 512 done . . . [16h 31min 23sec UTC]
+155° kernel of 512 done . . . [16h 31min 23sec UTC]
+156° kernel of 512 done . . . [16h 31min 24sec UTC]
+157° kernel of 512 done . . . [16h 31min 24sec UTC]
+158° kernel of 512 done . . . [16h 31min 24sec UTC]
+159° kernel of 512 done . . . [16h 31min 25sec UTC]
+160° kernel of 512 done . . . [16h 31min 25sec UTC]
+161° kernel of 512 done . . . [16h 31min 26sec UTC]
+162° kernel of 512 done . . . [16h 31min 26sec UTC]
+163° kernel of 512 done . . . [16h 31min 27sec UTC]
+164° kernel of 512 done . . . [16h 31min 27sec UTC]
+165° kernel of 512 done . . . [16h 31min 27sec UTC]
+166° kernel of 512 done . . . [16h 31min 28sec UTC]
+167° kernel of 512 done . . . [16h 31min 28sec UTC]
+168° kernel of 512 done . . . [16h 31min 29sec UTC]
+169° kernel of 512 done . . . [16h 31min 29sec UTC]
+170° kernel of 512 done . . . [16h 31min 30sec UTC]
+171° kernel of 512 done . . . [16h 31min 30sec UTC]
+172° kernel of 512 done . . . [16h 31min 30sec UTC]
+173° kernel of 512 done . . . [16h 31min 31sec UTC]
+174° kernel of 512 done . . . [16h 31min 31sec UTC]
+175° kernel of 512 done . . . [16h 31min 32sec UTC]
+176° kernel of 512 done . . . [16h 31min 32sec UTC]
+177° kernel of 512 done . . . [16h 31min 33sec UTC]
+178° kernel of 512 done . . . [16h 31min 33sec UTC]
+179° kernel of 512 done . . . [16h 31min 33sec UTC]
+180° kernel of 512 done . . . [16h 31min 34sec UTC]
+181° kernel of 512 done . . . [16h 31min 34sec UTC]
+182° kernel of 512 done . . . [16h 31min 35sec UTC]
+183° kernel of 512 done . . . [16h 31min 35sec UTC]
+184° kernel of 512 done . . . [16h 31min 36sec UTC]
+185° kernel of 512 done . . . [16h 31min 36sec UTC]
+186° kernel of 512 done . . . [16h 31min 36sec UTC]
+187° kernel of 512 done . . . [16h 31min 37sec UTC]
+188° kernel of 512 done . . . [16h 31min 37sec UTC]
+189° kernel of 512 done . . . [16h 31min 38sec UTC]
+190° kernel of 512 done . . . [16h 31min 38sec UTC]
+191° kernel of 512 done . . . [16h 31min 39sec UTC]
+192° kernel of 512 done . . . [16h 31min 39sec UTC]
+193° kernel of 512 done . . . [16h 31min 39sec UTC]
+194° kernel of 512 done . . . [16h 31min 40sec UTC]
+195° kernel of 512 done . . . [16h 31min 40sec UTC]
+196° kernel of 512 done . . . [16h 31min 41sec UTC]
+197° kernel of 512 done . . . [16h 31min 41sec UTC]
+198° kernel of 512 done . . . [16h 31min 42sec UTC]
+199° kernel of 512 done . . . [16h 31min 42sec UTC]
+200° kernel of 512 done . . . [16h 31min 42sec UTC]
+201° kernel of 512 done . . . [16h 31min 43sec UTC]
+202° kernel of 512 done . . . [16h 31min 43sec UTC]
+203° kernel of 512 done . . . [16h 31min 44sec UTC]
+204° kernel of 512 done . . . [16h 31min 44sec UTC]
+205° kernel of 512 done . . . [16h 31min 45sec UTC]
+206° kernel of 512 done . . . [16h 31min 45sec UTC]
+207° kernel of 512 done . . . [16h 31min 45sec UTC]
+208° kernel of 512 done . . . [16h 31min 46sec UTC]
+209° kernel of 512 done . . . [16h 31min 46sec UTC]
+210° kernel of 512 done . . . [16h 31min 47sec UTC]
+211° kernel of 512 done . . . [16h 31min 47sec UTC]
+212° kernel of 512 done . . . [16h 31min 48sec UTC]
+213° kernel of 512 done . . . [16h 31min 48sec UTC]
+214° kernel of 512 done . . . [16h 31min 48sec UTC]
+215° kernel of 512 done . . . [16h 31min 49sec UTC]
+216° kernel of 512 done . . . [16h 31min 49sec UTC]
+217° kernel of 512 done . . . [16h 31min 50sec UTC]
+218° kernel of 512 done . . . [16h 31min 50sec UTC]
+219° kernel of 512 done . . . [16h 31min 51sec UTC]
+220° kernel of 512 done . . . [16h 31min 51sec UTC]
+221° kernel of 512 done . . . [16h 31min 51sec UTC]
+222° kernel of 512 done . . . [16h 31min 52sec UTC]
+223° kernel of 512 done . . . [16h 31min 52sec UTC]
+224° kernel of 512 done . . . [16h 31min 53sec UTC]
+225° kernel of 512 done . . . [16h 31min 53sec UTC]
+226° kernel of 512 done . . . [16h 31min 54sec UTC]
+227° kernel of 512 done . . . [16h 31min 54sec UTC]
+228° kernel of 512 done . . . [16h 31min 54sec UTC]
+229° kernel of 512 done . . . [16h 31min 55sec UTC]
+230° kernel of 512 done . . . [16h 31min 55sec UTC]
+231° kernel of 512 done . . . [16h 31min 56sec UTC]
+232° kernel of 512 done . . . [16h 31min 56sec UTC]
+233° kernel of 512 done . . . [16h 31min 57sec UTC]
+234° kernel of 512 done . . . [16h 31min 57sec UTC]
+235° kernel of 512 done . . . [16h 31min 57sec UTC]
+236° kernel of 512 done . . . [16h 31min 58sec UTC]
+237° kernel of 512 done . . . [16h 31min 58sec UTC]
+238° kernel of 512 done . . . [16h 31min 59sec UTC]
+239° kernel of 512 done . . . [16h 31min 59sec UTC]
+240° kernel of 512 done . . . [16h 32min 0sec UTC]
+241° kernel of 512 done . . . [16h 32min 0sec UTC]
+242° kernel of 512 done . . . [16h 32min 0sec UTC]
+243° kernel of 512 done . . . [16h 32min 1sec UTC]
+244° kernel of 512 done . . . [16h 32min 1sec UTC]
+245° kernel of 512 done . . . [16h 32min 2sec UTC]
+246° kernel of 512 done . . . [16h 32min 2sec UTC]
+247° kernel of 512 done . . . [16h 32min 3sec UTC]
+248° kernel of 512 done . . . [16h 32min 3sec UTC]
+249° kernel of 512 done . . . [16h 32min 3sec UTC]
+250° kernel of 512 done . . . [16h 32min 4sec UTC]
+251° kernel of 512 done . . . [16h 32min 4sec UTC]
+252° kernel of 512 done . . . [16h 32min 5sec UTC]
+253° kernel of 512 done . . . [16h 32min 5sec UTC]
+254° kernel of 512 done . . . [16h 32min 6sec UTC]
+255° kernel of 512 done . . . [16h 32min 6sec UTC]
+256° kernel of 512 done . . . [16h 32min 6sec UTC]
+257° kernel of 512 done . . . [16h 32min 7sec UTC]
+258° kernel of 512 done . . . [16h 32min 7sec UTC]
+259° kernel of 512 done . . . [16h 32min 8sec UTC]
+260° kernel of 512 done . . . [16h 32min 8sec UTC]
+261° kernel of 512 done . . . [16h 32min 9sec UTC]
+262° kernel of 512 done . . . [16h 32min 9sec UTC]
+263° kernel of 512 done . . . [16h 32min 9sec UTC]
+264° kernel of 512 done . . . [16h 32min 10sec UTC]
+265° kernel of 512 done . . . [16h 32min 10sec UTC]
+266° kernel of 512 done . . . [16h 32min 11sec UTC]
+267° kernel of 512 done . . . [16h 32min 11sec UTC]
+268° kernel of 512 done . . . [16h 32min 12sec UTC]
+269° kernel of 512 done . . . [16h 32min 12sec UTC]
+270° kernel of 512 done . . . [16h 32min 12sec UTC]
+271° kernel of 512 done . . . [16h 32min 13sec UTC]
+272° kernel of 512 done . . . [16h 32min 13sec UTC]
+273° kernel of 512 done . . . [16h 32min 14sec UTC]
+274° kernel of 512 done . . . [16h 32min 14sec UTC]
+275° kernel of 512 done . . . [16h 32min 15sec UTC]
+276° kernel of 512 done . . . [16h 32min 15sec UTC]
+277° kernel of 512 done . . . [16h 32min 15sec UTC]
+278° kernel of 512 done . . . [16h 32min 16sec UTC]
+279° kernel of 512 done . . . [16h 32min 16sec UTC]
+280° kernel of 512 done . . . [16h 32min 17sec UTC]
+281° kernel of 512 done . . . [16h 32min 17sec UTC]
+282° kernel of 512 done . . . [16h 32min 18sec UTC]
+283° kernel of 512 done . . . [16h 32min 18sec UTC]
+284° kernel of 512 done . . . [16h 32min 18sec UTC]
+285° kernel of 512 done . . . [16h 32min 19sec UTC]
+286° kernel of 512 done . . . [16h 32min 19sec UTC]
+287° kernel of 512 done . . . [16h 32min 20sec UTC]
+288° kernel of 512 done . . . [16h 32min 20sec UTC]
+289° kernel of 512 done . . . [16h 32min 21sec UTC]
+290° kernel of 512 done . . . [16h 32min 21sec UTC]
+291° kernel of 512 done . . . [16h 32min 21sec UTC]
+292° kernel of 512 done . . . [16h 32min 22sec UTC]
+293° kernel of 512 done . . . [16h 32min 22sec UTC]
+294° kernel of 512 done . . . [16h 32min 23sec UTC]
+295° kernel of 512 done . . . [16h 32min 23sec UTC]
+296° kernel of 512 done . . . [16h 32min 24sec UTC]
+297° kernel of 512 done . . . [16h 32min 24sec UTC]
+298° kernel of 512 done . . . [16h 32min 24sec UTC]
+299° kernel of 512 done . . . [16h 32min 25sec UTC]
+300° kernel of 512 done . . . [16h 32min 25sec UTC]
+301° kernel of 512 done . . . [16h 32min 26sec UTC]
+302° kernel of 512 done . . . [16h 32min 26sec UTC]
+303° kernel of 512 done . . . [16h 32min 27sec UTC]
+304° kernel of 512 done . . . [16h 32min 27sec UTC]
+305° kernel of 512 done . . . [16h 32min 27sec UTC]
+306° kernel of 512 done . . . [16h 32min 28sec UTC]
+307° kernel of 512 done . . . [16h 32min 28sec UTC]
+308° kernel of 512 done . . . [16h 32min 29sec UTC]
+309° kernel of 512 done . . . [16h 32min 29sec UTC]
+310° kernel of 512 done . . . [16h 32min 30sec UTC]
+311° kernel of 512 done . . . [16h 32min 30sec UTC]
+312° kernel of 512 done . . . [16h 32min 30sec UTC]
+313° kernel of 512 done . . . [16h 32min 31sec UTC]
+314° kernel of 512 done . . . [16h 32min 31sec UTC]
+315° kernel of 512 done . . . [16h 32min 32sec UTC]
+316° kernel of 512 done . . . [16h 32min 32sec UTC]
+317° kernel of 512 done . . . [16h 32min 33sec UTC]
+318° kernel of 512 done . . . [16h 32min 33sec UTC]
+319° kernel of 512 done . . . [16h 32min 33sec UTC]
+320° kernel of 512 done . . . [16h 32min 34sec UTC]
+321° kernel of 512 done . . . [16h 32min 34sec UTC]
+322° kernel of 512 done . . . [16h 32min 35sec UTC]
+323° kernel of 512 done . . . [16h 32min 35sec UTC]
+324° kernel of 512 done . . . [16h 32min 36sec UTC]
+325° kernel of 512 done . . . [16h 32min 36sec UTC]
+326° kernel of 512 done . . . [16h 32min 36sec UTC]
+327° kernel of 512 done . . . [16h 32min 37sec UTC]
+328° kernel of 512 done . . . [16h 32min 37sec UTC]
+329° kernel of 512 done . . . [16h 32min 38sec UTC]
+330° kernel of 512 done . . . [16h 32min 38sec UTC]
+331° kernel of 512 done . . . [16h 32min 39sec UTC]
+332° kernel of 512 done . . . [16h 32min 39sec UTC]
+333° kernel of 512 done . . . [16h 32min 39sec UTC]
+334° kernel of 512 done . . . [16h 32min 40sec UTC]
+335° kernel of 512 done . . . [16h 32min 40sec UTC]
+336° kernel of 512 done . . . [16h 32min 41sec UTC]
+337° kernel of 512 done . . . [16h 32min 41sec UTC]
+338° kernel of 512 done . . . [16h 32min 42sec UTC]
+339° kernel of 512 done . . . [16h 32min 42sec UTC]
+340° kernel of 512 done . . . [16h 32min 42sec UTC]
+341° kernel of 512 done . . . [16h 32min 43sec UTC]
+342° kernel of 512 done . . . [16h 32min 43sec UTC]
+343° kernel of 512 done . . . [16h 32min 44sec UTC]
+344° kernel of 512 done . . . [16h 32min 44sec UTC]
+345° kernel of 512 done . . . [16h 32min 45sec UTC]
+346° kernel of 512 done . . . [16h 32min 45sec UTC]
+347° kernel of 512 done . . . [16h 32min 45sec UTC]
+348° kernel of 512 done . . . [16h 32min 46sec UTC]
+349° kernel of 512 done . . . [16h 32min 46sec UTC]
+350° kernel of 512 done . . . [16h 32min 47sec UTC]
+351° kernel of 512 done . . . [16h 32min 47sec UTC]
+352° kernel of 512 done . . . [16h 32min 48sec UTC]
+353° kernel of 512 done . . . [16h 32min 48sec UTC]
+354° kernel of 512 done . . . [16h 32min 48sec UTC]
+355° kernel of 512 done . . . [16h 32min 49sec UTC]
+356° kernel of 512 done . . . [16h 32min 49sec UTC]
+357° kernel of 512 done . . . [16h 32min 50sec UTC]
+358° kernel of 512 done . . . [16h 32min 50sec UTC]
+359° kernel of 512 done . . . [16h 32min 51sec UTC]
+360° kernel of 512 done . . . [16h 32min 51sec UTC]
+361° kernel of 512 done . . . [16h 32min 51sec UTC]
+362° kernel of 512 done . . . [16h 32min 52sec UTC]
+363° kernel of 512 done . . . [16h 32min 52sec UTC]
+364° kernel of 512 done . . . [16h 32min 53sec UTC]
+365° kernel of 512 done . . . [16h 32min 53sec UTC]
+366° kernel of 512 done . . . [16h 32min 54sec UTC]
+367° kernel of 512 done . . . [16h 32min 54sec UTC]
+368° kernel of 512 done . . . [16h 32min 54sec UTC]
+369° kernel of 512 done . . . [16h 32min 55sec UTC]
+370° kernel of 512 done . . . [16h 32min 55sec UTC]
+371° kernel of 512 done . . . [16h 32min 56sec UTC]
+372° kernel of 512 done . . . [16h 32min 56sec UTC]
+373° kernel of 512 done . . . [16h 32min 57sec UTC]
+374° kernel of 512 done . . . [16h 32min 57sec UTC]
+375° kernel of 512 done . . . [16h 32min 57sec UTC]
+376° kernel of 512 done . . . [16h 32min 58sec UTC]
+377° kernel of 512 done . . . [16h 32min 58sec UTC]
+378° kernel of 512 done . . . [16h 32min 59sec UTC]
+379° kernel of 512 done . . . [16h 32min 59sec UTC]
+380° kernel of 512 done . . . [16h 33min 0sec UTC]
+381° kernel of 512 done . . . [16h 33min 0sec UTC]
+382° kernel of 512 done . . . [16h 33min 0sec UTC]
+383° kernel of 512 done . . . [16h 33min 1sec UTC]
+384° kernel of 512 done . . . [16h 33min 1sec UTC]
+385° kernel of 512 done . . . [16h 33min 2sec UTC]
+386° kernel of 512 done . . . [16h 33min 2sec UTC]
+387° kernel of 512 done . . . [16h 33min 3sec UTC]
+388° kernel of 512 done . . . [16h 33min 3sec UTC]
+389° kernel of 512 done . . . [16h 33min 3sec UTC]
+390° kernel of 512 done . . . [16h 33min 4sec UTC]
+391° kernel of 512 done . . . [16h 33min 4sec UTC]
+392° kernel of 512 done . . . [16h 33min 5sec UTC]
+393° kernel of 512 done . . . [16h 33min 5sec UTC]
+394° kernel of 512 done . . . [16h 33min 6sec UTC]
+395° kernel of 512 done . . . [16h 33min 6sec UTC]
+396° kernel of 512 done . . . [16h 33min 6sec UTC]
+397° kernel of 512 done . . . [16h 33min 7sec UTC]
+398° kernel of 512 done . . . [16h 33min 7sec UTC]
+399° kernel of 512 done . . . [16h 33min 8sec UTC]
+400° kernel of 512 done . . . [16h 33min 8sec UTC]
+401° kernel of 512 done . . . [16h 33min 9sec UTC]
+402° kernel of 512 done . . . [16h 33min 9sec UTC]
+403° kernel of 512 done . . . [16h 33min 9sec UTC]
+404° kernel of 512 done . . . [16h 33min 10sec UTC]
+405° kernel of 512 done . . . [16h 33min 10sec UTC]
+406° kernel of 512 done . . . [16h 33min 11sec UTC]
+407° kernel of 512 done . . . [16h 33min 11sec UTC]
+408° kernel of 512 done . . . [16h 33min 12sec UTC]
+409° kernel of 512 done . . . [16h 33min 12sec UTC]
+410° kernel of 512 done . . . [16h 33min 12sec UTC]
+411° kernel of 512 done . . . [16h 33min 13sec UTC]
+412° kernel of 512 done . . . [16h 33min 13sec UTC]
+413° kernel of 512 done . . . [16h 33min 14sec UTC]
+414° kernel of 512 done . . . [16h 33min 14sec UTC]
+415° kernel of 512 done . . . [16h 33min 15sec UTC]
+416° kernel of 512 done . . . [16h 33min 15sec UTC]
+417° kernel of 512 done . . . [16h 33min 15sec UTC]
+418° kernel of 512 done . . . [16h 33min 16sec UTC]
+419° kernel of 512 done . . . [16h 33min 16sec UTC]
+420° kernel of 512 done . . . [16h 33min 17sec UTC]
+421° kernel of 512 done . . . [16h 33min 17sec UTC]
+422° kernel of 512 done . . . [16h 33min 18sec UTC]
+423° kernel of 512 done . . . [16h 33min 18sec UTC]
+424° kernel of 512 done . . . [16h 33min 18sec UTC]
+425° kernel of 512 done . . . [16h 33min 19sec UTC]
+426° kernel of 512 done . . . [16h 33min 19sec UTC]
+427° kernel of 512 done . . . [16h 33min 20sec UTC]
+428° kernel of 512 done . . . [16h 33min 20sec UTC]
+429° kernel of 512 done . . . [16h 33min 21sec UTC]
+430° kernel of 512 done . . . [16h 33min 21sec UTC]
+431° kernel of 512 done . . . [16h 33min 21sec UTC]
+432° kernel of 512 done . . . [16h 33min 22sec UTC]
+433° kernel of 512 done . . . [16h 33min 22sec UTC]
+434° kernel of 512 done . . . [16h 33min 23sec UTC]
+435° kernel of 512 done . . . [16h 33min 23sec UTC]
+436° kernel of 512 done . . . [16h 33min 24sec UTC]
+437° kernel of 512 done . . . [16h 33min 24sec UTC]
+438° kernel of 512 done . . . [16h 33min 24sec UTC]
+439° kernel of 512 done . . . [16h 33min 25sec UTC]
+440° kernel of 512 done . . . [16h 33min 25sec UTC]
+441° kernel of 512 done . . . [16h 33min 26sec UTC]
+442° kernel of 512 done . . . [16h 33min 26sec UTC]
+443° kernel of 512 done . . . [16h 33min 27sec UTC]
+444° kernel of 512 done . . . [16h 33min 27sec UTC]
+445° kernel of 512 done . . . [16h 33min 27sec UTC]
+446° kernel of 512 done . . . [16h 33min 28sec UTC]
+447° kernel of 512 done . . . [16h 33min 28sec UTC]
+448° kernel of 512 done . . . [16h 33min 29sec UTC]
+449° kernel of 512 done . . . [16h 33min 29sec UTC]
+450° kernel of 512 done . . . [16h 33min 30sec UTC]
+451° kernel of 512 done . . . [16h 33min 30sec UTC]
+452° kernel of 512 done . . . [16h 33min 30sec UTC]
+453° kernel of 512 done . . . [16h 33min 31sec UTC]
+454° kernel of 512 done . . . [16h 33min 31sec UTC]
+455° kernel of 512 done . . . [16h 33min 32sec UTC]
+456° kernel of 512 done . . . [16h 33min 32sec UTC]
+457° kernel of 512 done . . . [16h 33min 33sec UTC]
+458° kernel of 512 done . . . [16h 33min 33sec UTC]
+459° kernel of 512 done . . . [16h 33min 33sec UTC]
+460° kernel of 512 done . . . [16h 33min 34sec UTC]
+461° kernel of 512 done . . . [16h 33min 34sec UTC]
+462° kernel of 512 done . . . [16h 33min 35sec UTC]
+463° kernel of 512 done . . . [16h 33min 35sec UTC]
+464° kernel of 512 done . . . [16h 33min 36sec UTC]
+465° kernel of 512 done . . . [16h 33min 36sec UTC]
+466° kernel of 512 done . . . [16h 33min 36sec UTC]
+467° kernel of 512 done . . . [16h 33min 37sec UTC]
+468° kernel of 512 done . . . [16h 33min 37sec UTC]
+469° kernel of 512 done . . . [16h 33min 38sec UTC]
+470° kernel of 512 done . . . [16h 33min 38sec UTC]
+471° kernel of 512 done . . . [16h 33min 39sec UTC]
+472° kernel of 512 done . . . [16h 33min 39sec UTC]
+473° kernel of 512 done . . . [16h 33min 39sec UTC]
+474° kernel of 512 done . . . [16h 33min 40sec UTC]
+475° kernel of 512 done . . . [16h 33min 40sec UTC]
+476° kernel of 512 done . . . [16h 33min 41sec UTC]
+477° kernel of 512 done . . . [16h 33min 41sec UTC]
+478° kernel of 512 done . . . [16h 33min 42sec UTC]
+479° kernel of 512 done . . . [16h 33min 42sec UTC]
+480° kernel of 512 done . . . [16h 33min 42sec UTC]
+481° kernel of 512 done . . . [16h 33min 43sec UTC]
+482° kernel of 512 done . . . [16h 33min 43sec UTC]
+483° kernel of 512 done . . . [16h 33min 44sec UTC]
+484° kernel of 512 done . . . [16h 33min 44sec UTC]
+485° kernel of 512 done . . . [16h 33min 45sec UTC]
+486° kernel of 512 done . . . [16h 33min 45sec UTC]
+487° kernel of 512 done . . . [16h 33min 45sec UTC]
+488° kernel of 512 done . . . [16h 33min 46sec UTC]
+489° kernel of 512 done . . . [16h 33min 46sec UTC]
+490° kernel of 512 done . . . [16h 33min 47sec UTC]
+491° kernel of 512 done . . . [16h 33min 47sec UTC]
+492° kernel of 512 done . . . [16h 33min 48sec UTC]
+493° kernel of 512 done . . . [16h 33min 48sec UTC]
+494° kernel of 512 done . . . [16h 33min 48sec UTC]
+495° kernel of 512 done . . . [16h 33min 49sec UTC]
+496° kernel of 512 done . . . [16h 33min 49sec UTC]
+497° kernel of 512 done . . . [16h 33min 50sec UTC]
+498° kernel of 512 done . . . [16h 33min 50sec UTC]
+499° kernel of 512 done . . . [16h 33min 51sec UTC]
+500° kernel of 512 done . . . [16h 33min 51sec UTC]
+501° kernel of 512 done . . . [16h 33min 51sec UTC]
+502° kernel of 512 done . . . [16h 33min 52sec UTC]
+503° kernel of 512 done . . . [16h 33min 52sec UTC]
+504° kernel of 512 done . . . [16h 33min 53sec UTC]
+505° kernel of 512 done . . . [16h 33min 53sec UTC]
+506° kernel of 512 done . . . [16h 33min 54sec UTC]
+507° kernel of 512 done . . . [16h 33min 54sec UTC]
+508° kernel of 512 done . . . [16h 33min 55sec UTC]
+509° kernel of 512 done . . . [16h 33min 55sec UTC]
+510° kernel of 512 done . . . [16h 33min 55sec UTC]
+511° kernel of 512 done . . . [16h 33min 56sec UTC]
+512° kernel of 512 done . . . [16h 33min 56sec UTC]
+
+- - - - - - - End execution one - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                          512 	 |
+| Bytes per Key:                 256 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution two, with stream - - - - - -
+
+Stream: 512, Thread per Stream: 13
+
+Global memory required: 135.792 Bytes (133.120 Bytes for keys + 624 Bytes for curandState + 2.048 Bytes for kernel IDs)
+Total length of the keys: 131.072 Bytes (overhead 2.048 Bytes)
+grid(1, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 01 00 00 00 00 00 00 00 00 00 00 
+Stream 0 complete . . . [16h 33min 57sec UTC]
+Stream 1 complete . . . [16h 33min 57sec UTC]
+Stream 2 complete . . . [16h 33min 58sec UTC]
+Stream 3 complete . . . [16h 33min 58sec UTC]
+Stream 4 complete . . . [16h 33min 58sec UTC]
+Stream 5 complete . . . [16h 33min 59sec UTC]
+Stream 6 complete . . . [16h 33min 59sec UTC]
+Stream 7 complete . . . [16h 34min 0sec UTC]
+Stream 8 complete . . . [16h 34min 0sec UTC]
+Stream 9 complete . . . [16h 34min 1sec UTC]
+Stream 10 complete . . . [16h 34min 1sec UTC]
+Stream 11 complete . . . [16h 34min 1sec UTC]
+Stream 12 complete . . . [16h 34min 2sec UTC]
+Stream 13 complete . . . [16h 34min 2sec UTC]
+Stream 14 complete . . . [16h 34min 3sec UTC]
+Stream 15 complete . . . [16h 34min 3sec UTC]
+Stream 16 complete . . . [16h 34min 4sec UTC]
+Stream 17 complete . . . [16h 34min 4sec UTC]
+Stream 18 complete . . . [16h 34min 4sec UTC]
+Stream 19 complete . . . [16h 34min 5sec UTC]
+Stream 20 complete . . . [16h 34min 5sec UTC]
+Stream 21 complete . . . [16h 34min 6sec UTC]
+Stream 22 complete . . . [16h 34min 6sec UTC]
+Stream 23 complete . . . [16h 34min 7sec UTC]
+Stream 24 complete . . . [16h 34min 7sec UTC]
+Stream 25 complete . . . [16h 34min 7sec UTC]
+Stream 26 complete . . . [16h 34min 8sec UTC]
+Stream 27 complete . . . [16h 34min 8sec UTC]
+Stream 28 complete . . . [16h 34min 9sec UTC]
+Stream 29 complete . . . [16h 34min 9sec UTC]
+Stream 30 complete . . . [16h 34min 9sec UTC]
+Stream 31 complete . . . [16h 34min 10sec UTC]
+Stream 32 complete . . . [16h 34min 10sec UTC]
+Stream 33 complete . . . [16h 34min 11sec UTC]
+Stream 34 complete . . . [16h 34min 11sec UTC]
+Stream 35 complete . . . [16h 34min 12sec UTC]
+Stream 36 complete . . . [16h 34min 12sec UTC]
+Stream 37 complete . . . [16h 34min 12sec UTC]
+Stream 38 complete . . . [16h 34min 13sec UTC]
+Stream 39 complete . . . [16h 34min 13sec UTC]
+Stream 40 complete . . . [16h 34min 14sec UTC]
+Stream 41 complete . . . [16h 34min 14sec UTC]
+Stream 42 complete . . . [16h 34min 15sec UTC]
+Stream 43 complete . . . [16h 34min 15sec UTC]
+Stream 44 complete . . . [16h 34min 15sec UTC]
+Stream 45 complete . . . [16h 34min 16sec UTC]
+Stream 46 complete . . . [16h 34min 16sec UTC]
+Stream 47 complete . . . [16h 34min 17sec UTC]
+Stream 48 complete . . . [16h 34min 17sec UTC]
+Stream 49 complete . . . [16h 34min 18sec UTC]
+Stream 50 complete . . . [16h 34min 18sec UTC]
+Stream 51 complete . . . [16h 34min 18sec UTC]
+Stream 52 complete . . . [16h 34min 19sec UTC]
+Stream 53 complete . . . [16h 34min 19sec UTC]
+Stream 54 complete . . . [16h 34min 20sec UTC]
+Stream 55 complete . . . [16h 34min 20sec UTC]
+Stream 56 complete . . . [16h 34min 21sec UTC]
+Stream 57 complete . . . [16h 34min 21sec UTC]
+Stream 58 complete . . . [16h 34min 21sec UTC]
+Stream 59 complete . . . [16h 34min 22sec UTC]
+Stream 60 complete . . . [16h 34min 22sec UTC]
+Stream 61 complete . . . [16h 34min 23sec UTC]
+Stream 62 complete . . . [16h 34min 23sec UTC]
+Stream 63 complete . . . [16h 34min 24sec UTC]
+Stream 64 complete . . . [16h 34min 24sec UTC]
+Stream 65 complete . . . [16h 34min 24sec UTC]
+Stream 66 complete . . . [16h 34min 25sec UTC]
+Stream 67 complete . . . [16h 34min 25sec UTC]
+Stream 68 complete . . . [16h 34min 26sec UTC]
+Stream 69 complete . . . [16h 34min 26sec UTC]
+Stream 70 complete . . . [16h 34min 27sec UTC]
+Stream 71 complete . . . [16h 34min 27sec UTC]
+Stream 72 complete . . . [16h 34min 27sec UTC]
+Stream 73 complete . . . [16h 34min 28sec UTC]
+Stream 74 complete . . . [16h 34min 28sec UTC]
+Stream 75 complete . . . [16h 34min 29sec UTC]
+Stream 76 complete . . . [16h 34min 29sec UTC]
+Stream 77 complete . . . [16h 34min 30sec UTC]
+Stream 78 complete . . . [16h 34min 30sec UTC]
+Stream 79 complete . . . [16h 34min 30sec UTC]
+Stream 80 complete . . . [16h 34min 31sec UTC]
+Stream 81 complete . . . [16h 34min 31sec UTC]
+Stream 82 complete . . . [16h 34min 32sec UTC]
+Stream 83 complete . . . [16h 34min 32sec UTC]
+Stream 84 complete . . . [16h 34min 33sec UTC]
+Stream 85 complete . . . [16h 34min 33sec UTC]
+Stream 86 complete . . . [16h 34min 33sec UTC]
+Stream 87 complete . . . [16h 34min 34sec UTC]
+Stream 88 complete . . . [16h 34min 34sec UTC]
+Stream 89 complete . . . [16h 34min 35sec UTC]
+Stream 90 complete . . . [16h 34min 35sec UTC]
+Stream 91 complete . . . [16h 34min 36sec UTC]
+Stream 92 complete . . . [16h 34min 36sec UTC]
+Stream 93 complete . . . [16h 34min 36sec UTC]
+Stream 94 complete . . . [16h 34min 37sec UTC]
+Stream 95 complete . . . [16h 34min 37sec UTC]
+Stream 96 complete . . . [16h 34min 38sec UTC]
+Stream 97 complete . . . [16h 34min 38sec UTC]
+Stream 98 complete . . . [16h 34min 39sec UTC]
+Stream 99 complete . . . [16h 34min 39sec UTC]
+Stream 100 complete . . . [16h 34min 39sec UTC]
+Stream 101 complete . . . [16h 34min 40sec UTC]
+Stream 102 complete . . . [16h 34min 40sec UTC]
+Stream 103 complete . . . [16h 34min 41sec UTC]
+Stream 104 complete . . . [16h 34min 41sec UTC]
+Stream 105 complete . . . [16h 34min 42sec UTC]
+Stream 106 complete . . . [16h 34min 42sec UTC]
+Stream 107 complete . . . [16h 34min 42sec UTC]
+Stream 108 complete . . . [16h 34min 43sec UTC]
+Stream 109 complete . . . [16h 34min 43sec UTC]
+Stream 110 complete . . . [16h 34min 44sec UTC]
+Stream 111 complete . . . [16h 34min 44sec UTC]
+Stream 112 complete . . . [16h 34min 45sec UTC]
+Stream 113 complete . . . [16h 34min 45sec UTC]
+Stream 114 complete . . . [16h 34min 45sec UTC]
+Stream 115 complete . . . [16h 34min 46sec UTC]
+Stream 116 complete . . . [16h 34min 46sec UTC]
+Stream 117 complete . . . [16h 34min 47sec UTC]
+Stream 118 complete . . . [16h 34min 47sec UTC]
+Stream 119 complete . . . [16h 34min 48sec UTC]
+Stream 120 complete . . . [16h 34min 48sec UTC]
+Stream 121 complete . . . [16h 34min 48sec UTC]
+Stream 122 complete . . . [16h 34min 49sec UTC]
+Stream 123 complete . . . [16h 34min 49sec UTC]
+Stream 124 complete . . . [16h 34min 50sec UTC]
+Stream 125 complete . . . [16h 34min 50sec UTC]
+Stream 126 complete . . . [16h 34min 51sec UTC]
+Stream 127 complete . . . [16h 34min 51sec UTC]
+Stream 128 complete . . . [16h 34min 51sec UTC]
+Stream 129 complete . . . [16h 34min 52sec UTC]
+Stream 130 complete . . . [16h 34min 52sec UTC]
+Stream 131 complete . . . [16h 34min 53sec UTC]
+Stream 132 complete . . . [16h 34min 53sec UTC]
+Stream 133 complete . . . [16h 34min 54sec UTC]
+Stream 134 complete . . . [16h 34min 54sec UTC]
+Stream 135 complete . . . [16h 34min 54sec UTC]
+Stream 136 complete . . . [16h 34min 55sec UTC]
+Stream 137 complete . . . [16h 34min 55sec UTC]
+Stream 138 complete . . . [16h 34min 56sec UTC]
+Stream 139 complete . . . [16h 34min 56sec UTC]
+Stream 140 complete . . . [16h 34min 57sec UTC]
+Stream 141 complete . . . [16h 34min 57sec UTC]
+Stream 142 complete . . . [16h 34min 57sec UTC]
+Stream 143 complete . . . [16h 34min 58sec UTC]
+Stream 144 complete . . . [16h 34min 58sec UTC]
+Stream 145 complete . . . [16h 34min 59sec UTC]
+Stream 146 complete . . . [16h 34min 59sec UTC]
+Stream 147 complete . . . [16h 35min 0sec UTC]
+Stream 148 complete . . . [16h 35min 0sec UTC]
+Stream 149 complete . . . [16h 35min 0sec UTC]
+Stream 150 complete . . . [16h 35min 1sec UTC]
+Stream 151 complete . . . [16h 35min 1sec UTC]
+Stream 152 complete . . . [16h 35min 2sec UTC]
+Stream 153 complete . . . [16h 35min 2sec UTC]
+Stream 154 complete . . . [16h 35min 3sec UTC]
+Stream 155 complete . . . [16h 35min 3sec UTC]
+Stream 156 complete . . . [16h 35min 3sec UTC]
+Stream 157 complete . . . [16h 35min 4sec UTC]
+Stream 158 complete . . . [16h 35min 4sec UTC]
+Stream 159 complete . . . [16h 35min 5sec UTC]
+Stream 160 complete . . . [16h 35min 5sec UTC]
+Stream 161 complete . . . [16h 35min 6sec UTC]
+Stream 162 complete . . . [16h 35min 6sec UTC]
+Stream 163 complete . . . [16h 35min 6sec UTC]
+Stream 164 complete . . . [16h 35min 7sec UTC]
+Stream 165 complete . . . [16h 35min 7sec UTC]
+Stream 166 complete . . . [16h 35min 8sec UTC]
+Stream 167 complete . . . [16h 35min 8sec UTC]
+Stream 168 complete . . . [16h 35min 9sec UTC]
+Stream 169 complete . . . [16h 35min 9sec UTC]
+Stream 170 complete . . . [16h 35min 9sec UTC]
+Stream 171 complete . . . [16h 35min 10sec UTC]
+Stream 172 complete . . . [16h 35min 10sec UTC]
+Stream 173 complete . . . [16h 35min 11sec UTC]
+Stream 174 complete . . . [16h 35min 11sec UTC]
+Stream 175 complete . . . [16h 35min 12sec UTC]
+Stream 176 complete . . . [16h 35min 12sec UTC]
+Stream 177 complete . . . [16h 35min 12sec UTC]
+Stream 178 complete . . . [16h 35min 13sec UTC]
+Stream 179 complete . . . [16h 35min 13sec UTC]
+Stream 180 complete . . . [16h 35min 14sec UTC]
+Stream 181 complete . . . [16h 35min 14sec UTC]
+Stream 182 complete . . . [16h 35min 15sec UTC]
+Stream 183 complete . . . [16h 35min 15sec UTC]
+Stream 184 complete . . . [16h 35min 15sec UTC]
+Stream 185 complete . . . [16h 35min 16sec UTC]
+Stream 186 complete . . . [16h 35min 16sec UTC]
+Stream 187 complete . . . [16h 35min 17sec UTC]
+Stream 188 complete . . . [16h 35min 17sec UTC]
+Stream 189 complete . . . [16h 35min 18sec UTC]
+Stream 190 complete . . . [16h 35min 18sec UTC]
+Stream 191 complete . . . [16h 35min 18sec UTC]
+Stream 192 complete . . . [16h 35min 19sec UTC]
+Stream 193 complete . . . [16h 35min 19sec UTC]
+Stream 194 complete . . . [16h 35min 20sec UTC]
+Stream 195 complete . . . [16h 35min 20sec UTC]
+Stream 196 complete . . . [16h 35min 21sec UTC]
+Stream 197 complete . . . [16h 35min 21sec UTC]
+Stream 198 complete . . . [16h 35min 21sec UTC]
+Stream 199 complete . . . [16h 35min 22sec UTC]
+Stream 200 complete . . . [16h 35min 22sec UTC]
+Stream 201 complete . . . [16h 35min 23sec UTC]
+Stream 202 complete . . . [16h 35min 23sec UTC]
+Stream 203 complete . . . [16h 35min 24sec UTC]
+Stream 204 complete . . . [16h 35min 24sec UTC]
+Stream 205 complete . . . [16h 35min 24sec UTC]
+Stream 206 complete . . . [16h 35min 25sec UTC]
+Stream 207 complete . . . [16h 35min 25sec UTC]
+Stream 208 complete . . . [16h 35min 26sec UTC]
+Stream 209 complete . . . [16h 35min 26sec UTC]
+Stream 210 complete . . . [16h 35min 27sec UTC]
+Stream 211 complete . . . [16h 35min 27sec UTC]
+Stream 212 complete . . . [16h 35min 27sec UTC]
+Stream 213 complete . . . [16h 35min 28sec UTC]
+Stream 214 complete . . . [16h 35min 28sec UTC]
+Stream 215 complete . . . [16h 35min 29sec UTC]
+Stream 216 complete . . . [16h 35min 29sec UTC]
+Stream 217 complete . . . [16h 35min 30sec UTC]
+Stream 218 complete . . . [16h 35min 30sec UTC]
+Stream 219 complete . . . [16h 35min 30sec UTC]
+Stream 220 complete . . . [16h 35min 31sec UTC]
+Stream 221 complete . . . [16h 35min 31sec UTC]
+Stream 222 complete . . . [16h 35min 32sec UTC]
+Stream 223 complete . . . [16h 35min 32sec UTC]
+Stream 224 complete . . . [16h 35min 33sec UTC]
+Stream 225 complete . . . [16h 35min 33sec UTC]
+Stream 226 complete . . . [16h 35min 33sec UTC]
+Stream 227 complete . . . [16h 35min 34sec UTC]
+Stream 228 complete . . . [16h 35min 34sec UTC]
+Stream 229 complete . . . [16h 35min 35sec UTC]
+Stream 230 complete . . . [16h 35min 35sec UTC]
+Stream 231 complete . . . [16h 35min 36sec UTC]
+Stream 232 complete . . . [16h 35min 36sec UTC]
+Stream 233 complete . . . [16h 35min 36sec UTC]
+Stream 234 complete . . . [16h 35min 37sec UTC]
+Stream 235 complete . . . [16h 35min 37sec UTC]
+Stream 236 complete . . . [16h 35min 38sec UTC]
+Stream 237 complete . . . [16h 35min 38sec UTC]
+Stream 238 complete . . . [16h 35min 39sec UTC]
+Stream 239 complete . . . [16h 35min 39sec UTC]
+Stream 240 complete . . . [16h 35min 39sec UTC]
+Stream 241 complete . . . [16h 35min 40sec UTC]
+Stream 242 complete . . . [16h 35min 40sec UTC]
+Stream 243 complete . . . [16h 35min 41sec UTC]
+Stream 244 complete . . . [16h 35min 41sec UTC]
+Stream 245 complete . . . [16h 35min 42sec UTC]
+Stream 246 complete . . . [16h 35min 42sec UTC]
+Stream 247 complete . . . [16h 35min 42sec UTC]
+Stream 248 complete . . . [16h 35min 43sec UTC]
+Stream 249 complete . . . [16h 35min 43sec UTC]
+Stream 250 complete . . . [16h 35min 44sec UTC]
+Stream 251 complete . . . [16h 35min 44sec UTC]
+Stream 252 complete . . . [16h 35min 45sec UTC]
+Stream 253 complete . . . [16h 35min 45sec UTC]
+Stream 254 complete . . . [16h 35min 45sec UTC]
+Stream 255 complete . . . [16h 35min 46sec UTC]
+Stream 256 complete . . . [16h 35min 46sec UTC]
+Stream 257 complete . . . [16h 35min 47sec UTC]
+Stream 258 complete . . . [16h 35min 47sec UTC]
+Stream 259 complete . . . [16h 35min 48sec UTC]
+Stream 260 complete . . . [16h 35min 48sec UTC]
+Stream 261 complete . . . [16h 35min 48sec UTC]
+Stream 262 complete . . . [16h 35min 49sec UTC]
+Stream 263 complete . . . [16h 35min 49sec UTC]
+Stream 264 complete . . . [16h 35min 50sec UTC]
+Stream 265 complete . . . [16h 35min 50sec UTC]
+Stream 266 complete . . . [16h 35min 51sec UTC]
+Stream 267 complete . . . [16h 35min 51sec UTC]
+Stream 268 complete . . . [16h 35min 51sec UTC]
+Stream 269 complete . . . [16h 35min 52sec UTC]
+Stream 270 complete . . . [16h 35min 52sec UTC]
+Stream 271 complete . . . [16h 35min 53sec UTC]
+Stream 272 complete . . . [16h 35min 53sec UTC]
+Stream 273 complete . . . [16h 35min 54sec UTC]
+Stream 274 complete . . . [16h 35min 54sec UTC]
+Stream 275 complete . . . [16h 35min 54sec UTC]
+Stream 276 complete . . . [16h 35min 55sec UTC]
+Stream 277 complete . . . [16h 35min 55sec UTC]
+Stream 278 complete . . . [16h 35min 56sec UTC]
+Stream 279 complete . . . [16h 35min 56sec UTC]
+Stream 280 complete . . . [16h 35min 57sec UTC]
+Stream 281 complete . . . [16h 35min 57sec UTC]
+Stream 282 complete . . . [16h 35min 57sec UTC]
+Stream 283 complete . . . [16h 35min 58sec UTC]
+Stream 284 complete . . . [16h 35min 58sec UTC]
+Stream 285 complete . . . [16h 35min 59sec UTC]
+Stream 286 complete . . . [16h 35min 59sec UTC]
+Stream 287 complete . . . [16h 36min 0sec UTC]
+Stream 288 complete . . . [16h 36min 0sec UTC]
+Stream 289 complete . . . [16h 36min 0sec UTC]
+Stream 290 complete . . . [16h 36min 1sec UTC]
+Stream 291 complete . . . [16h 36min 1sec UTC]
+Stream 292 complete . . . [16h 36min 2sec UTC]
+Stream 293 complete . . . [16h 36min 2sec UTC]
+Stream 294 complete . . . [16h 36min 3sec UTC]
+Stream 295 complete . . . [16h 36min 3sec UTC]
+Stream 296 complete . . . [16h 36min 3sec UTC]
+Stream 297 complete . . . [16h 36min 4sec UTC]
+Stream 298 complete . . . [16h 36min 4sec UTC]
+Stream 299 complete . . . [16h 36min 5sec UTC]
+Stream 300 complete . . . [16h 36min 5sec UTC]
+Stream 301 complete . . . [16h 36min 6sec UTC]
+Stream 302 complete . . . [16h 36min 6sec UTC]
+Stream 303 complete . . . [16h 36min 6sec UTC]
+Stream 304 complete . . . [16h 36min 7sec UTC]
+Stream 305 complete . . . [16h 36min 7sec UTC]
+Stream 306 complete . . . [16h 36min 8sec UTC]
+Stream 307 complete . . . [16h 36min 8sec UTC]
+Stream 308 complete . . . [16h 36min 9sec UTC]
+Stream 309 complete . . . [16h 36min 9sec UTC]
+Stream 310 complete . . . [16h 36min 9sec UTC]
+Stream 311 complete . . . [16h 36min 10sec UTC]
+Stream 312 complete . . . [16h 36min 10sec UTC]
+Stream 313 complete . . . [16h 36min 11sec UTC]
+Stream 314 complete . . . [16h 36min 11sec UTC]
+Stream 315 complete . . . [16h 36min 12sec UTC]
+Stream 316 complete . . . [16h 36min 12sec UTC]
+Stream 317 complete . . . [16h 36min 12sec UTC]
+Stream 318 complete . . . [16h 36min 13sec UTC]
+Stream 319 complete . . . [16h 36min 13sec UTC]
+Stream 320 complete . . . [16h 36min 14sec UTC]
+Stream 321 complete . . . [16h 36min 14sec UTC]
+Stream 322 complete . . . [16h 36min 15sec UTC]
+Stream 323 complete . . . [16h 36min 15sec UTC]
+Stream 324 complete . . . [16h 36min 15sec UTC]
+Stream 325 complete . . . [16h 36min 16sec UTC]
+Stream 326 complete . . . [16h 36min 16sec UTC]
+Stream 327 complete . . . [16h 36min 17sec UTC]
+Stream 328 complete . . . [16h 36min 17sec UTC]
+Stream 329 complete . . . [16h 36min 18sec UTC]
+Stream 330 complete . . . [16h 36min 18sec UTC]
+Stream 331 complete . . . [16h 36min 18sec UTC]
+Stream 332 complete . . . [16h 36min 19sec UTC]
+Stream 333 complete . . . [16h 36min 19sec UTC]
+Stream 334 complete . . . [16h 36min 20sec UTC]
+Stream 335 complete . . . [16h 36min 20sec UTC]
+Stream 336 complete . . . [16h 36min 21sec UTC]
+Stream 337 complete . . . [16h 36min 21sec UTC]
+Stream 338 complete . . . [16h 36min 21sec UTC]
+Stream 339 complete . . . [16h 36min 22sec UTC]
+Stream 340 complete . . . [16h 36min 22sec UTC]
+Stream 341 complete . . . [16h 36min 23sec UTC]
+Stream 342 complete . . . [16h 36min 23sec UTC]
+Stream 343 complete . . . [16h 36min 24sec UTC]
+Stream 344 complete . . . [16h 36min 24sec UTC]
+Stream 345 complete . . . [16h 36min 24sec UTC]
+Stream 346 complete . . . [16h 36min 25sec UTC]
+Stream 347 complete . . . [16h 36min 25sec UTC]
+Stream 348 complete . . . [16h 36min 26sec UTC]
+Stream 349 complete . . . [16h 36min 26sec UTC]
+Stream 350 complete . . . [16h 36min 27sec UTC]
+Stream 351 complete . . . [16h 36min 27sec UTC]
+Stream 352 complete . . . [16h 36min 27sec UTC]
+Stream 353 complete . . . [16h 36min 28sec UTC]
+Stream 354 complete . . . [16h 36min 28sec UTC]
+Stream 355 complete . . . [16h 36min 29sec UTC]
+Stream 356 complete . . . [16h 36min 29sec UTC]
+Stream 357 complete . . . [16h 36min 30sec UTC]
+Stream 358 complete . . . [16h 36min 30sec UTC]
+Stream 359 complete . . . [16h 36min 30sec UTC]
+Stream 360 complete . . . [16h 36min 31sec UTC]
+Stream 361 complete . . . [16h 36min 31sec UTC]
+Stream 362 complete . . . [16h 36min 32sec UTC]
+Stream 363 complete . . . [16h 36min 32sec UTC]
+Stream 364 complete . . . [16h 36min 33sec UTC]
+Stream 365 complete . . . [16h 36min 33sec UTC]
+Stream 366 complete . . . [16h 36min 33sec UTC]
+Stream 367 complete . . . [16h 36min 34sec UTC]
+Stream 368 complete . . . [16h 36min 34sec UTC]
+Stream 369 complete . . . [16h 36min 35sec UTC]
+Stream 370 complete . . . [16h 36min 35sec UTC]
+Stream 371 complete . . . [16h 36min 36sec UTC]
+Stream 372 complete . . . [16h 36min 36sec UTC]
+Stream 373 complete . . . [16h 36min 36sec UTC]
+Stream 374 complete . . . [16h 36min 37sec UTC]
+Stream 375 complete . . . [16h 36min 37sec UTC]
+Stream 376 complete . . . [16h 36min 38sec UTC]
+Stream 377 complete . . . [16h 36min 38sec UTC]
+Stream 378 complete . . . [16h 36min 39sec UTC]
+Stream 379 complete . . . [16h 36min 39sec UTC]
+Stream 380 complete . . . [16h 36min 39sec UTC]
+Stream 381 complete . . . [16h 36min 40sec UTC]
+Stream 382 complete . . . [16h 36min 40sec UTC]
+Stream 383 complete . . . [16h 36min 41sec UTC]
+Stream 384 complete . . . [16h 36min 41sec UTC]
+Stream 385 complete . . . [16h 36min 42sec UTC]
+Stream 386 complete . . . [16h 36min 42sec UTC]
+Stream 387 complete . . . [16h 36min 42sec UTC]
+Stream 388 complete . . . [16h 36min 43sec UTC]
+Stream 389 complete . . . [16h 36min 43sec UTC]
+Stream 390 complete . . . [16h 36min 44sec UTC]
+Stream 391 complete . . . [16h 36min 44sec UTC]
+Stream 392 complete . . . [16h 36min 45sec UTC]
+Stream 393 complete . . . [16h 36min 45sec UTC]
+Stream 394 complete . . . [16h 36min 45sec UTC]
+Stream 395 complete . . . [16h 36min 46sec UTC]
+Stream 396 complete . . . [16h 36min 46sec UTC]
+Stream 397 complete . . . [16h 36min 47sec UTC]
+Stream 398 complete . . . [16h 36min 47sec UTC]
+Stream 399 complete . . . [16h 36min 48sec UTC]
+Stream 400 complete . . . [16h 36min 48sec UTC]
+Stream 401 complete . . . [16h 36min 48sec UTC]
+Stream 402 complete . . . [16h 36min 49sec UTC]
+Stream 403 complete . . . [16h 36min 49sec UTC]
+Stream 404 complete . . . [16h 36min 50sec UTC]
+Stream 405 complete . . . [16h 36min 50sec UTC]
+Stream 406 complete . . . [16h 36min 51sec UTC]
+Stream 407 complete . . . [16h 36min 51sec UTC]
+Stream 408 complete . . . [16h 36min 51sec UTC]
+Stream 409 complete . . . [16h 36min 52sec UTC]
+Stream 410 complete . . . [16h 36min 52sec UTC]
+Stream 411 complete . . . [16h 36min 53sec UTC]
+Stream 412 complete . . . [16h 36min 53sec UTC]
+Stream 413 complete . . . [16h 36min 54sec UTC]
+Stream 414 complete . . . [16h 36min 54sec UTC]
+Stream 415 complete . . . [16h 36min 54sec UTC]
+Stream 416 complete . . . [16h 36min 55sec UTC]
+Stream 417 complete . . . [16h 36min 55sec UTC]
+Stream 418 complete . . . [16h 36min 56sec UTC]
+Stream 419 complete . . . [16h 36min 56sec UTC]
+Stream 420 complete . . . [16h 36min 57sec UTC]
+Stream 421 complete . . . [16h 36min 57sec UTC]
+Stream 422 complete . . . [16h 36min 57sec UTC]
+Stream 423 complete . . . [16h 36min 58sec UTC]
+Stream 424 complete . . . [16h 36min 58sec UTC]
+Stream 425 complete . . . [16h 36min 59sec UTC]
+Stream 426 complete . . . [16h 36min 59sec UTC]
+Stream 427 complete . . . [16h 37min 0sec UTC]
+Stream 428 complete . . . [16h 37min 0sec UTC]
+Stream 429 complete . . . [16h 37min 0sec UTC]
+Stream 430 complete . . . [16h 37min 1sec UTC]
+Stream 431 complete . . . [16h 37min 1sec UTC]
+Stream 432 complete . . . [16h 37min 2sec UTC]
+Stream 433 complete . . . [16h 37min 2sec UTC]
+Stream 434 complete . . . [16h 37min 3sec UTC]
+Stream 435 complete . . . [16h 37min 3sec UTC]
+Stream 436 complete . . . [16h 37min 3sec UTC]
+Stream 437 complete . . . [16h 37min 4sec UTC]
+Stream 438 complete . . . [16h 37min 4sec UTC]
+Stream 439 complete . . . [16h 37min 5sec UTC]
+Stream 440 complete . . . [16h 37min 5sec UTC]
+Stream 441 complete . . . [16h 37min 6sec UTC]
+Stream 442 complete . . . [16h 37min 6sec UTC]
+Stream 443 complete . . . [16h 37min 6sec UTC]
+Stream 444 complete . . . [16h 37min 7sec UTC]
+Stream 445 complete . . . [16h 37min 7sec UTC]
+Stream 446 complete . . . [16h 37min 8sec UTC]
+Stream 447 complete . . . [16h 37min 8sec UTC]
+Stream 448 complete . . . [16h 37min 9sec UTC]
+Stream 449 complete . . . [16h 37min 9sec UTC]
+Stream 450 complete . . . [16h 37min 9sec UTC]
+Stream 451 complete . . . [16h 37min 10sec UTC]
+Stream 452 complete . . . [16h 37min 10sec UTC]
+Stream 453 complete . . . [16h 37min 11sec UTC]
+Stream 454 complete . . . [16h 37min 11sec UTC]
+Stream 455 complete . . . [16h 37min 12sec UTC]
+Stream 456 complete . . . [16h 37min 12sec UTC]
+Stream 457 complete . . . [16h 37min 12sec UTC]
+Stream 458 complete . . . [16h 37min 13sec UTC]
+Stream 459 complete . . . [16h 37min 13sec UTC]
+Stream 460 complete . . . [16h 37min 14sec UTC]
+Stream 461 complete . . . [16h 37min 14sec UTC]
+Stream 462 complete . . . [16h 37min 15sec UTC]
+Stream 463 complete . . . [16h 37min 15sec UTC]
+Stream 464 complete . . . [16h 37min 15sec UTC]
+Stream 465 complete . . . [16h 37min 16sec UTC]
+Stream 466 complete . . . [16h 37min 16sec UTC]
+Stream 467 complete . . . [16h 37min 17sec UTC]
+Stream 468 complete . . . [16h 37min 17sec UTC]
+Stream 469 complete . . . [16h 37min 18sec UTC]
+Stream 470 complete . . . [16h 37min 18sec UTC]
+Stream 471 complete . . . [16h 37min 18sec UTC]
+Stream 472 complete . . . [16h 37min 19sec UTC]
+Stream 473 complete . . . [16h 37min 19sec UTC]
+Stream 474 complete . . . [16h 37min 20sec UTC]
+Stream 475 complete . . . [16h 37min 20sec UTC]
+Stream 476 complete . . . [16h 37min 21sec UTC]
+Stream 477 complete . . . [16h 37min 21sec UTC]
+Stream 478 complete . . . [16h 37min 21sec UTC]
+Stream 479 complete . . . [16h 37min 22sec UTC]
+Stream 480 complete . . . [16h 37min 22sec UTC]
+Stream 481 complete . . . [16h 37min 23sec UTC]
+Stream 482 complete . . . [16h 37min 23sec UTC]
+Stream 483 complete . . . [16h 37min 24sec UTC]
+Stream 484 complete . . . [16h 37min 24sec UTC]
+Stream 485 complete . . . [16h 37min 25sec UTC]
+Stream 486 complete . . . [16h 37min 25sec UTC]
+Stream 487 complete . . . [16h 37min 25sec UTC]
+Stream 488 complete . . . [16h 37min 26sec UTC]
+Stream 489 complete . . . [16h 37min 26sec UTC]
+Stream 490 complete . . . [16h 37min 27sec UTC]
+Stream 491 complete . . . [16h 37min 27sec UTC]
+Stream 492 complete . . . [16h 37min 28sec UTC]
+Stream 493 complete . . . [16h 37min 28sec UTC]
+Stream 494 complete . . . [16h 37min 28sec UTC]
+Stream 495 complete . . . [16h 37min 29sec UTC]
+Stream 496 complete . . . [16h 37min 29sec UTC]
+Stream 497 complete . . . [16h 37min 30sec UTC]
+Stream 498 complete . . . [16h 37min 30sec UTC]
+Stream 499 complete . . . [16h 37min 31sec UTC]
+Stream 500 complete . . . [16h 37min 31sec UTC]
+Stream 501 complete . . . [16h 37min 31sec UTC]
+Stream 502 complete . . . [16h 37min 32sec UTC]
+Stream 503 complete . . . [16h 37min 32sec UTC]
+Stream 504 complete . . . [16h 37min 33sec UTC]
+Stream 505 complete . . . [16h 37min 33sec UTC]
+Stream 506 complete . . . [16h 37min 34sec UTC]
+Stream 507 complete . . . [16h 37min 34sec UTC]
+Stream 508 complete . . . [16h 37min 34sec UTC]
+Stream 509 complete . . . [16h 37min 35sec UTC]
+Stream 510 complete . . . [16h 37min 35sec UTC]
+Stream 511 complete . . . [16h 37min 36sec UTC]
+- - - - - - - - End execution two - - - - - - - - 
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                          512 	 |
+| Bytes per Key:                 256 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution three, one kernel no stream - - - - - -
+
+Kernel: 1, Thread per Kernel: 6.554
+
+Global memory required: 445.672 Bytes (131.080 Bytes for keys + 314.592 Bytes for curandState)
+Total length of the keys: 131.072 Bytes (overhead 8 Bytes)
+grid(52, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 01 00 00 00 00 00 00 00 00 00 00 
+- - - - - - - End execution three - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                          512 	 |
+| Bytes per Key:                 256 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution four, rational use of stream - - - - - -
+
+Stream: 2, Threads per Stream: 3.277
+Every stream generate 65.540 Bytes.
+
+Global memory required: 288.384 Bytes (131.080 Bytes for keys + 157.296 Bytes for curandState + 8 Bytes for kernel IDs)
+Total length of the keys: 131.072 Bytes (overhead 8 Bytes)
+grid(26, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 01 00 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 516.129883 millisec). . . [16h 37min 37sec UTC]
+Stream 1 complete (elapsed 516.171631 millisec). . . [16h 37min 38sec UTC]
+
+
+
+
+
+Stream: 4, Threads per Stream: 1.639
+Every stream generate 32.780 Bytes.
+
+Global memory required: 209.808 Bytes (131.120 Bytes for keys + 78.672 Bytes for curandState + 16 Bytes for kernel IDs)
+Total length of the keys: 131.072 Bytes (overhead 48 Bytes)
+grid(13, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 01 00 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 455.550110 millisec). . . [16h 37min 38sec UTC]
+Stream 1 complete (elapsed 454.011383 millisec). . . [16h 37min 38sec UTC]
+Stream 2 complete (elapsed 454.550262 millisec). . . [16h 37min 39sec UTC]
+Stream 3 complete (elapsed 455.109283 millisec). . . [16h 37min 39sec UTC]
+
+
+
+
+
+Stream: 8, Threads per Stream: 820
+Every stream generate 16.400 Bytes.
+
+Global memory required: 170.592 Bytes (131.200 Bytes for keys + 39.360 Bytes for curandState + 32 Bytes for kernel IDs)
+Total length of the keys: 131.072 Bytes (overhead 128 Bytes)
+grid(7, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 01 00 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 450.405640 millisec). . . [16h 37min 40sec UTC]
+Stream 1 complete (elapsed 450.847626 millisec). . . [16h 37min 40sec UTC]
+Stream 2 complete (elapsed 451.422852 millisec). . . [16h 37min 41sec UTC]
+Stream 3 complete (elapsed 451.978149 millisec). . . [16h 37min 41sec UTC]
+Stream 4 complete (elapsed 450.870941 millisec). . . [16h 37min 42sec UTC]
+Stream 5 complete (elapsed 451.428894 millisec). . . [16h 37min 42sec UTC]
+Stream 6 complete (elapsed 451.993805 millisec). . . [16h 37min 43sec UTC]
+Stream 7 complete (elapsed 452.550323 millisec). . . [16h 37min 43sec UTC]
+
+
+
+
+
+Stream: 16, Threads per Stream: 410
+Every stream generate 8.200 Bytes.
+
+Global memory required: 150.944 Bytes (131.200 Bytes for keys + 19.680 Bytes for curandState + 64 Bytes for kernel IDs)
+Total length of the keys: 131.072 Bytes (overhead 128 Bytes)
+grid(4, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 01 00 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 450.456665 millisec). . . [16h 37min 43sec UTC]
+Stream 1 complete (elapsed 451.108521 millisec). . . [16h 37min 44sec UTC]
+Stream 2 complete (elapsed 451.672058 millisec). . . [16h 37min 44sec UTC]
+Stream 3 complete (elapsed 452.235840 millisec). . . [16h 37min 45sec UTC]
+Stream 4 complete (elapsed 451.106934 millisec). . . [16h 37min 45sec UTC]
+Stream 5 complete (elapsed 451.667328 millisec). . . [16h 37min 46sec UTC]
+Stream 6 complete (elapsed 452.241974 millisec). . . [16h 37min 46sec UTC]
+Stream 7 complete (elapsed 452.796631 millisec). . . [16h 37min 47sec UTC]
+Stream 8 complete (elapsed 451.645386 millisec). . . [16h 37min 47sec UTC]
+Stream 9 complete (elapsed 452.225586 millisec). . . [16h 37min 47sec UTC]
+Stream 10 complete (elapsed 452.797791 millisec). . . [16h 37min 48sec UTC]
+Stream 11 complete (elapsed 453.361542 millisec). . . [16h 37min 48sec UTC]
+Stream 12 complete (elapsed 452.223572 millisec). . . [16h 37min 49sec UTC]
+Stream 13 complete (elapsed 452.786285 millisec). . . [16h 37min 49sec UTC]
+Stream 14 complete (elapsed 453.368866 millisec). . . [16h 37min 50sec UTC]
+Stream 15 complete (elapsed 453.920227 millisec). . . [16h 37min 50sec UTC]
+
+
+
+
+- - - - - - - End execution four - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                          512 	 |
+| Bytes per Key:                 256 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Last but not least execution, SEQUENTIAL - - - - - -
+Chiavi: 512
+Blocchi: 13
+Iterazioni: 1000
+% 0 complete . . . [16h 37min 50sec UTC]
+(key 0) Salt: 73 61 6c 74 67 45 8b 6b 00 01 00 00 00 00 00 00 00 00 00 00 
+% 10 complete . . . [16h 37min 53sec UTC]
+% 20 complete . . . [16h 37min 56sec UTC]
+% 30 complete . . . [16h 37min 59sec UTC]
+% 40 complete . . . [16h 38min 2sec UTC]
+% 50 complete . . . [16h 38min 5sec UTC]
+% 60 complete . . . [16h 38min 8sec UTC]
+% 70 complete . . . [16h 38min 12sec UTC]
+% 80 complete . . . [16h 38min 15sec UTC]
+% 90 complete . . . [16h 38min 18sec UTC]
+% 100 complete . . . [16h 38min 21sec UTC]
+x: 6656000
+- - - - - - - - End last execution - - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .check correctness . . .
+
+
+
+- - - - - - - - - - RESULT - - - - - - - - - - - - - - 
+  Solution 1: One kernel per key takes 	 219.482312 seconds
+  Solution 2: One stream per key takes 	 219.474732 seconds
+  Solution 3: One kernel takes 	 0.771075 seconds
+  Solution 4: 2 Stream takes 	 1.035992 seconds
+  Solution 4: 4 Stream takes 	 1.822700 seconds
+  Solution 4: 8 Stream takes 	 3.615464 seconds
+  Solution 4: 16 Stream takes 	 7.239672 seconds
+  Sequential takes 	 30.475926 seconds
+
+  Solution 3 vs Solution 1 (512 kernel): 	 % 99.648685
+  Solution 3 vs Solution 2 (512 stream): 	 % 99.648673
+  Solution 3 Solution 4 (2 stream): 	 % 25.571329
+  Solution 3 Solution 4 (4 stream): 	 % 57.696000
+  Solution 3 Solution 4 (8 stream): 	 % 78.672861
+  Solution 3 Solution 4 (16 stream): 	 % 89.349310
+  Solution 3 vs Sequential: 	 % 97.469888
+- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+==29810== Profiling result:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 48.41%  219.442s       512  428.60ms  425.48ms  432.26ms  pbkdf2(char*, int*, curandStateXORWOW*)
+ 48.40%  219.428s       512  428.57ms  425.46ms  432.23ms  pbkdf2_2(char*, int*, curandStateXORWOW*)
+  3.02%  13.6971s        30  456.57ms  450.35ms  516.12ms  pbkdf2_4(char*, int*, curandStateXORWOW*)
+  0.17%  769.50ms         1  769.50ms  769.50ms  769.50ms  pbkdf2_3(char*, curandStateXORWOW*)
+  0.00%  2.9792ms      1055  2.8230us  1.6000us  23.712us  [CUDA memcpy DtoH]
+  0.00%  2.6103ms      1064  2.4530us  1.2790us  24.447us  [CUDA memcpy HtoD]
+  0.00%  44.831us        13  3.4480us  1.3760us  5.0880us  [CUDA memset]
+
+==29810== API calls:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 51.20%  232.272s       542  428.55ms  5.1870us  516.12ms  cudaEventSynchronize
+ 48.55%  220.232s      1025  214.86ms  17.445us  769.60ms  cudaMemcpy
+  0.18%  835.52ms       572  1.4607ms  2.4700us  425.38ms  cudaEventRecord
+  0.03%  138.10ms        10  13.810ms  13.235us  137.89ms  cudaMemcpyToSymbol
+  0.01%  65.038ms         1  65.038ms  65.038ms  65.038ms  cudaDeviceReset
+  0.00%  22.466ms       542  41.450us  1.0830us  320.10us  cudaStreamCreate
+  0.00%  15.729ms      1055  14.908us  10.287us  1.9503ms  cudaLaunch
+  0.00%  12.887ms       542  23.775us  2.4150us  552.82us  cudaStreamDestroy
+  0.00%  9.4070ms      1084  8.6780us  6.8070us  21.953us  cudaMemcpyAsync
+  0.00%  5.6410ms        20  282.05us  9.0910us  467.78us  cudaMalloc
+  0.00%  5.3337ms        10  533.37us  446.52us  718.71us  cudaMallocHost
+  0.00%  5.0195ms        12  418.29us  402.61us  521.29us  cudaGetDeviceProperties
+  0.00%  3.2553ms        10  325.53us  301.49us  367.96us  cudaFreeHost
+  0.00%  2.6639ms        20  133.19us  14.118us  344.07us  cudaFree
+  0.00%  1.6268ms       261  6.2320us     381ns  230.09us  cuDeviceGetAttribute
+  0.00%  1.3829ms      3164     437ns     308ns  5.0360us  cudaSetupArgument
+  0.00%  962.49us       572  1.6820us     995ns  7.4940us  cudaEventCreate
+  0.00%  800.99us      1055     759ns     554ns  12.184us  cudaConfigureCall
+  0.00%  768.66us       572  1.3430us     825ns  7.1620us  cudaEventDestroy
+  0.00%  731.05us         3  243.68us  176.60us  285.59us  cuDeviceTotalMem
+  0.00%  229.84us        13  17.679us  8.7450us  35.627us  cudaMemset
+  0.00%  171.94us        30  5.7310us  4.3750us  10.926us  cudaEventElapsedTime
+  0.00%  147.96us         3  49.319us  47.360us  50.634us  cuDeviceGetName
+  0.00%  18.301us         1  18.301us  18.301us  18.301us  cudaDeviceSynchronize
+  0.00%  17.716us         1  17.716us  17.716us  17.716us  cudaSetDevice
+  0.00%  3.6260us         2  1.8130us     667ns  2.9590us  cuDeviceGetCount
+  0.00%  3.1110us         6     518ns     390ns     748ns  cuDeviceGet

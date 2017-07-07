@@ -1,0 +1,363 @@
+				----------- Authors -------------
+				| Luca Tagliabue, Marco Predari |
+				---------------------------------
+
+- - - - - - - - - - - - - REMINDER - - - - - - - - - - - - - -
+| [1]   sizeof(curandState): 48 Bytes                        |
+| [2]   For EVERY solution we print ONLY the first salt used |
+| [3]   DK_LEN * DK_NUM > 2048 for a sensible execution      |
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                            8 	 |
+| Bytes per Key:              65.536 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution one, more kernel no stream - - - - - -
+
+Kernel: 8, Thread per Kernel: 3.277
+
+Global memory required: 681.616 Bytes (524.320 Bytes for keys + 157.296 Bytes for curandState)
+Total length of the keys: 524.288 Bytes (overhead 32 Bytes)
+grid(26, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 00 01 00 00 00 00 00 00 00 00 00 
+1° kernel of 8 done . . . [16h 41min 27sec UTC]
+2° kernel of 8 done . . . [16h 41min 28sec UTC]
+3° kernel of 8 done . . . [16h 41min 28sec UTC]
+4° kernel of 8 done . . . [16h 41min 29sec UTC]
+5° kernel of 8 done . . . [16h 41min 29sec UTC]
+6° kernel of 8 done . . . [16h 41min 30sec UTC]
+7° kernel of 8 done . . . [16h 41min 30sec UTC]
+8° kernel of 8 done . . . [16h 41min 31sec UTC]
+
+- - - - - - - End execution one - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                            8 	 |
+| Bytes per Key:              65.536 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution two, with stream - - - - - -
+
+Stream: 8, Thread per Stream: 3.277
+
+Global memory required: 681.648 Bytes (524.320 Bytes for keys + 157.296 Bytes for curandState + 32 Bytes for kernel IDs)
+Total length of the keys: 524.288 Bytes (overhead 32 Bytes)
+grid(26, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 00 01 00 00 00 00 00 00 00 00 00 
+Stream 0 complete . . . [16h 41min 31sec UTC]
+Stream 1 complete . . . [16h 41min 32sec UTC]
+Stream 2 complete . . . [16h 41min 32sec UTC]
+Stream 3 complete . . . [16h 41min 33sec UTC]
+Stream 4 complete . . . [16h 41min 33sec UTC]
+Stream 5 complete . . . [16h 41min 34sec UTC]
+Stream 6 complete . . . [16h 41min 34sec UTC]
+Stream 7 complete . . . [16h 41min 35sec UTC]
+- - - - - - - - End execution two - - - - - - - - 
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                            8 	 |
+| Bytes per Key:              65.536 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution three, one kernel no stream - - - - - -
+
+Kernel: 1, Thread per Kernel: 26.215
+
+Global memory required: 1.782.620 Bytes (524.300 Bytes for keys + 1.258.320 Bytes for curandState)
+Total length of the keys: 524.288 Bytes (overhead 12 Bytes)
+grid(205, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 00 01 00 00 00 00 00 00 00 00 00 
+- - - - - - - End execution three - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                            8 	 |
+| Bytes per Key:              65.536 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution four, rational use of stream - - - - - -
+
+Stream: 2, Threads per Stream: 13.108
+Every stream generate 262.160 Bytes.
+
+Global memory required: 1.153.512 Bytes (524.320 Bytes for keys + 629.184 Bytes for curandState + 8 Bytes for kernel IDs)
+Total length of the keys: 524.288 Bytes (overhead 32 Bytes)
+grid(103, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 00 01 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 1482.379761 millisec). . . [16h 41min 39sec UTC]
+Stream 1 complete (elapsed 1481.364014 millisec). . . [16h 41min 41sec UTC]
+
+
+
+
+
+Stream: 4, Threads per Stream: 6.554
+Every stream generate 131.080 Bytes.
+
+Global memory required: 838.928 Bytes (524.320 Bytes for keys + 314.592 Bytes for curandState + 16 Bytes for kernel IDs)
+Total length of the keys: 524.288 Bytes (overhead 32 Bytes)
+grid(52, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 00 01 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 753.783630 millisec). . . [16h 41min 41sec UTC]
+Stream 1 complete (elapsed 753.613770 millisec). . . [16h 41min 42sec UTC]
+Stream 2 complete (elapsed 755.084900 millisec). . . [16h 41min 43sec UTC]
+Stream 3 complete (elapsed 756.450134 millisec). . . [16h 41min 44sec UTC]
+
+
+
+
+
+Stream: 8, Threads per Stream: 3.277
+Every stream generate 65.540 Bytes.
+
+Global memory required: 681.648 Bytes (524.320 Bytes for keys + 157.296 Bytes for curandState + 32 Bytes for kernel IDs)
+Total length of the keys: 524.288 Bytes (overhead 32 Bytes)
+grid(26, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 00 01 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 514.747253 millisec). . . [16h 41min 44sec UTC]
+Stream 1 complete (elapsed 514.143799 millisec). . . [16h 41min 45sec UTC]
+Stream 2 complete (elapsed 515.819824 millisec). . . [16h 41min 45sec UTC]
+Stream 3 complete (elapsed 518.434814 millisec). . . [16h 41min 46sec UTC]
+Stream 4 complete (elapsed 515.411255 millisec). . . [16h 41min 46sec UTC]
+Stream 5 complete (elapsed 515.081055 millisec). . . [16h 41min 47sec UTC]
+Stream 6 complete (elapsed 516.803833 millisec). . . [16h 41min 47sec UTC]
+Stream 7 complete (elapsed 516.735474 millisec). . . [16h 41min 48sec UTC]
+
+
+
+
+
+Stream: 16, Threads per Stream: 1.639
+Every stream generate 32.780 Bytes.
+
+Global memory required: 603.216 Bytes (524.480 Bytes for keys + 78.672 Bytes for curandState + 64 Bytes for kernel IDs)
+Total length of the keys: 524.288 Bytes (overhead 192 Bytes)
+grid(13, 1, 1) - block(128, 1, 1)
+
+Salt for idx 0 - kernel_id 0: 73 61 6c 74 04 7f 3d 3f 00 00 01 00 00 00 00 00 00 00 00 00 
+Stream 0 complete (elapsed 454.130249 millisec). . . [16h 41min 48sec UTC]
+Stream 1 complete (elapsed 452.531647 millisec). . . [16h 41min 49sec UTC]
+Stream 2 complete (elapsed 453.091217 millisec). . . [16h 41min 49sec UTC]
+Stream 3 complete (elapsed 453.664215 millisec). . . [16h 41min 50sec UTC]
+Stream 4 complete (elapsed 452.520660 millisec). . . [16h 41min 50sec UTC]
+Stream 5 complete (elapsed 453.103729 millisec). . . [16h 41min 51sec UTC]
+Stream 6 complete (elapsed 453.661865 millisec). . . [16h 41min 51sec UTC]
+Stream 7 complete (elapsed 454.196014 millisec). . . [16h 41min 51sec UTC]
+Stream 8 complete (elapsed 453.099396 millisec). . . [16h 41min 52sec UTC]
+Stream 9 complete (elapsed 453.678986 millisec). . . [16h 41min 52sec UTC]
+Stream 10 complete (elapsed 454.225372 millisec). . . [16h 41min 53sec UTC]
+Stream 11 complete (elapsed 454.790009 millisec). . . [16h 41min 53sec UTC]
+Stream 12 complete (elapsed 453.650391 millisec). . . [16h 41min 54sec UTC]
+Stream 13 complete (elapsed 454.222076 millisec). . . [16h 41min 54sec UTC]
+Stream 14 complete (elapsed 454.809052 millisec). . . [16h 41min 55sec UTC]
+Stream 15 complete (elapsed 455.335175 millisec). . . [16h 41min 55sec UTC]
+
+
+
+
+- - - - - - - End execution four - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:                   foo 	 |
+| Keys:                            8 	 |
+| Bytes per Key:              65.536 	 |
+| Threads per Block:             128 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Last but not least execution, SEQUENTIAL - - - - - -
+Chiavi: 8
+Blocchi: 3277
+Iterazioni: 1000
+% 0 complete . . . [16h 41min 55sec UTC]
+(key 0) Salt: 73 61 6c 74 67 45 8b 6b 00 00 01 00 00 00 00 00 00 00 00 00 
+% 10 complete . . . [16h 42min 7sec UTC]
+% 20 complete . . . [16h 42min 19sec UTC]
+% 30 complete . . . [16h 42min 31sec UTC]
+% 40 complete . . . [16h 42min 43sec UTC]
+% 50 complete . . . [16h 42min 55sec UTC]
+% 60 complete . . . [16h 43min 7sec UTC]
+% 70 complete . . . [16h 43min 19sec UTC]
+% 80 complete . . . [16h 43min 31sec UTC]
+% 90 complete . . . [16h 43min 43sec UTC]
+% 100 complete . . . [16h 43min 55sec UTC]
+x: 26216000
+- - - - - - - - End last execution - - - - - - - - - - - - - - -
+
+
+
+
+
+
+
+
+
+* * * **************************************************************************************** * * *
+
+
+
+
+
+
+
+
+Press enter to continue . . .check correctness . . .
+
+
+
+- - - - - - - - - - RESULT - - - - - - - - - - - - - - 
+  Solution 1: One kernel per key takes 	 4.134796 seconds
+  Solution 2: One stream per key takes 	 4.132490 seconds
+  Solution 3: One kernel takes 	 2.796205 seconds
+  Solution 4: 2 Stream takes 	 2.968254 seconds
+  Solution 4: 4 Stream takes 	 3.022621 seconds
+  Solution 4: 8 Stream takes 	 4.131364 seconds
+  Solution 4: 16 Stream takes 	 7.265124 seconds
+  Sequential takes 	 120.395816 seconds
+
+  Solution 3 vs Solution 1 (8 kernel): 	 % 32.373807
+  Solution 3 vs Solution 2 (8 stream): 	 % 32.336071
+  Solution 3 Solution 4 (2 stream): 	 % 5.796297
+  Solution 3 Solution 4 (4 stream): 	 % 7.490713
+  Solution 3 Solution 4 (8 stream): 	 % 32.317628
+  Solution 3 Solution 4 (16 stream): 	 % 61.511944
+  Solution 3 vs Sequential: 	 % 97.677490
+- - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+==31159== Profiling result:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 61.11%  17.3683s        30  578.94ms  452.45ms  1.48223s  pbkdf2_4(char*, int*, curandStateXORWOW*)
+ 14.53%  4.12893s         8  516.12ms  515.04ms  518.63ms  pbkdf2(char*, int*, curandStateXORWOW*)
+ 14.52%  4.12733s         8  515.92ms  514.86ms  516.97ms  pbkdf2_2(char*, int*, curandStateXORWOW*)
+  9.83%  2.79432s         1  2.79432s  2.79432s  2.79432s  pbkdf2_3(char*, curandStateXORWOW*)
+  0.00%  834.18us        47  17.748us  8.4800us  86.782us  [CUDA memcpy DtoH]
+  0.00%  244.25us        56  4.3610us  1.6320us  41.119us  [CUDA memcpy HtoD]
+  0.00%  82.847us        13  6.3720us  1.6640us  10.656us  [CUDA memset]
+
+==31159== API calls:
+Time(%)      Time     Calls       Avg       Min       Max  Name
+ 74.99%  21.4955s        38  565.67ms  452.50ms  1.48227s  cudaEventSynchronize
+ 24.16%  6.92460s        17  407.33ms  20.131us  2.79473s  cudaMemcpy
+  0.55%  156.84ms        10  15.684ms  13.932us  156.64ms  cudaMemcpyToSymbol
+  0.19%  55.878ms         1  55.878ms  55.878ms  55.878ms  cudaDeviceReset
+  0.02%  6.4053ms        20  320.27us  9.3640us  482.82us  cudaMalloc
+  0.02%  5.0848ms        10  508.48us  445.18us  622.61us  cudaMallocHost
+  0.02%  5.0516ms        12  420.97us  401.29us  524.93us  cudaGetDeviceProperties
+  0.01%  3.2625ms        10  326.25us  307.02us  364.25us  cudaFreeHost
+  0.01%  2.8375ms        20  141.88us  13.819us  235.74us  cudaFree
+  0.01%  2.6773ms        47  56.963us  11.377us  1.9670ms  cudaLaunch
+  0.01%  1.7670ms       261  6.7690us     404ns  241.42us  cuDeviceGetAttribute
+  0.00%  810.35us         3  270.12us  184.65us  314.65us  cuDeviceTotalMem
+  0.00%  806.65us        76  10.613us  6.9920us  24.345us  cudaMemcpyAsync
+  0.00%  692.98us        38  18.236us     934ns  295.25us  cudaStreamCreate
+  0.00%  268.09us        68  3.9420us  2.5790us  10.513us  cudaEventRecord
+  0.00%  233.08us        13  17.929us  9.3040us  37.784us  cudaMemset
+  0.00%  162.39us         3  54.128us  52.322us  57.400us  cuDeviceGetName
+  0.00%  161.95us        30  5.3980us  4.2580us  11.054us  cudaEventElapsedTime
+  0.00%  156.31us        38  4.1130us  3.3230us  12.323us  cudaStreamDestroy
+  0.00%  114.58us        68  1.6840us     890ns  12.183us  cudaEventCreate
+  0.00%  79.566us        68  1.1700us     795ns  5.1370us  cudaEventDestroy
+  0.00%  55.629us       140     397ns     302ns  1.4730us  cudaSetupArgument
+  0.00%  54.095us        47  1.1500us     520ns  7.9040us  cudaConfigureCall
+  0.00%  21.541us         1  21.541us  21.541us  21.541us  cudaDeviceSynchronize
+  0.00%  18.711us         1  18.711us  18.711us  18.711us  cudaSetDevice
+  0.00%  3.8350us         2  1.9170us     706ns  3.1290us  cuDeviceGetCount
+  0.00%  3.3800us         6     563ns     401ns     880ns  cuDeviceGet
