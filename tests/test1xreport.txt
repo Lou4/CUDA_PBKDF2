@@ -1,142 +1,19 @@
-
-./Debug/GPU_Project_clean 8 h3ll0w0rld 1000 32 8 1 0 1 > tests/test1xreport.txt
-		
+./Debug/GPU_Project 8 h3ll0w0rld 1000 32 8 1 0 0 > tests/test1xreport.txt				
 				----------- Authors -------------
 				| Luca Tagliabue, Marco Predari |
 				---------------------------------
 
-- - - - - - - - REMINDER - - - - - - - - 
-|    sizeof(curandState): 48 Bytes     |
-- - - - - - - - - - - - - - - - - - - - 
-
-
+- - - - - - - - - - - - - REMINDER - - - - - - - - - - - - - -
+| [1]   sizeof(curandState): 48 Bytes                        |
+| [2]   For EVERY solution we print ONLY the first salt used |
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 
 - - - - - - - - - REQUEST - - - - - - - -
+| Source Keys:            h3ll0w0rld 	 |
 | Keys:                            8 	 |
 | Bytes per Key:                  32 	 |
-| Threads per block:               8 	 |
-| H_LEN Bytes:                    20 	 |
-| Iterations:                  1.000 	 |
-- - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - Execution one, more kernel no stream - - - - - -
-
-Kernel: 8, Thread per Kernel: 2
-
-Global memory required: 416 Bytes (320 Bytes for keys + 96 Bytes for curandState)
-Total length of the keys: 256 Bytes (overhead 64 Bytes)
-grid(1, 1, 1) - block(8, 1, 1)
-Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00 
-1° kernel of 8 done . . . [11h 11min 52sec UTC]
-2° kernel of 8 done . . . [11h 11min 52sec UTC]
-3° kernel of 8 done . . . [11h 11min 53sec UTC]
-4° kernel of 8 done . . . [11h 11min 53sec UTC]
-5° kernel of 8 done . . . [11h 11min 54sec UTC]
-6° kernel of 8 done . . . [11h 11min 54sec UTC]
-7° kernel of 8 done . . . [11h 11min 55sec UTC]
-8° kernel of 8 done . . . [11h 11min 55sec UTC]
-
-(0° key): 68 e1 7f ed bb 89 04 08 3e b6 0e b1 aa f4 55 b1 70 55 86 1b 5b c9 d5 12 64 03 94 d4 bf ee d7 8c 
-
-(1° key): 8f 9c 62 2e 47 68 8c c5 6d 96 2c 73 59 80 69 13 60 61 d2 ee c0 26 a9 ee 87 9e b8 7c d6 e8 16 58 
-
-(2° key): 80 00 78 b0 fa ac 6e 9a 44 37 3c 2b 7c 64 ee ce 1a 13 7c f7 51 5f ca e4 88 d1 48 43 80 16 5d ef 
-
-(3° key): 44 6d c2 c3 37 68 04 2f 6e 34 d3 6b ad 09 0b 3b ae b3 8d 26 18 18 f3 ae 04 3f f8 bd a1 32 44 b3 
-
-(4° key): 0c b5 35 ba 50 ff ff 6a ce 57 3a cc ea 9c 6b e1 a4 0b c1 c4 40 6a 80 62 85 20 b4 03 e3 b2 38 ee 
-
-(5° key): 19 90 96 59 84 4f 3a 48 dd 29 68 82 42 27 2a 49 45 4a 06 86 5e 30 b2 91 f4 20 43 c8 69 5b 47 c0 
-
-(6° key): 53 37 75 3b 4c e2 07 38 76 4d 2e 1e 53 d2 48 c2 53 58 72 aa f8 41 10 a1 da b4 f1 52 99 54 09 3e 
-
-(7° key): b0 1d 87 78 cd 3e 07 04 07 c5 36 75 6b bd bd 53 c8 2e 20 39 75 0a d9 33 6e c5 36 47 0e d3 81 b8 
-
-- - - - - - - End execution one - - - - - - - - - - - - - -
-
-
-
-
-
-
-
-
-
-* * * **************************************************************************************** * * *
-
-
-
-
-
-
-
-
-Press enter to continue . . .
-- - - - - - - - - REQUEST - - - - - - - -
-| Keys:                            8 	 |
-| Bytes per Key:                  32 	 |
-| Threads per block:               8 	 |
-| H_LEN Bytes:                    20 	 |
-| Iterations:                  1.000 	 |
-- - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - Execution two, with stream - - - - - -
-
-Stream: 8, Thread per Stream: 2
-
-Global memory required: 448 Bytes (320 Bytes for keys + 96 Bytes for curandState + 32 Bytes for kernel IDs)
-Total length of the keys: 256 Bytes (overhead 64 Bytes)
-grid(1, 1, 1) - block(8, 1, 1)
-Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00 
-Stream 0 complete . . . [11h 11min 55sec UTC]
-Stream 1 complete . . . [11h 11min 56sec UTC]
-Stream 2 complete . . . [11h 11min 56sec UTC]
-Stream 3 complete . . . [11h 11min 57sec UTC]
-Stream 4 complete . . . [11h 11min 57sec UTC]
-Stream 5 complete . . . [11h 11min 58sec UTC]
-Stream 6 complete . . . [11h 11min 58sec UTC]
-Stream 7 complete . . . [11h 11min 58sec UTC]
-(0° key): 68 e1 7f ed bb 89 04 08 3e b6 0e b1 aa f4 55 b1 70 55 86 1b 5b c9 d5 12 64 03 94 d4 bf ee d7 8c 
-
-(1° key): 8f 9c 62 2e 47 68 8c c5 6d 96 2c 73 59 80 69 13 60 61 d2 ee c0 26 a9 ee 87 9e b8 7c d6 e8 16 58 
-
-(2° key): 80 00 78 b0 fa ac 6e 9a 44 37 3c 2b 7c 64 ee ce 1a 13 7c f7 51 5f ca e4 88 d1 48 43 80 16 5d ef 
-
-(3° key): 44 6d c2 c3 37 68 04 2f 6e 34 d3 6b ad 09 0b 3b ae b3 8d 26 18 18 f3 ae 04 3f f8 bd a1 32 44 b3 
-
-(4° key): 0c b5 35 ba 50 ff ff 6a ce 57 3a cc ea 9c 6b e1 a4 0b c1 c4 40 6a 80 62 85 20 b4 03 e3 b2 38 ee 
-
-(5° key): 19 90 96 59 84 4f 3a 48 dd 29 68 82 42 27 2a 49 45 4a 06 86 5e 30 b2 91 f4 20 43 c8 69 5b 47 c0 
-
-(6° key): 53 37 75 3b 4c e2 07 38 76 4d 2e 1e 53 d2 48 c2 53 58 72 aa f8 41 10 a1 da b4 f1 52 99 54 09 3e 
-
-(7° key): b0 1d 87 78 cd 3e 07 04 07 c5 36 75 6b bd bd 53 c8 2e 20 39 75 0a d9 33 6e c5 36 47 0e d3 81 b8 
-
-- - - - - - - - End execution two - - - - - - - - 
-
-
-
-
-
-
-
-
-
-* * * **************************************************************************************** * * *
-
-
-
-
-
-
-
-
-Press enter to continue . . .
-- - - - - - - - - REQUEST - - - - - - - -
-| Keys:                            8 	 |
-| Bytes per Key:                  32 	 |
-| Threads per block:               8 	 |
+| Threads per Block:               8 	 |
 | H_LEN Bytes:                    20 	 |
 | Iterations:                  1.000 	 |
 - - - - - - - - - - - - - - - - - - - - -
@@ -148,7 +25,7 @@ Kernel: 1, Thread per Kernel: 13
 Global memory required: 884 Bytes (260 Bytes for keys + 624 Bytes for curandState)
 Total length of the keys: 256 Bytes (overhead 4 Bytes)
 grid(2, 1, 1) - block(8, 1, 1)
-Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00 
+
 (0° key): 68 e1 7f ed bb 89 04 08 3e b6 0e b1 aa f4 55 b1 70 55 86 1b 5b c9 d5 12 64 03 94 d4 bf ee d7 8c 
 
 (1° key): d6 7b fb c0 16 fb 39 46 0b dc 3b 36 4c 72 db 57 0d a9 9a 0d f0 0a 2e 5c 14 dc a5 76 60 4d f0 4e 
@@ -169,217 +46,21 @@ Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00
 
 
 
-
-
-
-
-
-
-* * * **************************************************************************************** * * *
-
-
-
-
-
-
-
-
-Press enter to continue . . .
-- - - - - - - - - REQUEST - - - - - - - -
-| Keys:                            8 	 |
-| Bytes per Key:                  32 	 |
-| Threads per block:               8 	 |
-| H_LEN Bytes:                    20 	 |
-| Iterations:                  1.000 	 |
-- - - - - - - - - - - - - - - - - - - - -
-
-- - - - - - Execution four, rational use of stream - - - - - -
-
-Stream: 2, Threads per Stream: 7
-Every stream generate 140 Bytes.
-
-Global memory required: 624 Bytes (280 Bytes for keys + 336 Bytes for curandState + 8 Bytes for kernel IDs)
-Total length of the keys: 256 Bytes (overhead 24 Bytes)
-grid(1, 1, 1) - block(8, 1, 1)
-Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00 
-Stream 0 complete (elapsed 426.918396 millisec). . . [11h 11min 59sec UTC]
-Stream 1 complete (elapsed 425.037537 millisec). . . [11h 12min 0sec UTC]
-(0° key): 68 e1 7f ed bb 89 04 08 3e b6 0e b1 aa f4 55 b1 70 55 86 1b 5b c9 d5 12 64 03 94 d4 bf ee d7 8c 
-
-(1° key): d6 7b fb c0 16 fb 39 46 0b dc 3b 36 4c 72 db 57 0d a9 9a 0d f0 0a 2e 5c 14 dc a5 76 60 4d f0 4e 
-
-(2° key): f5 1e fb a7 cf 37 35 1a 18 17 81 ec 2c 5e 2c b5 34 3e 05 d1 0d 41 ed 45 2b e0 2f ac 85 44 f8 f9 
-
-(3° key): bf 93 03 4e f7 0b 9c 0d d5 9a 3a 73 11 58 d5 19 c4 19 4c 0f fa 76 50 9a 34 f3 19 85 fa aa 99 c7 
-
-(4° key): 95 f5 d6 6a 19 27 9e f0 18 01 07 78 8f 9c 62 2e 47 68 8c c5 6d 96 2c 73 59 80 69 13 60 61 d2 ee 
-
-(5° key): c0 26 a9 ee 87 9e b8 7c d6 e8 16 58 ee d3 06 1f 48 24 c3 ff 5c ad 75 0e 11 66 93 cc 0b 72 c4 c2 
-
-(6° key): 3b e1 6b c6 93 f6 84 1b e5 47 1b 6c a4 b5 e8 09 44 55 c4 6b 23 13 1d 1b 1e dd bb 4c b3 4b 44 30 
-
-(7° key): 82 9e 54 24 b0 3d f1 93 e1 bd 6b e5 dd a4 77 1c 28 9e 17 2e 10 6d 2b 94 a0 de db 93 63 19 fe 5a 
-
-
-
-
-
-
-Stream: 4, Threads per Stream: 4
-Every stream generate 80 Bytes.
-
-Global memory required: 528 Bytes (320 Bytes for keys + 192 Bytes for curandState + 16 Bytes for kernel IDs)
-Total length of the keys: 256 Bytes (overhead 64 Bytes)
-grid(1, 1, 1) - block(8, 1, 1)
-Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00 
-Stream 0 complete (elapsed 426.924133 millisec). . . [11h 12min 0sec UTC]
-Stream 1 complete (elapsed 425.044922 millisec). . . [11h 12min 1sec UTC]
-Stream 2 complete (elapsed 425.794098 millisec). . . [11h 12min 1sec UTC]
-Stream 3 complete (elapsed 426.096466 millisec). . . [11h 12min 1sec UTC]
-(0° key): 68 e1 7f ed bb 89 04 08 3e b6 0e b1 aa f4 55 b1 70 55 86 1b 5b c9 d5 12 64 03 94 d4 bf ee d7 8c 
-
-(1° key): d6 7b fb c0 16 fb 39 46 0b dc 3b 36 4c 72 db 57 0d a9 9a 0d f0 0a 2e 5c 14 dc a5 76 60 4d f0 4e 
-
-(2° key): f5 1e fb a7 cf 37 35 1a 18 17 81 ec 2c 5e 2c b5 8f 9c 62 2e 47 68 8c c5 6d 96 2c 73 59 80 69 13 
-
-(3° key): 60 61 d2 ee c0 26 a9 ee 87 9e b8 7c d6 e8 16 58 ee d3 06 1f 48 24 c3 ff 5c ad 75 0e 11 66 93 cc 
-
-(4° key): 0b 72 c4 c2 3b e1 6b c6 93 f6 84 1b e5 47 1b 6c a4 b5 e8 09 44 55 c4 6b 23 13 1d 1b 1e dd bb 4c 
-
-(5° key): 80 00 78 b0 fa ac 6e 9a 44 37 3c 2b 7c 64 ee ce 1a 13 7c f7 51 5f ca e4 88 d1 48 43 80 16 5d ef 
-
-(6° key): 31 27 25 40 71 3f ce a5 7d e2 87 54 ad d0 f6 29 f0 bb 0b ef e1 80 90 67 46 b0 89 71 01 74 6d 9e 
-
-(7° key): 7b ac 90 8c 1c c9 8a ac 97 3f ee 21 6c 7f e0 00 44 6d c2 c3 37 68 04 2f 6e 34 d3 6b ad 09 0b 3b 
-
-
-
-
-
-
-Stream: 8, Threads per Stream: 2
-Every stream generate 40 Bytes.
-
-Global memory required: 448 Bytes (320 Bytes for keys + 96 Bytes for curandState + 32 Bytes for kernel IDs)
-Total length of the keys: 256 Bytes (overhead 64 Bytes)
-grid(1, 1, 1) - block(8, 1, 1)
-Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00 
-Stream 0 complete (elapsed 426.921967 millisec). . . [11h 12min 2sec UTC]
-Stream 1 complete (elapsed 424.989044 millisec). . . [11h 12min 2sec UTC]
-Stream 2 complete (elapsed 425.658508 millisec). . . [11h 12min 3sec UTC]
-Stream 3 complete (elapsed 425.866119 millisec). . . [11h 12min 3sec UTC]
-Stream 4 complete (elapsed 425.218231 millisec). . . [11h 12min 4sec UTC]
-Stream 5 complete (elapsed 425.432526 millisec). . . [11h 12min 4sec UTC]
-Stream 6 complete (elapsed 426.093964 millisec). . . [11h 12min 4sec UTC]
-Stream 7 complete (elapsed 426.291199 millisec). . . [11h 12min 5sec UTC]
-(0° key): 68 e1 7f ed bb 89 04 08 3e b6 0e b1 aa f4 55 b1 70 55 86 1b 5b c9 d5 12 64 03 94 d4 bf ee d7 8c 
-
-(1° key): d6 7b fb c0 16 fb 39 46 8f 9c 62 2e 47 68 8c c5 6d 96 2c 73 59 80 69 13 60 61 d2 ee c0 26 a9 ee 
-
-(2° key): 87 9e b8 7c d6 e8 16 58 ee d3 06 1f 48 24 c3 ff 80 00 78 b0 fa ac 6e 9a 44 37 3c 2b 7c 64 ee ce 
-
-(3° key): 1a 13 7c f7 51 5f ca e4 88 d1 48 43 80 16 5d ef 31 27 25 40 71 3f ce a5 44 6d c2 c3 37 68 04 2f 
-
-(4° key): 6e 34 d3 6b ad 09 0b 3b ae b3 8d 26 18 18 f3 ae 04 3f f8 bd a1 32 44 b3 f0 18 32 4c 08 d6 85 0b 
-
-(5° key): 0c b5 35 ba 50 ff ff 6a ce 57 3a cc ea 9c 6b e1 a4 0b c1 c4 40 6a 80 62 85 20 b4 03 e3 b2 38 ee 
-
-(6° key): e6 d4 c0 da f8 57 71 8a 19 90 96 59 84 4f 3a 48 dd 29 68 82 42 27 2a 49 45 4a 06 86 5e 30 b2 91 
-
-(7° key): f4 20 43 c8 69 5b 47 c0 1f 87 df 75 cd ea f8 47 53 37 75 3b 4c e2 07 38 76 4d 2e 1e 53 d2 48 c2 
-
-
-
-
-
-
-Stream: 16, Threads per Stream: 1
-Every stream generate 20 Bytes.
-
-Global memory required: 432 Bytes (320 Bytes for keys + 48 Bytes for curandState + 64 Bytes for kernel IDs)
-Total length of the keys: 256 Bytes (overhead 64 Bytes)
-grid(1, 1, 1) - block(8, 1, 1)
-Salt: 73 61 6c 74 04 7f 3d 3f 20 00 00 00 00 00 00 00 00 00 00 00 
-Stream 0 complete (elapsed 426.918365 millisec). . . [11h 12min 5sec UTC]
-Stream 1 complete (elapsed 424.895294 millisec). . . [11h 12min 6sec UTC]
-Stream 2 complete (elapsed 425.458008 millisec). . . [11h 12min 6sec UTC]
-Stream 3 complete (elapsed 425.546417 millisec). . . [11h 12min 7sec UTC]
-Stream 4 complete (elapsed 425.123108 millisec). . . [11h 12min 7sec UTC]
-Stream 5 complete (elapsed 425.231506 millisec). . . [11h 12min 7sec UTC]
-Stream 6 complete (elapsed 425.771545 millisec). . . [11h 12min 8sec UTC]
-Stream 7 complete (elapsed 425.833527 millisec). . . [11h 12min 8sec UTC]
-Stream 8 complete (elapsed 425.442444 millisec). . . [11h 12min 9sec UTC]
-Stream 9 complete (elapsed 425.512207 millisec). . . [11h 12min 9sec UTC]
-Stream 10 complete (elapsed 426.092224 millisec). . . [11h 12min 10sec UTC]
-Stream 11 complete (elapsed 426.125122 millisec). . . [11h 12min 10sec UTC]
-Stream 12 complete (elapsed 425.757111 millisec). . . [11h 12min 10sec UTC]
-Stream 13 complete (elapsed 425.850006 millisec). . . [11h 12min 11sec UTC]
-Stream 14 complete (elapsed 426.392426 millisec). . . [11h 12min 11sec UTC]
-Stream 15 complete (elapsed 426.463409 millisec). . . [11h 12min 12sec UTC]
-(0° key): 68 e1 7f ed bb 89 04 08 3e b6 0e b1 aa f4 55 b1 70 55 86 1b 8f 9c 62 2e 47 68 8c c5 6d 96 2c 73 
-
-(1° key): 59 80 69 13 60 61 d2 ee 80 00 78 b0 fa ac 6e 9a 44 37 3c 2b 7c 64 ee ce 1a 13 7c f7 44 6d c2 c3 
-
-(2° key): 37 68 04 2f 6e 34 d3 6b ad 09 0b 3b ae b3 8d 26 0c b5 35 ba 50 ff ff 6a ce 57 3a cc ea 9c 6b e1 
-
-(3° key): a4 0b c1 c4 19 90 96 59 84 4f 3a 48 dd 29 68 82 42 27 2a 49 45 4a 06 86 53 37 75 3b 4c e2 07 38 
-
-(4° key): 76 4d 2e 1e 53 d2 48 c2 53 58 72 aa b0 1d 87 78 cd 3e 07 04 07 c5 36 75 6b bd bd 53 c8 2e 20 39 
-
-(5° key): a8 95 8d 7c 7e 87 b8 8e 41 c9 bf 60 e5 4a 9e 43 a7 39 8b 0a f6 aa c2 08 05 ba f4 86 80 0a 0d 9d 
-
-(6° key): e1 ca c1 3f ba 6c c3 bd 4c 86 79 63 e7 60 5e 62 6d 1e ce 37 4b 21 7d ef be 25 c4 ec 04 e9 9d 23 
-
-(7° key): 0f 93 1b 3f b5 49 af 6b 42 e3 df c0 cd e7 a0 1d ef 21 39 35 1c ec 21 7a 74 40 39 fe d4 c2 84 c4 
-
-
-
-
-
-- - - - - - - End execution four - - - - - - - - - - - - - -
-
-
-
-
-
-
-
-
-
-* * * **************************************************************************************** * * *
-
-
-
-
-
-
-
-
-Press enter to continue . . .
-- - - - - - - - - REQUEST - - - - - - - -
-| Keys:                            8 	 |
-| Bytes per Key:                  32 	 |
-| Threads per block:               8 	 |
-| H_LEN Bytes:                    20 	 |
-| Iterations:                  1.000 	 |
-- - - - - - - - - - - - - - - - - - - - -
-
 - - - - - - Last but not least execution, SEQUENTIAL - - - - - -
 Chiavi: 8
 Blocchi: 2
 Iterazioni: 1000
-% 0 complete . . . [11h 12min 12sec UTC]
-(key 0) Salt: 73 61 6c 74 67 45 8b 6b 20 00 00 00 00 00 00 00 00 00 00 00 
-% 10 complete . . . [11h 12min 12sec UTC]
-% 20 complete . . . [11h 12min 12sec UTC]
-% 30 complete . . . [11h 12min 12sec UTC]
-% 40 complete . . . [11h 12min 12sec UTC]
-% 50 complete . . . [11h 12min 12sec UTC]
-% 60 complete . . . [11h 12min 12sec UTC]
-% 70 complete . . . [11h 12min 12sec UTC]
-% 80 complete . . . [11h 12min 12sec UTC]
-% 90 complete . . . [11h 12min 12sec UTC]
-% 100 complete . . . [11h 12min 12sec UTC]
+% 0 complete . . . [14h 51min 20sec UTC]
+% 10 complete . . . [14h 51min 20sec UTC]
+% 20 complete . . . [14h 51min 20sec UTC]
+% 30 complete . . . [14h 51min 20sec UTC]
+% 40 complete . . . [14h 51min 20sec UTC]
+% 50 complete . . . [14h 51min 20sec UTC]
+% 60 complete . . . [14h 51min 20sec UTC]
+% 70 complete . . . [14h 51min 20sec UTC]
+% 80 complete . . . [14h 51min 20sec UTC]
+% 90 complete . . . [14h 51min 20sec UTC]
+% 100 complete . . . [14h 51min 20sec UTC]
 x: 16000
 (0° key): b4 dd 2c e4 01 b5 94 4d d1 08 a1 e0 16 a5 3f 7a 29 64 76 c9 f7 a8 75 5d c0 45 b7 cf c1 33 b8 6b 
 
@@ -398,43 +79,3 @@ x: 16000
 (7° key): b5 e7 22 ca be 5a 98 d7 39 83 47 a1 8d 26 60 c2 11 24 85 1f 16 4b 6b c6 f0 7c 5e 66 3f 7f 7e 26 
 
 - - - - - - - - End last execution - - - - - - - - - - - - - - -
-
-
-
-
-
-
-
-
-
-* * * **************************************************************************************** * * *
-
-
-
-
-
-
-
-
-Press enter to continue . . .check correctness . . .
-
-
-
-- - - - - - - - - - RESULT - - - - - - - - - - - - - - 
-  Solution 1: One kernel per key takes 	 3.409509 seconds
-  Solution 2: One stream per key takes 	 3.408818 seconds
-  Solution 3: One kernel takes 	 0.427547 seconds
-  Solution 4: 2 Stream takes 	 0.854127 seconds
-  Solution 4: 4 Stream takes 	 1.706061 seconds
-  Solution 4: 8 Stream takes 	 3.408668 seconds
-  Solution 4: 16 Stream takes 	 6.815128 seconds
-  Sequential takes 	 0.072036 seconds
-
-  Solution 3 vs Solution 1 (8 kernel): 	 % 87.460161
-  Solution 3 vs Solution 2 (8 stream): 	 % 87.457618
-  Solution 3 Solution 4 (2 stream): 	 % 49.943405
-  Solution 3 Solution 4 (4 stream): 	 % 74.939528
-  Solution 3 Solution 4 (8 stream): 	 % 87.457065
-  Solution 3 Solution 4 (16 stream): 	 % 93.726501
-  Solution 3 vs Sequential: 	 % -493.518258
-- - - - - - - - - - - - - - - - - - - - - - - - - - - -

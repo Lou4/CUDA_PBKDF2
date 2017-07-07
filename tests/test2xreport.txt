@@ -1,0 +1,75 @@
+./Debug/GPU_Project 8 h3ll0w0rld 1000 128 4 1 0 0 > tests/test2xreport.txt
+				----------- Authors -------------
+				| Luca Tagliabue, Marco Predari |
+				---------------------------------
+
+- - - - - - - - - - - - - REMINDER - - - - - - - - - - - - - -
+| [1]   sizeof(curandState): 48 Bytes                        |
+| [2]   For EVERY solution we print ONLY the first salt used |
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+
+
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Key:             h3ll0w0rld 	 |
+| Keys:                            4 	 |
+| Bytes per Key:                 128 	 |
+| Threads per Block:               8 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Execution three, one kernel no stream - - - - - -
+
+Kernel: 1, Thread per Kernel: 26
+
+Global memory required: 1.768 Bytes (520 Bytes for keys + 1.248 Bytes for curandState)
+Total length of the keys: 512 Bytes (overhead 8 Bytes)
+grid(4, 1, 1) - block(8, 1, 1)
+
+(0° key): 19 11 2d 29 9b ec ba b4 ed 5f 0b 81 bd a6 02 b0 f9 50 9e 2c 7a fa 04 c7 d2 b1 89 d5 7c 0e 0f 14 ac 67 1c 48 5c f3 c2 11 95 e2 23 e2 e4 88 3a ef d9 9b 04 58 bd 35 74 1a 48 53 04 f9 ff a6 ad 32 d7 e1 d7 85 8c ae 1d 83 1a 47 c9 6e b2 07 4e f9 13 10 a6 ae 60 bc ed 85 03 c3 91 41 e0 b1 59 47 ee c9 c4 ec ce 87 4f 16 83 e3 5c a0 b5 36 e6 6d e9 3c 76 83 d7 91 69 3f a4 e2 b2 e5 8a 63 37 28 
+
+(1° key): 5a c4 bb 46 46 49 bd 65 9c 14 47 28 33 eb 1a 52 b1 2d ca ad 83 73 c4 a8 e9 02 0c e1 65 1f 8a ff 7a 63 90 76 49 72 66 8a d8 60 d8 c0 ef 38 26 e5 18 3e fc 4b 73 f8 22 be 51 8c ac 3a b8 78 08 63 a5 c6 7d 29 17 29 13 04 c4 36 8d 3c 84 17 e5 c9 70 1c 7c 66 46 75 74 f7 74 b2 bd 29 f1 de 0b 58 1f f5 dc ff f1 a3 45 07 c5 d6 34 d4 46 f6 7f f4 54 bd 51 27 e2 b5 58 27 6f 86 5f 0b 45 48 2a cc 
+
+(2° key): 79 43 72 27 30 2c 68 07 b6 d8 71 14 23 0f 01 e0 aa d7 a7 29 3d 79 ec 0c 0c 0f 57 66 31 c8 de d6 09 b0 c5 51 87 b2 27 2c 1f 25 c3 98 95 0d ca c1 0c d6 c5 62 0d e3 b0 23 ca 3a 2c 43 c3 10 99 06 38 4d 26 5c 18 e4 8d 03 56 1c 88 ac 28 dc 13 ce d1 12 32 7c dd cf f8 ed f6 8d b3 2a ba 91 2a 17 21 61 79 bd 9f 85 31 75 e7 4c f6 7c a5 78 89 fb cd e4 d7 74 b7 7c 49 0e c1 a2 7f fb 51 67 01 53 
+
+(3° key): fb 2f 7f f1 c2 e2 13 f1 3e da 85 a8 a4 ff 6c 0e 5e 6e 07 16 47 e3 c6 7c ea e7 48 bf 4a 60 23 5f 55 68 74 ec 0f 43 2c 9b 8c 3e 01 d4 74 1a 0f 92 2c e2 4e 35 fe 70 86 58 22 75 49 96 29 04 3a a2 98 65 85 04 a8 58 65 a1 0c c4 0e 4d 40 69 2c f1 31 0e be 73 16 0c ba 94 da 1d ef 3f e9 dd be 0d c5 9f 43 5f 2d 9d dd c0 18 d2 42 73 e1 8a bd 2e a7 cc ce e4 68 56 3f e8 d5 31 57 c1 cf 6c 62 82 
+
+- - - - - - - End execution three - - - - - - - - - - - - - -
+
+
+- - - - - - - - - REQUEST - - - - - - - -
+| Source Key:             h3ll0w0rld 	 |
+| Keys:                            4 	 |
+| Bytes per Key:                 128 	 |
+| Threads per Block:               8 	 |
+| H_LEN Bytes:                    20 	 |
+| Iterations:                  1.000 	 |
+- - - - - - - - - - - - - - - - - - - - -
+
+- - - - - - Last but not least execution, SEQUENTIAL - - - - - -
+Chiavi: 4
+Blocchi: 7
+Iterazioni: 1000
+% 0 complete . . . [14h 51min 25sec UTC]
+% 10 complete . . . [14h 51min 25sec UTC]
+% 20 complete . . . [14h 51min 25sec UTC]
+% 30 complete . . . [14h 51min 25sec UTC]
+% 40 complete . . . [14h 51min 25sec UTC]
+% 50 complete . . . [14h 51min 25sec UTC]
+% 60 complete . . . [14h 51min 25sec UTC]
+% 70 complete . . . [14h 51min 25sec UTC]
+% 80 complete . . . [14h 51min 25sec UTC]
+% 90 complete . . . [14h 51min 25sec UTC]
+% 100 complete . . . [14h 51min 25sec UTC]
+x: 28000
+(0° key): fb e8 e1 4a 62 2f 2e cb 93 81 f0 e0 83 4b 4b 22 59 2f d3 9c cb 65 07 34 14 e3 6e 8f bf b6 75 b1 d8 f3 84 40 f2 2a 92 b5 fb 06 03 f8 02 50 02 f6 29 f7 de c4 2f 7e 61 59 79 d7 8f d9 2b 5b 34 ad c1 8b 73 5c 39 4d c2 57 44 23 8c f6 e5 d9 fb a3 10 a1 33 eb d0 dd b9 3b 36 9b 9a 22 01 bf c8 78 32 5c 9a e6 00 df 5a 84 f9 5c a8 83 8a 11 c7 1f 9b 18 1a ea 68 df cb 64 e6 5e 0d 93 68 be 3b 60 
+
+(1° key): 9d 8d a0 67 f1 9a 6a fa 0a 65 25 6e e5 e0 33 bc d4 5a bd e4 d7 0c 86 af 4f 64 fa 56 2a 80 c4 2c df 0d 72 25 8e 55 de 7c 9d 4c d5 9a 38 2f a0 f2 f4 3b bd b6 7d a3 81 8c 74 d3 05 2b 85 73 ac 79 e5 05 12 8b 21 3b d4 55 5f aa 12 49 54 56 94 b6 8f 72 2f cc a3 e3 b9 0a 9d 68 ea fc 07 d2 c9 3a 72 3a 83 87 41 aa 94 1e de bd 80 7b c6 bb b0 57 6d b5 91 2b f6 ed b0 c8 4d 98 78 ff d3 f8 46 91 
+
+(2° key): 24 ef 0b 0e 2f ea fd 8c fa 23 51 3f d0 c2 2c 27 21 40 c3 33 62 28 41 f3 c0 2e f1 80 97 29 40 bf 28 bb 0e 4b 28 db 8f 28 29 d7 f9 9a 90 e8 41 8f a6 9a 9e 3c 4f d1 57 57 3b 93 bb 5f 3c d0 31 03 50 8f ac 2c 04 51 6c 34 fe c2 02 7a 3b 74 9a 74 57 48 c4 92 8b 7b 1f 72 00 4f b8 d5 38 26 15 01 46 77 87 1b d2 c0 a1 90 7e 16 79 93 51 9a 5c 2d 25 8b bb 99 eb e7 76 3b 9d 87 78 b7 99 3a 26 b4 
+
+(3° key): be 06 48 27 09 c5 e5 25 f9 51 66 f1 33 40 05 71 45 7c 1d b8 4b 3d cc 3b 1c b8 ca a1 98 e3 d0 46 78 a0 d1 bf df 8d bd 62 fd c8 28 dc 35 77 f5 15 6c 6e f1 9e ae c4 ba 96 dd 03 20 4b 42 d9 e7 9f 2d e2 e3 0b 1b 5d 1d 7c 08 31 52 55 ca 14 1a dc 04 21 4f 63 b5 7c f7 1c 9a 39 25 bd 2a aa 33 3f 7d c4 ee ae b4 6d 2f d6 a6 75 ac 8f 65 2e 4d 19 c7 39 98 e2 3f 3f 6e c3 33 09 84 73 43 24 8f e0 
+
+- - - - - - - - End last execution - - - - - - - - - - - - - - -
