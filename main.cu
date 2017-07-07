@@ -124,7 +124,7 @@ __host__ void execution4(long const DK_LEN, long const DK_NUM, int const GX, int
 __host__ void executionSequential(const char* SOURCE_KEY, int const C, long const DK_LEN, long const DK_NUM, struct Data *out);
 __host__ void copyValueFromGlobalMemoryToCPUMemory(uint8_t *keys, uint8_t *output, int const NUM, int const LEN, int const OFFSET);
 __host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM);
-__host__ void printHeader(long const DK_NUM, long const DK_LEN, int const  BX, int const C);
+__host__ void printHeader(const char *SK, long const DK_NUM, long const DK_LEN, int const  BX, int const C);
 __host__ void printKernelDebugInfo(int const K_ID, int const THREAD_X_K, int const K_BYTES_GENERATED, int const DK_LEN);
 
 /**
@@ -211,7 +211,7 @@ int main(int c, char **v){
 		out4[i].keys = (uint8_t*)malloc(DK_NUM * DK_LEN * sizeof(uint8_t*));
 	outS->keys = (uint8_t*)malloc(DK_NUM * DK_LEN * sizeof(uint8_t*));
 
-	printHeader(DK_NUM, DK_LEN, BX, C);
+	printHeader(SOURCE_KEY, DK_NUM, DK_LEN, BX, C);
 
 	CHECK(cudaSetDevice(DEV));
 
@@ -237,7 +237,7 @@ int main(int c, char **v){
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX, C);
+	printHeader(SOURCE_KEY, DK_NUM, DK_LEN, BX, C);
 
 	// With Stream
 	printf("- - - - - - Execution two, with stream - - - - - -\n");
@@ -253,7 +253,7 @@ int main(int c, char **v){
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX, C);
+	printHeader(SOURCE_KEY, DK_NUM, DK_LEN, BX, C);
 
 	// One kernel generate ALL dk, one thread generate one Ti
 	*threadsPerKernel = intDivCeil((DK_LEN * DK_NUM), H_LEN);		// Threads needed
@@ -275,7 +275,7 @@ int main(int c, char **v){
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX, C);
+	printHeader(SOURCE_KEY, DK_NUM, DK_LEN, BX, C);
 
 	printf("- - - - - - Execution four, rational use of stream - - - - - -\n");
 	for(int i = 0; i < S_LEN; i++){
@@ -301,11 +301,11 @@ int main(int c, char **v){
 	printf("Press enter to continue . . .");
 	//scanf("%d", &foo);
 
-	printHeader(DK_NUM, DK_LEN, BX, C);
+	printHeader(SOURCE_KEY, DK_NUM, DK_LEN, BX, C);
 
 	printf("- - - - - - Last but not least execution, SEQUENTIAL - - - - - -\n");
 	start = seconds();
-	executionSequential(SOURCE_KEY, C, DK_LEN, DK_NUM, outS);
+	//executionSequential(SOURCE_KEY, C, DK_LEN, DK_NUM, outS);
 	outS->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - - End last execution - - - - - - - - - - - - - - -\n");
 
@@ -765,11 +765,12 @@ __host__ void printAllKeys(uint8_t *keys, int const LEN, int const NUM){
 	}
 }
 
-__host__ void printHeader(long const DK_NUM, long const DK_LEN, int const  BX, int const C){
+__host__ void printHeader(const char* SK, long const DK_NUM, long const DK_LEN, int const  BX, int const C){
 	printf("\n- - - - - - - - - REQUEST - - - - - - - -\n");
+	printf("| Source Keys:       %15s \t |\n", SK);
 	printf("| Keys:              %15s \t |\n", prettyPrintNumber(DK_NUM));
 	printf("| Bytes per Key:     %15s \t |\n", prettyPrintNumber(DK_LEN));
-	printf("| Threads per block: %15d \t |\n", BX);
+	printf("| Threads per Block: %15d \t |\n", BX);
 	printf("| H_LEN Bytes:       %15d \t |\n", H_LEN);
 	printf("| Iterations:        %15s \t |\n", prettyPrintNumber(C));
 	printf("- - - - - - - - - - - - - - - - - - - - -\n\n");
