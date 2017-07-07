@@ -305,7 +305,7 @@ int main(int c, char **v){
 
 	printf("- - - - - - Last but not least execution, SEQUENTIAL - - - - - -\n");
 	start = seconds();
-	//executionSequential(SOURCE_KEY, C, DK_LEN, DK_NUM, outS);
+	executionSequential(SOURCE_KEY, C, DK_LEN, DK_NUM, outS);
 	outS->elapsedGlobal = seconds() - start;
 	printf("- - - - - - - - End last execution - - - - - - - - - - - - - - -\n");
 
